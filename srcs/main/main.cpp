@@ -6,6 +6,7 @@
 extern "C" {
 #include "ft_lexiq.h"
 }
+/*
 #define GLSL(CODE) "#version 330 core\n" #CODE
 
 int CloseApp(const std::string &msg = "ERROR", const int &code = -1, const bool &terminateGlfw = true);
@@ -35,9 +36,60 @@ const char *fragmentSource = GLSL(
 );
 
 void ResizeWindowCallBack(GLFWwindow *window, int width, int height);
+*/
+
+#include "Window.h"
+#include "Application.h"
 
 int main()
 {
+	dn::Window	*win = new dn::Window(100, 100, "My App");
+
+	win->SetStartCallback([](dn::Window *win) {
+		std::cout << win->x() << ", " << win->y() << std::endl;
+		glClearColor(0.1f, 0.1f, 0.1f, 1.f);
+	});
+
+	win->SetUpdateCallback([](dn::Window *win) {
+		static int	scl = 3;
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+		if (win->GetKey(GLFW_KEY_ESCAPE))
+			win->Close();
+
+		if (win->GetKey(GLFW_KEY_P))
+			++scl;
+		if (win->GetKey(GLFW_KEY_O))
+			--scl;
+
+		if (win->GetKey(GLFW_KEY_LEFT_SHIFT))
+		{
+			if (win->GetKey(GLFW_KEY_LEFT_CONTROL) && win->GetKey(GLFW_KEY_UP))
+				win->height(win->height() - 1);
+			else if (win->GetKey(GLFW_KEY_UP))
+				win->y(win->y() - scl);
+
+			if (win->GetKey(GLFW_KEY_LEFT_CONTROL) && win->GetKey(GLFW_KEY_DOWN))
+				win->height(win->height() + 1);
+			else if (win->GetKey(GLFW_KEY_DOWN))
+				win->y(win->y() + scl);
+
+			if (win->GetKey(GLFW_KEY_LEFT_CONTROL) && win->GetKey(GLFW_KEY_LEFT))
+				win->width(win->width() - 1);
+			else if (win->GetKey(GLFW_KEY_LEFT))
+				win->x(win->x() - scl);
+
+			if (win->GetKey(GLFW_KEY_LEFT_CONTROL) && win->GetKey(GLFW_KEY_RIGHT))
+				win->width(win->width() + 1);
+			else if (win->GetKey(GLFW_KEY_RIGHT))
+				win->x(win->x() + scl);
+		}
+
+	});
+	dn::Application::Run();
+
+/*
 	int	n = ft_lexiq(0, "*[@upper]", "HELLO");
 	std::cout << "Match: " << n << std::endl;
 	if (!glfwInit())
@@ -141,9 +193,9 @@ int main()
 		glfwSwapBuffers(window);
 	}
 
-	return (CloseApp("The app terminated successfully !", 0));
+	return (CloseApp("The app terminated successfully !", 0));*/
 }
-
+/*
 int CloseApp(const std::string &msg, const int &code, const bool &terminateGlfw)
 {
 	if (terminateGlfw)
@@ -155,4 +207,4 @@ int CloseApp(const std::string &msg, const int &code, const bool &terminateGlfw)
 void ResizeWindowCallBack(GLFWwindow *window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-}
+}*/
