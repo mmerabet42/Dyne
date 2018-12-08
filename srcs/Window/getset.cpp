@@ -1,30 +1,4 @@
 #include "Window.h"
-#include "Application.h"
-#include <iostream>
-
-/* Constructors */
-
-dn::Window::Window(const int &p_width, const int &p_height, const std::string &p_title)
-	: _x(0), _y(0), _flags(0), _width(p_width), _height(p_height), _title(p_title), _glfw(nullptr),
-
-	_keyCallback(nullptr), _startCallback(nullptr), _updateCallback(nullptr)
-{
-	this->_windowid = dn::Application::AddWindow(this);
-}
-
-dn::Window::Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title)
-	: Window(p_width, p_height, p_title)
-{
-	this->_x = p_x;
-	this->_y = p_y;
-	this->_flags |= DN_POS_SPECIFIED;
-}
-
-void	dn::Window::Close()
-{
-	if (this->_glfw)
-		glfwSetWindowShouldClose(this->_glfw, true);
-}
 
 /* Getters and setters */
 
@@ -48,7 +22,7 @@ void	dn::Window::height(const int &p_height)
 		glfwSetWindowSize(this->_glfw, this->_width, this->_height);
 }
 
-void	dn::Window::SetSize(const int &p_width, const int &p_height)
+void	dn::Window::setSize(const int &p_width, const int &p_height)
 {
 	if (p_width < 0 || p_height < 0)
 		return ;
@@ -66,6 +40,8 @@ void	dn::Window::x(const int &p_x)
 	this->_x = p_x;
 	if (this->_glfw)
 		glfwSetWindowPos(this->_glfw, this->_x, this->_y);
+	else
+		this->_flags |= DN_POS_SPECIFIED;
 }
 
 int		dn::Window::y() const { return (this->_y); }
@@ -76,9 +52,11 @@ void	dn::Window::y(const int &p_y)
 	this->_y = p_y;
 	if (this->_glfw)
 		glfwSetWindowPos(this->_glfw, this->_x, this->_y);
+	else
+		this->_flags |= DN_POS_SPECIFIED;
 }
 
-void	dn::Window::SetPos(const int &p_x, const int &p_y)
+void	dn::Window::setPos(const int &p_x, const int &p_y)
 {
 	if (p_x < 0 || p_y < 0)
 		return ;
@@ -86,6 +64,8 @@ void	dn::Window::SetPos(const int &p_x, const int &p_y)
 	this->_y = p_y;
 	if (this->_glfw)
 		glfwSetWindowPos(this->_glfw, this->_x, this->_y);
+	else
+		this->_flags |= DN_POS_SPECIFIED;
 }
 
 std::string	dn::Window::title() const { return (this->_title); }
@@ -96,24 +76,8 @@ void		dn::Window::title(const std::string &p_title)
 		glfwSetWindowTitle(this->_glfw, this->_title.c_str());
 }
 
-int			dn::Window::GetKey(const int &p_keycode) const
+dn::Color	dn::Window::clearColor() const { return (this->_clearColor); }
+void		dn::Window::setClearColor(const float &p_r, const float &p_g, const float &p_b)
 {
-	return (glfwGetKey(this->_glfw, p_keycode));
-}
-
-int			dn::Window::flags() const { return (this->_flags); }
-
-void	dn::Window::SetKeyCallback(void(*p_keyCallback)(dn::Window *, const int &, const int &))
-{
-	this->_keyCallback = p_keyCallback;
-}
-
-void	dn::Window::SetStartCallback(void(*p_startCallback)(dn::Window *))
-{
-	this->_startCallback = p_startCallback;
-}
-
-void	dn::Window::SetUpdateCallback(void(*p_updateCallback)(dn::Window *))
-{
-	this->_updateCallback = p_updateCallback;
+	this->_clearColor.set(p_r, p_g, p_b);
 }

@@ -23,27 +23,47 @@ namespace dn
 	public:
 
 		/* Start the application */
-		static int	Run();
+		static int	run();
 
 		/* Private function reserved for dn::Window */
 
-			static int	AddWindow(dn::Window *p_window);
-			static int	CreateGLFWwindow(dn::Window *p_window);
+			static int	addWindow(dn::Window *p_window);
 
-			static void	CloseWindow(dn::Window *p_window);
-			static void	DestroyWindows();
+			static void	closeWindow(dn::Window *p_window);
+			static void	destroyWindows();
 
 	private:
-		static std::vector<dn::Window *>			_windows;
-		static std::map<GLFWwindow *, dn::Window *>	_glfwWindows;
+		/* The list of added window, inserted once the dn::Window constructor is called1 */
+		static std::vector<dn::Window *> _windows;
+		/*
+		 * A map of windows indexed by their GLFWwindow identifiers.
+		 * Created after the run() function.
+		*/
+		static std::map<GLFWwindow *, dn::Window *> _glfwWindows;
 
-		static bool	_running;
+		/* Becomes true once the run() function is called */
+		static bool _running;
 
-		/* Global callbacks called directly by the GLFW library */
+		/* The window that has the current context */
+		static dn::Window *_context;
 
-		static void	WindowStartCallback(dn::Window *p_window);
-		static void	WindowUpdateCallback(dn::Window *p_window);
-		static void	WindowKeyCallback(GLFWwindow *p_window, int p_keycode, int p_scancode, int p_action, int p_mods);
+		/* Creates the GLFW window */
+		static int	createGLFWwindow(dn::Window *p_window);
+
+		/* Returns the dn::Window from the GLFWwindow */
+		static dn::Window *getWindow(GLFWwindow *p_window);
+
+		/*
+		 * Global callbacks called directly by the GLFW library.
+		 * The Application will make sure of sending it to the proper window.
+		*/
+
+		static void	windowStartCallback(dn::Window *p_window);
+		static void	windowUpdateCallback(dn::Window *p_window);
+		
+		static void	windowKeyCallback(GLFWwindow *p_window, int p_keycode, int p_scancode, int p_action, int p_mods);
+		static void	windowSizeCallback(GLFWwindow *p_window, int p_width, int p_height);
+		static void	windowPosCallback(GLFWwindow *p_window, int p_x, int p_y);
 	};
 }
 

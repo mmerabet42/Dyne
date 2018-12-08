@@ -1,22 +1,25 @@
-NAME		=	eng
+NAME		=	libeng.a
 CC			=	g++ -std=c++11
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
+MAIN_FILE	=	main.cpp
+OUT			=	a.out
+
 OSNAME		=	$(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	=	$(CC) $(CFLAGS) $(OBJB) libft/libft.a -lglfw -lGLEW -lGL -o $(NAME)
+	COMPILE	=	$(CC) $(CFLAGS) $(MAIN_FILE) $(NAME) libft/libft.a -lglfw -lGLEW -lGL -I includes/ -I libft/includes/ -o $(OUT)
 endif
 ifeq ($(OSNAME),Darwin)
-	COMPILE =	$(CC) $(CFLAGS) libft/libft.a -L ~/.brew/lib -lglfw -lglew -framework OpenGL $(OBJB) -o $(NAME)
+	COMPILE =	$(CC) $(CFLAGS) $(MAIN_FILE) $(NAME) libft/libft.a -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)
 endif
 
 SRCD		=	srcs/
 INCLUDES_D	=	includes/
-_INCLUDES	=	eng.h
+_INCLUDES	=	eng.h Window.h Application.h Color.h
 
-_MAIN_FS	=	main.cpp
-_APP_FS		=	Application.cpp Callbacks.cpp Init.cpp
-_WIN_FS		=	Window.cpp
+_MAIN_FS	=
+_APP_FS		=	application.cpp callbacks.cpp init.cpp
+_WIN_FS		=	window.cpp getset.cpp setcallbacks.cpp color.cpp
 
 INCLUDES	=	$(addprefix $(INCLUDES_D),$(_INCLUDES))
 
@@ -43,7 +46,8 @@ all: $(NAME)
 LIBFT = libft/libft.a
 $(NAME): $(LIBFT) $(OBJB)
 	@printf "\r\033[K$(CGREEN)Creating$(CEND): $(NAME)\n"
-	@$(COMPILE)
+	@ar rc $(NAME) $(OBJB)
+	@ranlib $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
 $(LIBFT):
@@ -65,16 +69,22 @@ $(OBJD)%.o: $(SRCD)Window/%.cpp $(INCLUDES) Makefile
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
 clean:
-	@rm -f $(OBJB)
 	@echo "$(CRED)Cleaning$(CEND): $(NAME)"
+	@rm -f $(OBJB)
+	@rm -f $(NAME)
 
 fclean:
-	@make clean
+	@echo "$(CRED)Cleaning$(CEND): $(NAME)"
+	@make fclean -C libft
+	@rm -f $(OBJB)
 	@rm -f $(NAME)
-	@echo "$(CRED)Full cleaning$(CEND): $(NAME)"
 
 re:
 	@make fclean
 	@make all
+
+main:
+	make $(NAME)
+	$(COMPILE)
 
 #.PHONY: all clean fclean re
