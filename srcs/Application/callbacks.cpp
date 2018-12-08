@@ -52,3 +52,16 @@ void	dn::Application::windowCloseCallback(GLFWwindow *p_window)
 	if (win->_closeCallback)
 		win->_closeCallback(win);
 }
+
+void	dn::Application::windowFocusCallback(GLFWwindow *p_window, int focused)
+{
+	dn::Window *win = dn::Application::getWindow(p_window);
+	if (!win)
+		return ;
+	if (focused)
+		dn::Application::_focused = win;
+	else if (dn::Application::_focused == win)
+		dn::Application::_focused = nullptr;
+	if (win->_focusCallback)
+		win->_focusCallback(win, focused);
+}

@@ -33,6 +33,11 @@ namespace dn
 			static void	closeWindow(dn::Window *p_window);
 			static void	destroyWindows();
 
+			static dn::Window	*focusedWindow();
+
+	static void	onStart(void(*p_callback)());
+	static void	onUpdate(void(*p_callback)());
+
 	private:
 		/* The list of added window, inserted once the dn::Window constructor is called1 */
 		static std::vector<dn::Window *> _windows;
@@ -47,12 +52,17 @@ namespace dn
 
 		/* The window that has the current context */
 		static dn::Window *_context;
+		static dn::Window *_focused;
 
 		/* Creates the GLFW window */
 		static int	createGLFWwindow(dn::Window *p_window);
 
 		/* Returns the dn::Window from the GLFWwindow */
 		static dn::Window *getWindow(GLFWwindow *p_window);
+
+		/* Application callbacks */
+		static void(*_startCallback)();
+		static void(*_updateCallback)();
 
 		/*
 		 * Global callbacks called directly by the GLFW library.
@@ -66,7 +76,8 @@ namespace dn
 		static void	windowKeyCallback(GLFWwindow *p_window, int p_keycode, int p_scancode, int p_action, int p_mods);
 		static void	windowSizeCallback(GLFWwindow *p_window, int p_width, int p_height);
 		static void	windowPosCallback(GLFWwindow *p_window, int p_x, int p_y);
-		
+		static void	windowFocusCallback(GLFWwindow *p_window, int focused);
+
 		friend class dn::Window;
 	};
 }

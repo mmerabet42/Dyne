@@ -10,6 +10,8 @@ extern "C" {
 #include "Window.h"
 #include "Application.h"
 
+void	clearWindowCallback(dn::Window *win);
+
 int main()
 {
 	dn::Window	*win = new dn::Window(600, 400, "My App");
@@ -22,6 +24,13 @@ int main()
 	win2->setClearColor(0.f, 1.f, 0.f);
 	win->setClearColor(0.1f, 0.1f, 0.1f);
 
+	dn::Application::onStart([]() {
+		std::cout << "Application has started" << std::endl;
+	});
+
+	win2->setUpdateCallback(clearWindowCallback);
+	win3->setUpdateCallback(clearWindowCallback);
+
 	win->setCloseCallback([](dn::Window *win) {
 		if (!win->flag(DN_CUSTOM_FLAG0))
 		{
@@ -30,12 +39,19 @@ int main()
 		}
 	});
 
+	win->setFocusCallback([](dn::Window *win, int focused) {
+			std::cout << "Focus changed " << focused << std::endl;
+			(void)win;
+	});
+
 	win->setStartCallback([](dn::Window *win) {
 		std::cout << "Window '" << win->title() << "' oppened" << std::endl;
 	});
 
 	win->setUpdateCallback([](dn::Window *win) {
 		static int	scl = 3;
+
+		win->clear();
 
 		if (win->getKey(GLFW_KEY_ESCAPE))
 			win->close();
@@ -75,4 +91,9 @@ int main()
 	});
 
 	dn::Application::run();
+}
+
+void	clearWindowCallback(dn::Window *win)
+{
+	win->clear();
 }

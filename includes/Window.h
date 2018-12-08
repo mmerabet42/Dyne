@@ -4,6 +4,7 @@
 # include <string>
 # include "GLFW/glfw3.h"
 # include "Color.h"
+# include "Funcs.h"
 
 # define DN_CLOSED (1 << 0)
 # define DN_POS_SPECIFIED (1 << 1)
@@ -26,6 +27,9 @@ namespace dn
 		Window(const int &p_width, const int &p_height, const std::string &p_title = "Window");
 		Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title = "Window");
 
+		void	clear() const;
+		void	clear(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.0f) const;
+
 		void	close();
 		void	open();
 
@@ -36,6 +40,9 @@ namespace dn
 		void	hide();
 		void	show();
 		bool	visible() const;
+
+		void	focus();
+		bool	focused() const;
 
 		int		getKey(const int &p_keycode) const;
 
@@ -67,13 +74,14 @@ namespace dn
 			void	disableFlag(const int &p_flag);
 			bool	flag(const int &p_flag) const;
 
-		void	setStartCallback(void(*p_startCallback)(dn::Window *));
-		void	setUpdateCallback(void(*p_updateCallback)(dn::Window *));
-		void	setCloseCallback(void(*p_closeCallback)(dn::Window *));
+		void	setStartCallback(dn::startCallbackFunc p_startCallback);
+		void	setUpdateCallback(dn::updateCallbackFunc p_updateCallback);
+		void	setCloseCallback(dn::closeCallbackFunc p_closeCallback);
 
-		void	setKeyCallback(void(*p_keyCallback)(dn::Window *, int, int));
-		void	setSizeCallback(void(*p_sizeCallback)(dn::Window *, int, int));
-		void	setPosCallback(void(*p_posCallback)(dn::Window *, int, int));
+		void	setKeyCallback(dn::keyCallbackFunc p_keyCallback);
+		void	setSizeCallback(dn::sizeCallbackFunc p_sizeCallback);
+		void	setPosCallback(dn::posCallbackFunc p_posCallback);
+		void	setFocusCallback(dn::focusCallbackFunc p_focusCallback);
 
 	private:
 		int			_x;
@@ -92,13 +100,14 @@ namespace dn
 
 		dn::Color	_clearColor;
 
-		void(*_startCallback)(dn::Window *);
-		void(*_updateCallback)(dn::Window *);
-		void(*_closeCallback)(dn::Window *);
-
-		void(*_keyCallback)(dn::Window *, int, int);
-		void(*_sizeCallback)(dn::Window *, int, int);
-		void(*_posCallback)(dn::Window *, int, int);
+		dn::startCallbackFunc	_startCallback;
+		dn::updateCallbackFunc	_updateCallback;
+		dn::closeCallbackFunc	_closeCallback;
+		
+		dn::keyCallbackFunc		_keyCallback;
+		dn::sizeCallbackFunc	_sizeCallback;
+		dn::posCallbackFunc		_posCallback;
+		dn::focusCallbackFunc	_focusCallback;
 
 		/* The dn::Application class has access to all of the dn::Window attributes. */
 		friend class dn::Application;

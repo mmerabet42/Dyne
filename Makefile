@@ -7,15 +7,15 @@ OUT			=	a.out
 
 OSNAME		=	$(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	=	$(CC) $(CFLAGS) $(MAIN_FILE) $(NAME) libft/libft.a -lglfw -lGLEW -lGL -I includes/ -I libft/includes/ -o $(OUT)
+	COMPILE	=	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a -lglfw -lGLEW -lGL -I includes/ -I libft/includes/ -o $(OUT)
 endif
 ifeq ($(OSNAME),Darwin)
-	COMPILE =	$(CC) $(CFLAGS) $(MAIN_FILE) $(NAME) libft/libft.a -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)
+	COMPILE =	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)
 endif
 
 SRCD		=	srcs/
 INCLUDES_D	=	includes/
-_INCLUDES	=	eng.h Window.h Application.h Color.h
+_INCLUDES	=	eng.h Window.h Application.h Color.h Funcs.h
 
 _MAIN_FS	=
 _APP_FS		=	application.cpp callbacks.cpp init.cpp

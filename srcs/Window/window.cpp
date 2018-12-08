@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "Window.h"
 #include "Application.h"
 #include <iostream>
@@ -9,7 +10,7 @@ dn::Window::Window(const int &p_width, const int &p_height, const std::string &p
 	_flags(DN_VISIBLE), _clearColor(1.f, 1.f, 1.f, 1.f),
 
 	_keyCallback(nullptr), _startCallback(nullptr), _updateCallback(nullptr), _sizeCallback(nullptr),
-	_posCallback(nullptr), _closeCallback(nullptr)
+	_posCallback(nullptr), _closeCallback(nullptr), _focusCallback(nullptr)
 {
 	this->_windowid = dn::Application::addWindow(this);
 }
@@ -20,6 +21,20 @@ dn::Window::Window(const int &p_x, const int &p_y, const int &p_width, const int
 	this->_x = p_x;
 	this->_y = p_y;
 	this->_flags |= DN_POS_SPECIFIED;
+}
+
+void	dn::Window::clear() const
+{
+	this->clear(this->_clearColor.r(), this->_clearColor.g(), this->_clearColor.b(), this->_clearColor.a());
+}
+
+void	dn::Window::clear(const float &p_r, const float &p_g, const float &p_b, const float &p_a) const
+{
+	if (this->_glfw)
+	{
+		glClearColor(p_r, p_g, p_b, p_a);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
 }
 
 void	dn::Window::close()
@@ -66,6 +81,18 @@ void		dn::Window::show()
 	this->_flags |= DN_VISIBLE;
 	if (this->_glfw)
 		glfwShowWindow(this->_glfw);
+}
+
+bool		dn::Window::focused() const
+{
+	return (dn::Application::focusedWindow() == this);
+}
+
+void		dn::Window::focus()
+{
+	dn::Application::_focused = this;
+	if (this->_glfw)
+		glfwFocusWindow(this->_glfw);
 }
 
 int			dn::Window::getKey(const int &p_keycode) const

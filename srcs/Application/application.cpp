@@ -40,6 +40,9 @@ int		dn::Application::run()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	dn::Application::_running = true;
+	/* Calling start callback of the application */
+	if (dn::Application::_startCallback)
+		dn::Application::_startCallback();
 
 	/* Calling the start callback of each window */
 	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end(); ++it)
@@ -59,13 +62,9 @@ int		dn::Application::run()
 				dn::Application::_context = *it;
 			}
 
-			glClearColor(
-				(*it)->_clearColor.r(),
-				(*it)->_clearColor.g(),
-				(*it)->_clearColor.b(),
-				(*it)->_clearColor.a()
-			);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			/* Calling update callback of the application */
+			if (dn::Application::_updateCallback)
+				dn::Application::_updateCallback();
 			/* Calling update callback of the current window */
 			dn::Application::windowUpdateCallback(*it);
 			glfwSwapBuffers((*it)->_glfw);
@@ -127,11 +126,15 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 	glfwSetWindowSizeCallback(p_window->_glfw, dn::Application::windowSizeCallback);
 	glfwSetWindowPosCallback(p_window->_glfw, dn::Application::windowPosCallback);
 	glfwSetWindowCloseCallback(p_window->_glfw, dn::Application::windowCloseCallback);
+	glfwSetWindowFocusCallback(p_window->_glfw, dn::Application::windowFocusCallback);
 
 	dn::Application::_glfwWindows.insert(std::make_pair(p_window->_glfw, p_window));
+	dn::Application::_focused = p_window;
 
 	return (DN_OK);
 }
+
+dn::Window	*dn::Application::focusedWindow() { return (dn::Application::_focused); }
 
 /*
 static void	dn::Application::DestroyWindow(dn::Window *&p_window)
