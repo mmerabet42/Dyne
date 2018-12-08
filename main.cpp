@@ -22,27 +22,16 @@ int main()
 	win2->setClearColor(0.f, 1.f, 0.f);
 	win->setClearColor(0.1f, 0.1f, 0.1f);
 
-	win2->setSizeCallback([](dn::Window *win, int w, int h) {
-		std::cout << "win '" << win->title() << "' size change " << w << h << std::endl;
-	});
-
-	win->setPosCallback([](dn::Window *win, int x, int y) {
-		std::cout << "win '" << win->title() << "' pos change " << x << y << std::endl;
-	});
-
-	win3->setUpdateCallback([](dn::Window *win) {
-		(void)win;
-		if (win->getKey(GLFW_KEY_ESCAPE))
-			win->close();
-	});
-
-	win2->setUpdateCallback([](dn::Window *win) {
-		if (win->getKey(GLFW_KEY_ESCAPE))
-			win->close();
+	win->setCloseCallback([](dn::Window *win) {
+		if (!win->flag(DN_CUSTOM_FLAG0))
+		{
+			std::cout << "Cannot be closed click on 'L' to enable closing" << std::endl;
+			win->open();
+		}
 	});
 
 	win->setStartCallback([](dn::Window *win) {
-		std::cout << win->x() << ", " << win->y() << std::endl;
+		std::cout << "Window '" << win->title() << "' oppened" << std::endl;
 	});
 
 	win->setUpdateCallback([](dn::Window *win) {
@@ -50,6 +39,15 @@ int main()
 
 		if (win->getKey(GLFW_KEY_ESCAPE))
 			win->close();
+		if (win->getKey(GLFW_KEY_L))
+		{
+			std::cout << "Closing the window is now possible !" << std::endl;
+			win->setClearColor(0.f, 0.f, 1.f);
+			win->enableFlag(DN_CUSTOM_FLAG0);
+		}
+
+		if (win->getKey(GLFW_KEY_E))
+			std::cout << "E pressed" << std::endl;
 
 		if (win->getKey(GLFW_KEY_LEFT_SHIFT))
 		{

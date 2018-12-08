@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 
+bool	dn::Application::running() { return (dn::Application::_running); }
 int		dn::Application::run()
 {
 	/* If the application is already running, we return an error */
@@ -117,12 +118,15 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 	else
 		glfwGetWindowPos(p_window->_glfw, &p_window->_x, &p_window->_y);
 
-	if (!(p_window->_flags & DN_VISIBLE))
+	if (p_window->_flags & DN_ICONIFIED)
 		p_window->iconify();
+	if (!(p_window->_flags & DN_VISIBLE))
+		p_window->hide();
 	
 	glfwSetKeyCallback(p_window->_glfw, dn::Application::windowKeyCallback);
 	glfwSetWindowSizeCallback(p_window->_glfw, dn::Application::windowSizeCallback);
 	glfwSetWindowPosCallback(p_window->_glfw, dn::Application::windowPosCallback);
+	glfwSetWindowCloseCallback(p_window->_glfw, dn::Application::windowCloseCallback);
 
 	dn::Application::_glfwWindows.insert(std::make_pair(p_window->_glfw, p_window));
 

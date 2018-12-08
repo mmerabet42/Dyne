@@ -43,3 +43,12 @@ void	dn::Application::windowPosCallback(GLFWwindow *p_window, int p_x, int p_y)
 	if (win->_posCallback)
 		win->_posCallback(win, p_x, p_y);
 }
+
+void	dn::Application::windowCloseCallback(GLFWwindow *p_window)
+{
+	dn::Window *win = dn::Application::getWindow(p_window);
+	if (!win)
+		return ;
+	if (win->_closeCallback)
+		win->_closeCallback(win);
+}

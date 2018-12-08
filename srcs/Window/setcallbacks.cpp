@@ -24,3 +24,8 @@ void	dn::Window::setPosCallback(void(*p_posCallback)(dn::Window *, int, int))
 {
 	this->_posCallback = p_posCallback;
 }
+
+void	dn::Window::setCloseCallback(void(*p_closeCallback)(dn::Window *))
+{
+	this->_closeCallback = p_closeCallback;
+}

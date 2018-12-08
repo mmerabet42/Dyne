@@ -9,6 +9,11 @@
 # define DN_POS_SPECIFIED (1 << 1)
 # define DN_ICONIFIED (1 << 2)
 # define DN_VISIBLE (1 << 3)
+# define DN_CUSTOM_FLAG0 (1 << 4)
+# define DN_CUSTOM_FLAG1 (1 << 5)
+# define DN_CUSTOM_FLAG2 (1 << 6)
+# define DN_CUSTOM_FLAG4 (1 << 7)
+# define DN_CUSTOM_FLAG5 (1 << 8)
 
 namespace dn
 {
@@ -22,6 +27,7 @@ namespace dn
 		Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title = "Window");
 
 		void	close();
+		void	open();
 
 		void	iconify();
 		void	restore();
@@ -57,10 +63,14 @@ namespace dn
 			void		setClearColor(const float &p_r, const float &p_g, const float &p_b);
 
 			int		flags() const;
-		
+			void	enableFlag(const int &p_flag);
+			void	disableFlag(const int &p_flag);
+			bool	flag(const int &p_flag) const;
+
 		void	setStartCallback(void(*p_startCallback)(dn::Window *));
 		void	setUpdateCallback(void(*p_updateCallback)(dn::Window *));
-		
+		void	setCloseCallback(void(*p_closeCallback)(dn::Window *));
+
 		void	setKeyCallback(void(*p_keyCallback)(dn::Window *, int, int));
 		void	setSizeCallback(void(*p_sizeCallback)(dn::Window *, int, int));
 		void	setPosCallback(void(*p_posCallback)(dn::Window *, int, int));
@@ -84,6 +94,8 @@ namespace dn
 
 		void(*_startCallback)(dn::Window *);
 		void(*_updateCallback)(dn::Window *);
+		void(*_closeCallback)(dn::Window *);
+
 		void(*_keyCallback)(dn::Window *, int, int);
 		void(*_sizeCallback)(dn::Window *, int, int);
 		void(*_posCallback)(dn::Window *, int, int);
