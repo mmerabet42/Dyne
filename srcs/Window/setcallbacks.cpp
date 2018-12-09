@@ -1,36 +1,36 @@
 #include "Window.h"
 
-void	dn::Window::setStartCallback(dn::startCallbackFunc p_startCallback)
+void	dn::Window::setStartCb(dn::startCbFunc p_callback)
 {
-	this->_startCallback = p_startCallback;
+	this->_startCb = p_callback;
 }
 
-void	dn::Window::setUpdateCallback(dn::updateCallbackFunc p_updateCallback)
+void	dn::Window::setUpdateCb(dn::updateCbFunc p_callback)
 {
-	this->_updateCallback = p_updateCallback;
+	this->_updateCb = p_callback;
 }
 
-void	dn::Window::setKeyCallback(dn::keyCallbackFunc p_keyCallback)
+void	dn::Window::setKeyCb(dn::keyCbFunc p_callback)
 {
-	this->_keyCallback = p_keyCallback;
+	this->_keyCb = p_callback;
 }
 
-void	dn::Window::setSizeCallback(dn::sizeCallbackFunc p_sizeCallback)
+void	dn::Window::setSizeCb(dn::sizeCbFunc p_callback)
 {
-	this->_sizeCallback = p_sizeCallback;
+	this->_sizeCb = p_callback;
 }
 
-void	dn::Window::setPosCallback(dn::posCallbackFunc p_posCallback)
+void	dn::Window::setPosCb(dn::posCbFunc p_callback)
 {
-	this->_posCallback = p_posCallback;
+	this->_posCb = p_callback;
 }
 
-void	dn::Window::setCloseCallback(dn::closeCallbackFunc p_closeCallback)
+void	dn::Window::setCloseCb(dn::closeCbFunc p_callback)
 {
-	this->_closeCallback = p_closeCallback;
+	this->_closeCb = p_callback;
 }
 
-void	dn::Window::setFocusCallback(dn::focusCallbackFunc p_focusCallback)
+void	dn::Window::setFocusCb(dn::focusCbFunc p_callback)
 {
-	this->_focusCallback = p_focusCallback;
+	this->_focusCb = p_callback;
 }

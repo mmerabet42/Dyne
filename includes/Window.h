@@ -10,11 +10,14 @@
 # define DN_POS_SPECIFIED (1 << 1)
 # define DN_ICONIFIED (1 << 2)
 # define DN_VISIBLE (1 << 3)
-# define DN_CUSTOM_FLAG0 (1 << 4)
-# define DN_CUSTOM_FLAG1 (1 << 5)
-# define DN_CUSTOM_FLAG2 (1 << 6)
-# define DN_CUSTOM_FLAG4 (1 << 7)
-# define DN_CUSTOM_FLAG5 (1 << 8)
+# define DN_AUTOCLEAR (1 << 4)
+# define DN_FLAG_NUM 5
+
+# define DN_CUSTOM_FLAG0 (1 << (DN_FLAG_NUM + 0))
+# define DN_CUSTOM_FLAG1 (1 << (DN_FLAG_NUM + 1))
+# define DN_CUSTOM_FLAG2 (1 << (DN_FLAG_NUM + 2))
+# define DN_CUSTOM_FLAG4 (1 << (DN_FLAG_NUM + 3))
+# define DN_CUSTOM_FLAG5 (1 << (DN_FLAG_NUM + 4))
 
 namespace dn
 {
@@ -70,18 +73,20 @@ namespace dn
 			void		setClearColor(const float &p_r, const float &p_g, const float &p_b);
 
 			int		flags() const;
-			void	enableFlag(const int &p_flag);
-			void	disableFlag(const int &p_flag);
-			bool	flag(const int &p_flag) const;
+			void	setFlag(const int &p_flag, const bool &p_set = true);
+			bool	getFlag(const int &p_flag) const;
 
-		void	setStartCallback(dn::startCallbackFunc p_startCallback);
-		void	setUpdateCallback(dn::updateCallbackFunc p_updateCallback);
-		void	setCloseCallback(dn::closeCallbackFunc p_closeCallback);
+			float	opacity() const;
+			void	setOpacity(const float &p_opacity);
 
-		void	setKeyCallback(dn::keyCallbackFunc p_keyCallback);
-		void	setSizeCallback(dn::sizeCallbackFunc p_sizeCallback);
-		void	setPosCallback(dn::posCallbackFunc p_posCallback);
-		void	setFocusCallback(dn::focusCallbackFunc p_focusCallback);
+		void	setStartCb(dn::startCbFunc p_callback);
+		void	setUpdateCb(dn::updateCbFunc p_callback);
+		void	setCloseCb(dn::closeCbFunc p_callback);
+
+		void	setKeyCb(dn::keyCbFunc p_callback);
+		void	setSizeCb(dn::sizeCbFunc p_callback);
+		void	setPosCb(dn::posCbFunc p_callback);
+		void	setFocusCb(dn::focusCbFunc p_callback);
 
 	private:
 		int			_x;
@@ -92,6 +97,8 @@ namespace dn
 
 		std::string	_title;
 
+		float		_opacity;
+
 		/* Initialized by dn::Application */
 		GLFWwindow	*_glfw;
 		int			_windowid;
@@ -100,14 +107,14 @@ namespace dn
 
 		dn::Color	_clearColor;
 
-		dn::startCallbackFunc	_startCallback;
-		dn::updateCallbackFunc	_updateCallback;
-		dn::closeCallbackFunc	_closeCallback;
+		dn::startCbFunc		_startCb;
+		dn::updateCbFunc	_updateCb;
+		dn::closeCbFunc		_closeCb;
 		
-		dn::keyCallbackFunc		_keyCallback;
-		dn::sizeCallbackFunc	_sizeCallback;
-		dn::posCallbackFunc		_posCallback;
-		dn::focusCallbackFunc	_focusCallback;
+		dn::keyCbFunc		_keyCb;
+		dn::sizeCbFunc		_sizeCb;
+		dn::posCbFunc		_posCb;
+		dn::focusCbFunc		_focusCb;
 
 		/* The dn::Application class has access to all of the dn::Window attributes. */
 		friend class dn::Application;

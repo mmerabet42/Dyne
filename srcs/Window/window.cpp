@@ -7,10 +7,10 @@
 
 dn::Window::Window(const int &p_width, const int &p_height, const std::string &p_title)
 	: _x(0), _y(0), _width(p_width), _height(p_height), _title(p_title), _glfw(nullptr),
-	_flags(DN_VISIBLE), _clearColor(1.f, 1.f, 1.f, 1.f),
+	_flags(DN_VISIBLE), _clearColor(1.f, 1.f, 1.f, 1.f), _opacity(1.f),
 
-	_keyCallback(nullptr), _startCallback(nullptr), _updateCallback(nullptr), _sizeCallback(nullptr),
-	_posCallback(nullptr), _closeCallback(nullptr), _focusCallback(nullptr)
+	_keyCb(nullptr), _startCb(nullptr), _updateCb(nullptr), _sizeCb(nullptr),
+	_posCb(nullptr), _closeCb(nullptr), _focusCb(nullptr)
 {
 	this->_windowid = dn::Application::addWindow(this);
 }
@@ -102,17 +102,15 @@ int			dn::Window::getKey(const int &p_keycode) const
 
 int			dn::Window::flags() const { return (this->_flags); }
 
-void		dn::Window::enableFlag(const int &p_flag)
+void		dn::Window::setFlag(const int &p_flag, const bool &p_set)
 {
-	this->_flags |= p_flag;
+	if (p_set)
+		this->_flags |= p_flag;
+	else
+		this->_flags &= ~p_flag;
 }
 
-void		dn::Window::disableFlag(const int &p_flag)
-{
-	this->_flags &= ~p_flag;
-}
-
-bool		dn::Window::flag(const int &p_flag) const
+bool		dn::Window::getFlag(const int &p_flag) const
 {
 	return (this->_flags & p_flag);
 }

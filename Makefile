@@ -2,12 +2,14 @@ NAME		=	libeng.a
 CC			=	g++ -std=c++11
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
+GET_PACKAGE	=	`pkg-config --static --libs x11 xrandr xi xxf86vm glew glfw3`
+
 MAIN_FILE	=	main.cpp
 OUT			=	a.out
 
 OSNAME		=	$(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	=	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a -lglfw -lGLEW -lGL -I includes/ -I libft/includes/ -o $(OUT)
+	COMPILE	=	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT)
 endif
 ifeq ($(OSNAME),Darwin)
 	COMPILE =	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)

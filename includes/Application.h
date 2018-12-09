@@ -77,7 +77,7 @@ namespace dn
 		static void	windowSizeCallback(GLFWwindow *p_window, int p_width, int p_height);
 		static void	windowPosCallback(GLFWwindow *p_window, int p_x, int p_y);
 		static void	windowFocusCallback(GLFWwindow *p_window, int focused);
-
+	
 		friend class dn::Window;
 	};
 }

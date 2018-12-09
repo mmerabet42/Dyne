@@ -10,8 +10,6 @@ extern "C" {
 #include "Window.h"
 #include "Application.h"
 
-void	clearWindowCallback(dn::Window *win);
-
 int main()
 {
 	dn::Window	*win = new dn::Window(600, 400, "My App");
@@ -24,31 +22,28 @@ int main()
 	win2->setClearColor(0.f, 1.f, 0.f);
 	win->setClearColor(0.1f, 0.1f, 0.1f);
 
-	dn::Application::onStart([]() {
-		std::cout << "Application has started" << std::endl;
+	win2->setFlag(DN_AUTOCLEAR, true);
+	win3->setFlag(DN_AUTOCLEAR, true);
+
+	win->setOpacity(0.5f);
+
+	win->setKeyCb([](dn::Window *win, int key, int ac) {
+		std::cout << "Key event " << key << " " << ac << std::endl;
 	});
 
-	win2->setUpdateCallback(clearWindowCallback);
-	win3->setUpdateCallback(clearWindowCallback);
-
-	win->setCloseCallback([](dn::Window *win) {
-		if (!win->flag(DN_CUSTOM_FLAG0))
+	win->setCloseCb([](dn::Window *win) {
+		if (!win->getFlag(DN_CUSTOM_FLAG0))
 		{
 			std::cout << "Cannot be closed click on 'L' to enable closing" << std::endl;
 			win->open();
 		}
 	});
 
-	win->setFocusCallback([](dn::Window *win, int focused) {
-			std::cout << "Focus changed " << focused << std::endl;
-			(void)win;
-	});
-
-	win->setStartCallback([](dn::Window *win) {
+	win->setStartCb([](dn::Window *win) {
 		std::cout << "Window '" << win->title() << "' oppened" << std::endl;
 	});
 
-	win->setUpdateCallback([](dn::Window *win) {
+	win->setUpdateCb([](dn::Window *win) {
 		static int	scl = 3;
 
 		win->clear();
@@ -59,7 +54,7 @@ int main()
 		{
 			std::cout << "Closing the window is now possible !" << std::endl;
 			win->setClearColor(0.f, 0.f, 1.f);
-			win->enableFlag(DN_CUSTOM_FLAG0);
+			win->setFlag(DN_CUSTOM_FLAG0, true);
 		}
 
 		if (win->getKey(GLFW_KEY_E))
@@ -91,9 +86,4 @@ int main()
 	});
 
 	dn::Application::run();
-}
-
-void	clearWindowCallback(dn::Window *win)
-{
-	win->clear();
 }

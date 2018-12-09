@@ -52,6 +52,9 @@ int		dn::Application::run()
 	while (dn::Application::_running)
 	{
 		glfwPollEvents();
+		/* Calling update callback of the application */
+		if (dn::Application::_updateCallback)
+			dn::Application::_updateCallback();
 		/* Each window must be updated */
 		for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end();)
 		{
@@ -62,9 +65,8 @@ int		dn::Application::run()
 				dn::Application::_context = *it;
 			}
 
-			/* Calling update callback of the application */
-			if (dn::Application::_updateCallback)
-				dn::Application::_updateCallback();
+			if ((*it)->_flags & DN_AUTOCLEAR)
+				(*it)->clear();
 			/* Calling update callback of the current window */
 			dn::Application::windowUpdateCallback(*it);
 			glfwSwapBuffers((*it)->_glfw);
@@ -121,7 +123,9 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 		p_window->iconify();
 	if (!(p_window->_flags & DN_VISIBLE))
 		p_window->hide();
-	
+	glfwSetWindowOpacity(p_window->_glfw, p_window->_opacity);
+
+
 	glfwSetKeyCallback(p_window->_glfw, dn::Application::windowKeyCallback);
 	glfwSetWindowSizeCallback(p_window->_glfw, dn::Application::windowSizeCallback);
 	glfwSetWindowPosCallback(p_window->_glfw, dn::Application::windowPosCallback);

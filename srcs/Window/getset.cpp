@@ -81,3 +81,11 @@ void		dn::Window::setClearColor(const float &p_r, const float &p_g, const float 
 {
 	this->_clearColor.set(p_r, p_g, p_b);
 }
+
+float		dn::Window::opacity() const { return (this->_opacity); }
+void		dn::Window::setOpacity(const float &p_opacity)
+{
+	this->_opacity = p_opacity;
+	if (this->_glfw)
+		glfwSetWindowOpacity(this->_glfw, this->_opacity);
+}
