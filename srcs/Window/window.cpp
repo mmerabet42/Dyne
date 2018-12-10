@@ -8,10 +8,12 @@
 dn::Window::Window(const int &p_width, const int &p_height, const std::string &p_title)
 	: _x(0), _y(0), _width(p_width), _height(p_height), _title(p_title), _glfw(nullptr),
 	_flags(DN_VISIBLE), _clearColor(1.f, 1.f, 1.f, 1.f), _opacity(1.f),
+	_framebufferWidth(0), _framebufferHeight(0),
 
 	_keyCb(nullptr), _startCb(nullptr), _updateCb(nullptr), _sizeCb(nullptr),
-	_posCb(nullptr), _closeCb(nullptr), _focusCb(nullptr)
+	_posCb(nullptr), _closeCb(nullptr), _focusCb(nullptr), _maximizeCb(nullptr)
 {
+	// Adding the window to the application.
 	this->_windowid = dn::Application::addWindow(this);
 }
 

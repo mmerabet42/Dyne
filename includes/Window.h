@@ -5,19 +5,7 @@
 # include "GLFW/glfw3.h"
 # include "Color.h"
 # include "Funcs.h"
-
-# define DN_CLOSED (1 << 0)
-# define DN_POS_SPECIFIED (1 << 1)
-# define DN_ICONIFIED (1 << 2)
-# define DN_VISIBLE (1 << 3)
-# define DN_AUTOCLEAR (1 << 4)
-# define DN_FLAG_NUM 5
-
-# define DN_CUSTOM_FLAG0 (1 << (DN_FLAG_NUM + 0))
-# define DN_CUSTOM_FLAG1 (1 << (DN_FLAG_NUM + 1))
-# define DN_CUSTOM_FLAG2 (1 << (DN_FLAG_NUM + 2))
-# define DN_CUSTOM_FLAG4 (1 << (DN_FLAG_NUM + 3))
-# define DN_CUSTOM_FLAG5 (1 << (DN_FLAG_NUM + 4))
+# include "Codes.h"
 
 namespace dn
 {
@@ -79,14 +67,16 @@ namespace dn
 			float	opacity() const;
 			void	setOpacity(const float &p_opacity);
 
-		void	setStartCb(dn::startCbFunc p_callback);
-		void	setUpdateCb(dn::updateCbFunc p_callback);
-		void	setCloseCb(dn::closeCbFunc p_callback);
+		void	setStartCb(const dn::startFunc &p_callback);
+		void	setUpdateCb(const dn::updateFunc &p_callback);
+		void	setCloseCb(const dn::closeFunc &p_callback);
 
-		void	setKeyCb(dn::keyCbFunc p_callback);
-		void	setSizeCb(dn::sizeCbFunc p_callback);
-		void	setPosCb(dn::posCbFunc p_callback);
-		void	setFocusCb(dn::focusCbFunc p_callback);
+		void	setKeyCb(const dn::keyFunc &p_callback);
+		void	setSizeCb(const dn::sizeFunc &p_callback);
+		void	setPosCb(const dn::posFunc &p_callback);
+		void	setFocusCb(const dn::focusFunc &p_callback);
+		void	setMaximizeCb(const dn::maximizeFunc &p_callback);
+		void	setFramebufferSizeCb(const dn::framebufferSizeFunc &p_callback);
 
 	private:
 		int			_x;
@@ -94,6 +84,8 @@ namespace dn
 
 		int			_width;
 		int			_height;
+		int			_framebufferWidth;
+		int			_framebufferHeight;
 
 		std::string	_title;
 
@@ -107,14 +99,15 @@ namespace dn
 
 		dn::Color	_clearColor;
 
-		dn::startCbFunc		_startCb;
-		dn::updateCbFunc	_updateCb;
-		dn::closeCbFunc		_closeCb;
-		
-		dn::keyCbFunc		_keyCb;
-		dn::sizeCbFunc		_sizeCb;
-		dn::posCbFunc		_posCb;
-		dn::focusCbFunc		_focusCb;
+		dn::startFunc			_startCb;
+		dn::updateFunc			_updateCb;
+		dn::closeFunc			_closeCb;
+		dn::keyFunc				_keyCb;
+		dn::sizeFunc			_sizeCb;
+		dn::posFunc				_posCb;
+		dn::focusFunc			_focusCb;
+		dn::maximizeFunc		_maximizeCb;
+		dn::framebufferSizeFunc	_framebufferSizeCb;
 
 		/* The dn::Application class has access to all of the dn::Window attributes. */
 		friend class dn::Application;

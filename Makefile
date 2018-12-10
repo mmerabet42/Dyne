@@ -9,10 +9,10 @@ OUT			=	a.out
 
 OSNAME		=	$(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	=	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT)
+	COMPILE	=	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT) -g3 -fsanitize=address
 endif
 ifeq ($(OSNAME),Darwin)
-	COMPILE =	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)
+	COMPILE =	$(CC) $(MAIN_FILE) $(NAME) libft/libft.a -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT) -g3 -fsanitize=address
 endif
 
 SRCD		=	srcs/
