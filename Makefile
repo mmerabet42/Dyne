@@ -82,7 +82,7 @@ fclean:
 	@rm -f $(NAME)
 
 re:
-	@make fclean
+	@make clean
 	@make all
 
 main:

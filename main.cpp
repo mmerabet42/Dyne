@@ -7,83 +7,94 @@ extern "C" {
 #include "ft_lexiq.h"
 #include "ft_printf.h"
 }
+
+#define DN_APPLICATION_FREEWINDOWS
 #include "Window.h"
 #include "Application.h"
 
+#define GLSL(CODE) "#version 330 core\n" #CODE
+
+static const char *g_vertexSource = GLSL(
+	in vec2 position;
+	in vec4 color;
+	out vec4 ocolor;
+	void main()
+	{
+		gl_Position = vec4(position, 0, 1);
+		ocolor = color;
+	}
+);
+
+static const char *g_fragmentSource = GLSL(
+	in vec4 ocolor;
+	out vec4 color;
+	void main()
+	{
+		color = ocolor;
+	}
+);
+
+// Compiles a shader program, specifying the vertex source and the fragment source.
+int compileProgram(const char *p_vertex, const char *p_fragment);
+
 int main()
 {
-	dn::Window	*win = new dn::Window(600, 400, "My Window");
-	dn::Window	*win2 = new dn::Window(600, 400, "lol");
-//	dn::Window	*win3 = new dn::Window(500, 20, "pzoouibhvjcs");
+	dn::Window *win = new dn::Window(600, 400, "My Window");
 
-	win2->setPos(300, 500);
-	win2->setClearColor(1.f, 0.f, 0.f);
-	win2->setFlag(DN_AUTOCLEAR, true);
-
-	//	win3->setPos(10, 50);
-	//	win3->setClearColor(1.f, 0.f, 0.f);
-	//	win3->setFlag(DN_AUTOCLEAR, true);
-
-	win->setOpacity(0.5f);
-	win->setClearColor(0.1f, 0.1f, 0.1f);
-
-	win->setFramebufferSizeCb([](dn::Window *win, int w, int h) {
-		std::cout << "frame buffer size" << std::endl;
-	});
-
-	win->setCloseCb([](dn::Window *win) {
-		if (!win->getFlag(DN_CUSTOM_FLAG0))
-		{
-			std::cout << "Cannot be closed click on 'L' to enable closing" << std::endl;
-			win->open();
-		}
-	});
-
-	win->setStartCb([](dn::Window *win) {
-		std::cout << "Window '" << win->title() << "' oppened" << std::endl;
-	});
+//	GLuint progId = compileProgram(g_vertexShader, g_fragmentSource);
+	GLuint progId = -1;
+	if (progId == -1)
+		return (dn::Application::terminate());
 
 	win->setUpdateCb([](dn::Window *win) {
-		static int	scl = 3;
-
 		win->clear();
 
 		if (win->getKey(DN_KEY_ESCAPE))
-			win->close();
-		if (win->getKey(DN_KEY_L))
-		{
-			std::cout << "Closing the window is now possible !" << std::endl;
-			win->setClearColor(0.f, 1.f, 1.f);
-			win->setFlag(DN_CUSTOM_FLAG0, true);
-		}
-
-		if (win->getKey(DN_KEY_E))
-			std::cout << "E pressed" << std::endl;
-
-		if (win->getKey(DN_KEY_LEFT_SHIFT))
-		{
-			if (win->getKey(DN_KEY_LEFT_CONTROL) && win->getKey(DN_KEY_UP))
-				win->height(win->height() - 1);
-			else if (win->getKey(DN_KEY_UP))
-				win->y(win->y() - scl);
-
-			if (win->getKey(DN_KEY_LEFT_CONTROL) && win->getKey(DN_KEY_DOWN))
-				win->height(win->height() + 1);
-			else if (win->getKey(DN_KEY_DOWN))
-				win->y(win->y() + scl);
-
-			if (win->getKey(DN_KEY_LEFT_CONTROL) && win->getKey(DN_KEY_LEFT))
-				win->width(win->width() - 1);
-			else if (win->getKey(DN_KEY_LEFT))
-				win->x(win->x() - scl);
-
-			if (win->getKey(DN_KEY_LEFT_CONTROL) && win->getKey(DN_KEY_RIGHT))
-				win->width(win->width() + 1);
-			else if (win->getKey(DN_KEY_RIGHT))
-				win->x(win->x() + scl);
-		}
-
+			dn::Application::stop();
 	});
 
-	dn::Application::run();
+	return (dn::Application::run());
+}
+
+// Compiles a shader program
+int compileProgram(const char *p_vertex, const char *p_fragment)
+{
+	GLuint progId, vertexId, fragmentId;
+	GLint status;
+	char errlog[512];
+
+	// Creating the vertex shader
+	vertexId = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexId, 1, &p_vertex, nullptr);
+	glCompileShader(vertexId);
+	// If a compilation error occured
+	glGetShaderiv(vertexId, GL_COMPILE_STATUS, &status);
+	if (!status)
+	{
+		glGetShaderInfoLog(vertexId, 512, nullptr, errlog);
+		std::cout << "Shader compilation error: " << errlog << std::endl;
+		return (-1);
+	}
+
+	// Creating the fragment shader
+	fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentId, 1, &p_fragment, nullptr);
+	glCompileShader(fragmentId);
+	glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &status);
+	if (!status)
+	{
+		glGetShaderInfoLog(fragmentId, 512, nullptr, errlog);
+		std::cout << "Shader compilation error: " << errlog << std::endl;
+		return (-1);
+	}
+
+	// Creating the program
+	progId = glCreateProgram();
+	// Attaching the shaders to the program
+	glAttachShader(progId, vertexId);
+	glAttachShader(progId, fragmentId);
+	// And finally linking the program
+	glLinkProgram(progId);
+	// Returning the id of the program
+	return (progId);
 }

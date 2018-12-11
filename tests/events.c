@@ -607,15 +607,6 @@ int main(int argc, char** argv)
 		glfwSetWindowContentScaleCallback(slots[i].window, window_content_scale_callback);
         
         
-		glfwSetWindowRefreshCallback(slots[i].window, window_refresh_callback);
-        
-        
-		glfwSetMouseButtonCallback(slots[i].window, mouse_button_callback);
-        
-		glfwSetCursorPosCallback(slots[i].window, cursor_position_callback);
-        
-		glfwSetCursorEnterCallback(slots[i].window, cursor_enter_callback);
-        
 		glfwSetScrollCallback(slots[i].window, scroll_callback);
         
 		glfwSetCharCallback(slots[i].window, char_callback);

@@ -7,7 +7,6 @@
 # include "GLFW/glfw3.h"
 # include "Codes.h"
 
-
 namespace dn
 {
 	/* Instead of including Window.h */
@@ -19,6 +18,7 @@ namespace dn
 
 		/* Start the application */
 		static int run();
+		static int terminate();
 		static void stop();
 		static bool running();
 
@@ -48,6 +48,7 @@ namespace dn
 
 		/* Becomes true once the run() function is called */
 		static bool	_running;
+		static bool	_stopped;
 		static int	_flags;
 
 		/* The window that has the current context */
@@ -82,6 +83,12 @@ namespace dn
 		static void windowFocusCallback(GLFWwindow *p_window, int p_focused);
 		static void windowMaximizeCallback(GLFWwindow *p_window, int p_maximized);
 		static void windowFramebufferSizeCallback(GLFWwindow *p_window, int p_width, int p_height);
+		static void windowRefreshCallback(GLFWwindow *p_window);
+		static void windowMouseButtonCallback(GLFWwindow *p_window, int p_button, int p_action, int p_mods);
+		static void windowMouseMoveCallback(GLFWwindow *p_window, double p_x, double p_y);
+		static void windowMouseEnterCallback(GLFWwindow *p_window, int p_entered);
+		static void windowScrollCallback(GLFWwindow *p_window, double p_x, double p_y);
+		static void windowDropCallback(GLFWwindow *p_window, int p_count, const char **p_paths);
 
 		friend class dn::Window;
 	};

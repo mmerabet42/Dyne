@@ -48,3 +48,33 @@ void	dn::Window::setFramebufferSizeCb(const dn::framebufferSizeFunc &p_callback)
 {
 	this->_framebufferSizeCb = p_callback;
 }
+
+void	dn::Window::setRefreshCb(const dn::refreshFunc &p_callback)
+{
+	this->_refreshCb = p_callback;
+}
+
+void	dn::Window::setMouseButtonCb(const dn::mouseButtonFunc &p_callback)
+{
+	this->_mouseButtonCb = p_callback;
+}
+
+void	dn::Window::setMouseMoveCb(const dn::mouseMoveFunc &p_callback)
+{
+	this->_mouseMoveCb = p_callback;
+}
+
+void	dn::Window::setMouseEnterCb(const dn::mouseEnterFunc &p_callback)
+{
+	this->_mouseEnterCb = p_callback;
+}
+
+void	dn::Window::setScrollCb(const dn::scrollFunc &p_callback)
+{
+	this->_scrollCb = p_callback;
+}
+
+void	dn::Window::setDropCb(const dn::dropFunc &p_callback)
+{
+	this->_dropCb = p_callback;
+}

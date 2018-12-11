@@ -7,6 +7,7 @@ dn::Window								*dn::Application::_focused = nullptr;
 std::vector<dn::Window *>				dn::Application::_windows;
 std::map<GLFWwindow *, dn::Window *>	dn::Application::_glfwWindows;
 bool									dn::Application::_running = false;
+bool									dn::Application::_stopped = false;
 std::function<void()>					dn::Application::_startCallback;
 std::function<void()>					dn::Application::_updateCallback;
 

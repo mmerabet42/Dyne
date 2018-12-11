@@ -89,3 +89,37 @@ void		dn::Window::setOpacity(const float &p_opacity)
 	if (this->_glfw)
 		glfwSetWindowOpacity(this->_glfw, this->_opacity);
 }
+
+void		dn::Window::setMinLimits(const int &p_width, const int &p_height)
+{
+	this->_minwidth = p_width;
+	this->_minheight = p_height;
+	if (this->_glfw)
+		glfwSetWindowSizeLimits(this->_glfw, p_width, p_height, this->_maxwidth, this->_maxheight);
+	else
+		this->_flags |= DN_LIMITS_SPECIFIED;
+}
+
+void		dn::Window::setMaxLimits(const int &p_width, const int &p_height)
+{
+	this->_maxwidth = p_width;
+	this->_maxheight = p_height;
+	if (this->_glfw)
+		glfwSetWindowSizeLimits(this->_glfw, this->_minwidth, this->_minwidth, p_width, p_height);
+	else
+		this->_flags |= DN_LIMITS_SPECIFIED;
+}
+
+void		dn::Window::setSizeLimits(const int &p_minwidth, const int &p_maxwidth, const int &p_minheight, const int &p_maxheight)
+{
+	this->_minwidth = p_minwidth;
+	this->_maxwidth = p_maxwidth;
+	this->_minheight = p_minheight;
+	this->_maxheight = p_maxheight;
+	if (this->_glfw)
+		glfwSetWindowSizeLimits(this->_glfw, p_minwidth, p_minheight, p_maxwidth, p_maxheight);
+	else
+		this->_flags |= DN_LIMITS_SPECIFIED;
+}
+
+GLFWwindow	*dn::Window::glfw() const { return (this->_glfw); }

@@ -6,6 +6,7 @@
 # include "Color.h"
 # include "Funcs.h"
 # include "Codes.h"
+# include <iostream>
 
 namespace dn
 {
@@ -45,6 +46,10 @@ namespace dn
 			int		height() const;
 			void	height(const int &p_height);
 
+			void	setMinLimits(const int &p_width, const int &p_height);
+			void	setMaxLimits(const int &p_width, const int &p_height);
+			void	setSizeLimits(const int &p_minwidth, const int &p_minheight, const int &p_maxwidth, const int &p_maxheight);
+
 			int		x() const;
 			void	x(const int &p_x);
 
@@ -67,6 +72,8 @@ namespace dn
 			float	opacity() const;
 			void	setOpacity(const float &p_opacity);
 
+			GLFWwindow	*glfw() const;
+
 		void	setStartCb(const dn::startFunc &p_callback);
 		void	setUpdateCb(const dn::updateFunc &p_callback);
 		void	setCloseCb(const dn::closeFunc &p_callback);
@@ -77,6 +84,12 @@ namespace dn
 		void	setFocusCb(const dn::focusFunc &p_callback);
 		void	setMaximizeCb(const dn::maximizeFunc &p_callback);
 		void	setFramebufferSizeCb(const dn::framebufferSizeFunc &p_callback);
+		void	setRefreshCb(const dn::refreshFunc &p_callback);
+		void	setMouseButtonCb(const dn::mouseButtonFunc &p_callback);
+		void	setMouseMoveCb(const dn::mouseMoveFunc &p_callback);
+		void	setMouseEnterCb(const dn::mouseEnterFunc &p_callback);
+		void	setScrollCb(const dn::scrollFunc &p_callback);
+		void	setDropCb(const dn::dropFunc &p_callback);
 
 	private:
 		int			_x;
@@ -84,8 +97,14 @@ namespace dn
 
 		int			_width;
 		int			_height;
+
 		int			_framebufferWidth;
 		int			_framebufferHeight;
+
+		int			_minwidth;
+		int			_maxwidth;
+		int			_minheight;
+		int			_maxheight;
 
 		std::string	_title;
 
@@ -108,6 +127,12 @@ namespace dn
 		dn::focusFunc			_focusCb;
 		dn::maximizeFunc		_maximizeCb;
 		dn::framebufferSizeFunc	_framebufferSizeCb;
+		dn::refreshFunc			_refreshCb;
+		dn::mouseButtonFunc		_mouseButtonCb;
+		dn::mouseMoveFunc		_mouseMoveCb;
+		dn::mouseEnterFunc		_mouseEnterCb;
+		dn::scrollFunc			_scrollCb;
+		dn::dropFunc			_dropCb;
 
 		/* The dn::Application class has access to all of the dn::Window attributes. */
 		friend class dn::Application;

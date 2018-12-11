@@ -7,11 +7,14 @@
 
 dn::Window::Window(const int &p_width, const int &p_height, const std::string &p_title)
 	: _x(0), _y(0), _width(p_width), _height(p_height), _title(p_title), _glfw(nullptr),
-	_flags(DN_VISIBLE), _clearColor(1.f, 1.f, 1.f, 1.f), _opacity(1.f),
+	_flags(DN_VISIBLE), _clearColor(0.f, 0.f, 0.f, 1.f), _opacity(1.f),
 	_framebufferWidth(0), _framebufferHeight(0),
+	_minwidth(DN_NONE), _minheight(DN_NONE), _maxwidth(DN_NONE), _maxheight(DN_NONE),
 
 	_keyCb(nullptr), _startCb(nullptr), _updateCb(nullptr), _sizeCb(nullptr),
-	_posCb(nullptr), _closeCb(nullptr), _focusCb(nullptr), _maximizeCb(nullptr)
+	_posCb(nullptr), _closeCb(nullptr), _focusCb(nullptr), _maximizeCb(nullptr),
+	_refreshCb(nullptr), _mouseButtonCb(nullptr), _mouseMoveCb(nullptr), _mouseEnterCb(nullptr),
+	_scrollCb(nullptr), _dropCb(nullptr)
 {
 	// Adding the window to the application.
 	this->_windowid = dn::Application::addWindow(this);

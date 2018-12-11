@@ -8,13 +8,16 @@
 bool	dn::Application::running() { return (dn::Application::_running); }
 int		dn::Application::run()
 {
-	// If the application is curently running, an error is returned.
+	// If the application is curently running, we stop the function at this point.
 	if (dn::Application::_running)
-		return (DN_ALRDY_RUNNING);
+		return (0);
+	// If the application has been stopped before it has run, then DN_STOPPED is returned.
+	else if (dn::Application::_stopped)
+		return (dn::Application::destroyWindows(), DN_STOPPED);
 
 	// If glfw failed to init, an error is returned.
 	if (!glfwInit())
-		return (dn::Application::destroyWindows(), DN_GLFW_FAIL);
+		return (DN_GLFW_FAIL);
 
 	// Settings of some basic window hints.
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -85,8 +88,24 @@ int		dn::Application::run()
 			dn::Application::_running = false;
 	}
 
-	// Once the main loop is done, GLFW terminates.
+	// Once the main loop is done, we clean and free everything.
+	dn::Application::destroyWindows();
 	glfwTerminate();
+	return (0);
+}
+
+void		dn::Application::stop()
+{
+	dn::Application::_running = false;
+	dn::Application::_stopped = true;
+}
+
+int			dn::Application::terminate()
+{
+	dn::Application::destroyWindows();
+	if (dn::Application::_running)
+		glfwTerminate();
+	dn::Application::_running = false;
 	return (0);
 }
 
@@ -111,7 +130,7 @@ int	dn::Application::addWindow(dn::Window *p_window)
 int	dn::Application::createGLFWwindow(dn::Window *p_window)
 {
 	// Creates the GLFW window.
-	p_window->_glfw = glfwCreateWindow(p_window->width(), p_window->height(), p_window->title().c_str(), nullptr, nullptr);
+	p_window->_glfw = glfwCreateWindow(p_window->_width, p_window->_height, p_window->_title.c_str(), nullptr, nullptr);
 
 	// If GLFW failed to create the window, an error is returned.
 	if (!p_window->_glfw)
@@ -122,12 +141,14 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 	// If the position of the window has been specified before the application has started,
 	// the GLFW window position is set.
 	if (p_window->_flags & DN_POS_SPECIFIED)
+	{
 		glfwSetWindowPos(p_window->_glfw, p_window->_x, p_window->_y);
+		p_window->_flags &= ~DN_POS_SPECIFIED;
+	}
 	// Otherwise if it has not been specified, the current position of the window
 	// is set to the DN window.
 	else
 		glfwGetWindowPos(p_window->_glfw, &p_window->_x, &p_window->_y);
-
 	// If the window has been iconified before the application has run,
 	// the GLFW window is iconified.
 	if (p_window->_flags & DN_ICONIFIED)
@@ -137,7 +158,13 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 		p_window->hide();
 	// Sets the opacity of the window.
 	glfwSetWindowOpacity(p_window->_glfw, p_window->_opacity);
-	
+
+	if (p_window->_flags & DN_LIMITS_SPECIFIED)
+	{
+		glfwSetWindowSizeLimits(p_window->_glfw, p_window->_minwidth, p_window->_minheight, p_window->_maxwidth, p_window->_maxheight);
+		p_window->_flags &= ~DN_LIMITS_SPECIFIED;
+	}
+
 	// Links all the callbacks to the application callbacks.
 	glfwSetKeyCallback(p_window->_glfw, dn::Application::windowKeyCallback);
 	glfwSetWindowSizeCallback(p_window->_glfw, dn::Application::windowSizeCallback);
@@ -146,6 +173,12 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 	glfwSetWindowFocusCallback(p_window->_glfw, dn::Application::windowFocusCallback);
 	glfwSetWindowMaximizeCallback(p_window->_glfw, dn::Application::windowMaximizeCallback);
 	glfwSetFramebufferSizeCallback(p_window->_glfw, dn::Application::windowFramebufferSizeCallback);
+	glfwSetWindowRefreshCallback(p_window->_glfw, dn::Application::windowRefreshCallback);
+	glfwSetMouseButtonCallback(p_window->_glfw, dn::Application::windowMouseButtonCallback);
+	glfwSetCursorPosCallback(p_window->_glfw, dn::Application::windowMouseMoveCallback);
+	glfwSetCursorEnterCallback(p_window->_glfw, dn::Application::windowMouseEnterCallback);
+	glfwSetScrollCallback(p_window->_glfw, dn::Application::windowScrollCallback);
+	glfwSetDropCallback(p_window->_glfw, dn::Application::windowDropCallback);
 
 	dn::Application::_glfwWindows.insert(std::make_pair(p_window->_glfw, p_window));
 	dn::Application::_focused = p_window;
@@ -157,7 +190,9 @@ dn::Window	*dn::Application::focusedWindow() { return (dn::Application::_focused
 
 void	dn::Application::destroyWindows()
 {
-	
+	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end();)
+		dn::Application::destroyWindow(it);
+	dn::Application::_glfwWindows.clear();
 }
 
 // Sets the next iterator of the window vector.
@@ -167,10 +202,11 @@ void	dn::Application::destroyWindow(std::vector<dn::Window * >::iterator &p_it)
 	(*p_it)->setFlag(DN_CLOSED, true);
 	dn::Application::_glfwWindows.erase((*p_it)->_glfw);
 	glfwDestroyWindow((*p_it)->_glfw);
-	// If the DN_FREEATCLOSE flag of the window is enabled,
-	// or if the DN_FREEWINDOWS flag of the application is enable,
+	// If DN_APPLICATION_FREEWINDOWS_DEFINED is defined,
+	// or if the DN_FREEATCLOSE flag of the window is enabled,
+	// or if the DN_FREEWINDOWS flag of the application is enabled,
 	// the window is freed.
 	if ((*p_it)->getFlag(DN_FREEATCLOSE) || (dn::Application::_flags & DN_FREEWINDOWS))
 		delete *p_it;
-	p_it = dn::Application::_windows.erase(p_it);
+p_it = dn::Application::_windows.erase(p_it);
 }

@@ -143,6 +143,8 @@
 # define DN_MOUSE_RIGHT			GLFW_MOUSE_BUTTON_RIGHT
 # define DN_MOUSE_MIDDLE		GLFW_MOUSE_BUTTON_MIDDLE
 
+# define DN_NONE				GLFW_DONT_CARE
+
 # define DN_CLOSED				(1 << 0)
 # define DN_POS_SPECIFIED		(1 << 1)
 # define DN_ICONIFIED			(1 << 2)
@@ -151,7 +153,8 @@
 # define DN_MAXIMIZED			(1 << 5)
 # define DN_FREEATCLOSE			(1 << 6)
 # define DN_FREEWINDOWS			(1 << 7)
-# define DN_FLAG_NUM			8
+# define DN_LIMITS_SPECIFIED	(1 << 8)
+# define DN_FLAG_NUM			9
 
 # define DN_CUSTOM_FLAG0		(1 << (DN_FLAG_NUM + 0))
 # define DN_CUSTOM_FLAG1		(1 << (DN_FLAG_NUM + 1))
@@ -159,9 +162,9 @@
 # define DN_CUSTOM_FLAG4		(1 << (DN_FLAG_NUM + 3))
 # define DN_CUSTOM_FLAG5		(1 << (DN_FLAG_NUM + 4))
 
-/* Flags for application */
 enum {
 	DN_OK,
+	DN_STOPPED,
 	DN_GLFW_FAIL,
 	DN_GLEW_FAIL,
 	DN_ALRDY_RUNNING,
