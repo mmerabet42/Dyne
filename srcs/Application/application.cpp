@@ -32,6 +32,7 @@ int		dn::Application::run()
 			return (dn::Application::destroyWindows(), DN_WINDOW_FAIL);
 
 	// If glew failed to init, an error is returned.
+	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 		return (dn::Application::destroyWindows(), DN_GLEW_FAIL);
 
@@ -158,12 +159,10 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 		p_window->hide();
 	// Sets the opacity of the window.
 	glfwSetWindowOpacity(p_window->_glfw, p_window->_opacity);
-
-	if (p_window->_flags & DN_LIMITS_SPECIFIED)
-	{
-		glfwSetWindowSizeLimits(p_window->_glfw, p_window->_minwidth, p_window->_minheight, p_window->_maxwidth, p_window->_maxheight);
-		p_window->_flags &= ~DN_LIMITS_SPECIFIED;
-	}
+	glfwSetWindowSizeLimits(p_window->_glfw,
+		p_window->_minwidth, p_window->_minheight,
+		p_window->_maxwidth, p_window->_maxheight);
+	glfwGetFramebufferSize(p_window->_glfw, &p_window->_framebufferWidth, &p_window->_framebufferHeight);
 
 	// Links all the callbacks to the application callbacks.
 	glfwSetKeyCallback(p_window->_glfw, dn::Application::windowKeyCallback);

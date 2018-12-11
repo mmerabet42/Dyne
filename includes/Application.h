@@ -30,6 +30,7 @@ namespace dn
 
 	static void setStartCb(const std::function<void()> &p_callback);
 	static void setUpdateCb(const std::function<void()> &p_callback);
+	static void setExitCb(const std::function<void()> &p_callback);
 
 	static dn::Window *getWindow(const size_t &p_index);
 	static dn::Window *getWindow(dn::Window *p_window);
@@ -67,6 +68,7 @@ namespace dn
 		/* Application callbacks */
 		static std::function<void()>	_startCallback;
 		static std::function<void()>	_updateCallback;
+		static std::function<void()>	_exitCallback;
 
 		/*
 		 * Global callbacks called directly by the GLFW library.

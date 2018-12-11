@@ -153,8 +153,7 @@
 # define DN_MAXIMIZED			(1 << 5)
 # define DN_FREEATCLOSE			(1 << 6)
 # define DN_FREEWINDOWS			(1 << 7)
-# define DN_LIMITS_SPECIFIED	(1 << 8)
-# define DN_FLAG_NUM			9
+# define DN_FLAG_NUM			8
 
 # define DN_CUSTOM_FLAG0		(1 << (DN_FLAG_NUM + 0))
 # define DN_CUSTOM_FLAG1		(1 << (DN_FLAG_NUM + 1))

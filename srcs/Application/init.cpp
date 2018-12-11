@@ -10,6 +10,7 @@ bool									dn::Application::_running = false;
 bool									dn::Application::_stopped = false;
 std::function<void()>					dn::Application::_startCallback;
 std::function<void()>					dn::Application::_updateCallback;
+std::function<void()>					dn::Application::_exitCallback;
 
 void dn::Application::setStartCb(const std::function<void()> &p_callback)
 {
@@ -19,6 +20,11 @@ void dn::Application::setStartCb(const std::function<void()> &p_callback)
 void dn::Application::setUpdateCb(const std::function<void()> &p_callback)
 {
 	dn::Application::_updateCallback = p_callback;
+}
+
+void dn::Application::setExitCb(const std::function<void()> &p_callback)
+{
+	dn::Application::_exitCallback = p_callback;
 }
 
 dn::Window *dn::Application::getWindow(const size_t &p_index)

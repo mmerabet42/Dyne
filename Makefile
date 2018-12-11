@@ -17,7 +17,7 @@ endif
 
 SRCD		=	srcs/
 INCLUDES_D	=	includes/
-_INCLUDES	=	eng.h Window.h Application.h Color.h Funcs.h
+_INCLUDES	=	eng.h Window.h Application.h Color.h Funcs.h Event.h
 
 _MAIN_FS	=
 _APP_FS		=	application.cpp callbacks.cpp init.cpp

@@ -46,6 +46,9 @@ namespace dn
 			int		height() const;
 			void	height(const int &p_height);
 
+			int		framebufferWidth() const;
+			int		framebufferHeight() const;
+
 			void	setMinLimits(const int &p_width, const int &p_height);
 			void	setMaxLimits(const int &p_width, const int &p_height);
 			void	setSizeLimits(const int &p_minwidth, const int &p_minheight, const int &p_maxwidth, const int &p_maxheight);
@@ -64,6 +67,7 @@ namespace dn
 
 			dn::Color	clearColor() const;
 			void		setClearColor(const float &p_r, const float &p_g, const float &p_b);
+			void		setClearColor(const int &p_r, const int &p_g, const int &p_b);
 
 			int		flags() const;
 			void	setFlag(const int &p_flag, const bool &p_set = true);

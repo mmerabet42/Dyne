@@ -22,6 +22,9 @@ void	dn::Window::height(const int &p_height)
 		glfwSetWindowSize(this->_glfw, this->_width, this->_height);
 }
 
+int		dn::Window::framebufferWidth() const { return (this->_framebufferWidth); }
+int		dn::Window::framebufferHeight() const { return (this->_framebufferHeight); }
+
 void	dn::Window::setSize(const int &p_width, const int &p_height)
 {
 	if (p_width < 0 || p_height < 0)
@@ -81,6 +84,10 @@ void		dn::Window::setClearColor(const float &p_r, const float &p_g, const float 
 {
 	this->_clearColor.set(p_r, p_g, p_b);
 }
+void		dn::Window::setClearColor(const int &p_r, const int &p_g, const int &p_b)
+{
+	this->_clearColor.set(p_r, p_g, p_b);
+}
 
 float		dn::Window::opacity() const { return (this->_opacity); }
 void		dn::Window::setOpacity(const float &p_opacity)
@@ -96,8 +103,6 @@ void		dn::Window::setMinLimits(const int &p_width, const int &p_height)
 	this->_minheight = p_height;
 	if (this->_glfw)
 		glfwSetWindowSizeLimits(this->_glfw, p_width, p_height, this->_maxwidth, this->_maxheight);
-	else
-		this->_flags |= DN_LIMITS_SPECIFIED;
 }
 
 void		dn::Window::setMaxLimits(const int &p_width, const int &p_height)
@@ -106,8 +111,6 @@ void		dn::Window::setMaxLimits(const int &p_width, const int &p_height)
 	this->_maxheight = p_height;
 	if (this->_glfw)
 		glfwSetWindowSizeLimits(this->_glfw, this->_minwidth, this->_minwidth, p_width, p_height);
-	else
-		this->_flags |= DN_LIMITS_SPECIFIED;
 }
 
 void		dn::Window::setSizeLimits(const int &p_minwidth, const int &p_maxwidth, const int &p_minheight, const int &p_maxheight)
@@ -118,8 +121,6 @@ void		dn::Window::setSizeLimits(const int &p_minwidth, const int &p_maxwidth, co
 	this->_maxheight = p_maxheight;
 	if (this->_glfw)
 		glfwSetWindowSizeLimits(this->_glfw, p_minwidth, p_minheight, p_maxwidth, p_maxheight);
-	else
-		this->_flags |= DN_LIMITS_SPECIFIED;
 }
 
 GLFWwindow	*dn::Window::glfw() const { return (this->_glfw); }
