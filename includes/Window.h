@@ -6,7 +6,7 @@
 # include "Color.h"
 # include "Funcs.h"
 # include "Codes.h"
-# include <iostream>
+# include "Event.h"
 
 namespace dn
 {
@@ -35,6 +35,10 @@ namespace dn
 
 		void	focus();
 		bool	focused() const;
+
+		void	setContext(const bool &p_force = false);
+		void	setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height);
+		void	updateViewport();
 
 		int		getKey(const int &p_keycode) const;
 
@@ -94,6 +98,23 @@ namespace dn
 		void	setMouseEnterCb(const dn::mouseEnterFunc &p_callback);
 		void	setScrollCb(const dn::scrollFunc &p_callback);
 		void	setDropCb(const dn::dropFunc &p_callback);
+
+		dn::PriorityEvent<dn::Window *>						startEvent;
+		dn::PriorityEvent<dn::Window *>						updateEvent;
+		dn::PriorityEvent<dn::Window *>						closeEvent;
+
+		dn::PriorityEvent<dn::Window *, int, int, int>		keyEvent;
+		dn::PriorityEvent<dn::Window *, int, int>			sizeEvent;
+		dn::PriorityEvent<dn::Window *, int, int>			posEvent;
+		dn::PriorityEvent<dn::Window *, bool>				focusEvent;
+		dn::PriorityEvent<dn::Window *, bool>				maximizeEvent;
+		dn::PriorityEvent<dn::Window *, int, int>			framebufferSizeEvent;
+		dn::PriorityEvent<dn::Window *>						refreshEvent;
+		dn::PriorityEvent<dn::Window *, int, int, int>		mouseButtonEvent;
+		dn::PriorityEvent<dn::Window *, double, double>		mouseMoveEvent;
+		dn::PriorityEvent<dn::Window *, bool>				mouseEnterEvent;
+		dn::PriorityEvent<dn::Window *, double, double>		scrollEvent;
+		dn::PriorityEvent<dn::Window *, int, const char **>	dropEvent;
 
 	private:
 		int			_x;

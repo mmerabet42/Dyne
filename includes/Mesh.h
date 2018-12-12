@@ -6,7 +6,7 @@ namespace dn
 	class Mesh
 	{
 	public:
-
+		
 	private:
 		
 	};

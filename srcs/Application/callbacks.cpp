@@ -7,6 +7,8 @@ void	dn::Application::windowStartCallback(dn::Window *p_window)
 	/* Calling the appropriate callback */
 	if (p_window->_startCb)
 		p_window->_startCb(p_window);
+	if (!p_window->getFlag(DN_CLOSED))
+		p_window->startEvent.trigger(p_window);
 }
 
 void	dn::Application::windowUpdateCallback(dn::Window *p_window)
@@ -14,16 +16,21 @@ void	dn::Application::windowUpdateCallback(dn::Window *p_window)
 	/* Calling the appropriate callback */
 	if (p_window->_updateCb)
 		p_window->_updateCb(p_window);
+	if (!p_window->getFlag(DN_CLOSED))
+		p_window->updateEvent.trigger(p_window);
 }
 
 void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int p_scancode, int p_action, int p_mods)
 {
 	/* This statement will always evaluate to true, so it is not necessary to do it */
 	dn::Window *win = dn::Application::getWindow(p_window);
-	if (!win || !win->_keyCb)
+	if (!win)
 		return ;
 	/* Calling the appropriate callback */
-	win->_keyCb(win, p_keycode, p_action);
+	if (win->_keyCb)
+		win->_keyCb(win, p_keycode, p_action, p_mods);
+	if (!win->getFlag(DN_CLOSED))
+		win->keyEvent.trigger(win, p_keycode, p_action, p_mods);
 }
 
 void	dn::Application::windowSizeCallback(GLFWwindow *p_window, int p_width, int p_height)
@@ -38,6 +45,8 @@ void	dn::Application::windowSizeCallback(GLFWwindow *p_window, int p_width, int 
 	// Calling the appropriate callback.
 	if (win->_sizeCb)
 		win->_sizeCb(win, p_width, p_height);
+	if (!win->getFlag(DN_CLOSED))
+		win->sizeEvent.trigger(win, p_width, p_height);
 }
 
 void	dn::Application::windowPosCallback(GLFWwindow *p_window, int p_x, int p_y)
@@ -52,6 +61,8 @@ void	dn::Application::windowPosCallback(GLFWwindow *p_window, int p_x, int p_y)
 	/* Calling the appropriate callback */
 	if (win->_posCb)
 		win->_posCb(win, p_x, p_y);
+	if (!win->getFlag(DN_CLOSED))
+		win->posEvent.trigger(win, p_x, p_y);
 }
 
 void	dn::Application::windowCloseCallback(GLFWwindow *p_window)
@@ -63,6 +74,7 @@ void	dn::Application::windowCloseCallback(GLFWwindow *p_window)
 	/* Calling the appropriate callback */
 	if (win->_closeCb)
 		win->_closeCb(win);
+	win->closeEvent.trigger(win);
 }
 
 void	dn::Application::windowFocusCallback(GLFWwindow *p_window, int p_focused)
@@ -78,6 +90,8 @@ void	dn::Application::windowFocusCallback(GLFWwindow *p_window, int p_focused)
 	/* Calling the appropriate callback */
 	if (win->_focusCb)
 		win->_focusCb(win, p_focused);
+	if (!win->getFlag(DN_CLOSED))
+		win->focusEvent.trigger(win, p_focused);
 }
 
 void	dn::Application::windowMaximizeCallback(GLFWwindow *p_window, int p_maximized)
@@ -94,6 +108,8 @@ void	dn::Application::windowMaximizeCallback(GLFWwindow *p_window, int p_maximiz
 	/* calling the appropriate callback */
 	if (win->_maximizeCb)
 		win->_maximizeCb(win, p_maximized);
+	if (!win->getFlag(DN_CLOSED))
+		win->maximizeEvent.trigger(win, p_maximized);
 }
 
 void	dn::Application::windowFramebufferSizeCallback(GLFWwindow *p_window, int p_width, int p_height)
@@ -108,6 +124,8 @@ void	dn::Application::windowFramebufferSizeCallback(GLFWwindow *p_window, int p_
 	/* Calling the appropriate callback */
 	if (win->_framebufferSizeCb)
 		win->_framebufferSizeCb(win, p_width, p_height);
+	if (!win->getFlag(DN_CLOSED))
+		win->framebufferSizeEvent.trigger(win, p_width, p_height);
 }
 
 void	dn::Application::windowRefreshCallback(GLFWwindow *p_window)
@@ -119,6 +137,8 @@ void	dn::Application::windowRefreshCallback(GLFWwindow *p_window)
 	/* calling the appropriate callback */
 	if (win->_refreshCb)
 		win->_refreshCb(win);
+	if (!win->getFlag(DN_CLOSED))
+		win->refreshEvent.trigger(win);
 }
 
 void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_button , int p_action, int p_mods)
@@ -130,6 +150,8 @@ void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_butt
 	/* calling the appropriate callback */
 	if (win->_mouseButtonCb)
 		win->_mouseButtonCb(win, p_button, p_action, p_mods);
+	if (!win->getFlag(DN_CLOSED))
+		win->mouseButtonEvent.trigger(win, p_button, p_action, p_mods);
 }
 
 void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, double p_y)
@@ -141,6 +163,8 @@ void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, 
 	/* calling the appropriate callback */
 	if (win->_mouseMoveCb)
 		win->_mouseMoveCb(win, p_x, p_y);
+	if (!win->getFlag(DN_CLOSED))
+		win->mouseMoveEvent.trigger(win, p_x, p_y);
 }
 
 void	dn::Application::windowMouseEnterCallback(GLFWwindow *p_window, int p_entered)
@@ -152,6 +176,8 @@ void	dn::Application::windowMouseEnterCallback(GLFWwindow *p_window, int p_enter
 	/* calling the appropriate callback */
 	if (win->_mouseEnterCb)
 		win->_mouseEnterCb(win, p_entered);
+	if (!win->getFlag(DN_CLOSED))
+		win->mouseEnterEvent.trigger(win, p_entered);
 }
 
 void	dn::Application::windowScrollCallback(GLFWwindow *p_window, double p_x, double p_y)
@@ -163,6 +189,8 @@ void	dn::Application::windowScrollCallback(GLFWwindow *p_window, double p_x, dou
 	/* calling the appropriate callback */
 	if (win->_scrollCb)
 		win->_scrollCb(win, p_x, p_y);
+	if (!win->getFlag(DN_CLOSED))
+		win->scrollEvent.trigger(win, p_x, p_y);
 }
 
 void	dn::Application::windowDropCallback(GLFWwindow *p_window, int p_count, const char **p_paths)
@@ -174,4 +202,6 @@ void	dn::Application::windowDropCallback(GLFWwindow *p_window, int p_count, cons
 	/* calling the appropriate callback */
 	if (win->_dropCb)
 		win->_dropCb(win, p_count, p_paths);
+	if (!win->getFlag(DN_CLOSED))
+		win->dropEvent.trigger(win, p_count, p_paths);
 }

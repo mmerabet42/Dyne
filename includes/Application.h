@@ -6,6 +6,7 @@
 # include <functional>
 # include "GLFW/glfw3.h"
 # include "Codes.h"
+# include <iostream>
 
 namespace dn
 {
@@ -37,6 +38,9 @@ namespace dn
 
 	static void setFlag(const int &p_flag, const bool &p_set);
 	static bool getFlag(const int &p_flag);
+
+	static void setContext(dn::Window *p_window, const bool &p_force = false);
+	static dn::Window *context();
 
 	private:
 		/* The list of added window, inserted once the dn::Window constructor is called1 */

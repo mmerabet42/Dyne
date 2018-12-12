@@ -3,69 +3,71 @@
 #define GLEW_STATIC
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-extern "C" {
-#include "ft_lexiq.h"
-#include "ft_printf.h"
-}
+#include "glm/glm.hpp"
+#include "glm/ext.hpp"
 
-#define DN_APPLICATION_FREEWINDOWS
 #include "Window.h"
 #include "Application.h"
+#include "Shader.h"
+#include "Vertex.h"
 
 #define GLSL(CODE) "#version 330 core\n" #CODE
 
 static const char *g_vertexSource = GLSL(
 	in vec2 position;
 	in vec4 color;
+
+	uniform mat4 transform;
+
 	out vec4 ocolor;
+
 	void main()
 	{
-		gl_Position = vec4(position, 0, 1);
+		gl_Position =  vec4(position, 0, 1);
 		ocolor = color;
 	}
 );
 
 static const char *g_fragmentSource = GLSL(
 	in vec4 ocolor;
+
 	out vec4 color;
+
 	void main()
 	{
 		color = ocolor;
 	}
 );
 
+void closeEscape(dn::Window *win, int k, int a, int m) { if (k == DN_KEY_ESCAPE) win->close(); }
+void closeApplication(dn::Window *win, int k, int a, int m) { if (k == DN_KEY_ESCAPE) dn::app::stop(); }
+
 // Compiles a shader program, specifying the vertex source and the fragment source.
 int compileProgram(const char *p_vertex, const char *p_fragment);
-#include "Event.h"
+
 int main()
 {
-	dn::Event<int, std::string> ev;
+	dn::Window *win = new dn::Window(600, 400, "First");
+	dn::Shader *shader = new dn::Shader(g_vertexSource, g_fragmentSource);
 
-	dn::connect(ev, [&](int a, std::string b) {
-		std::cout << "Hello : " << a << " " << b << std::endl;
-	});
-
-	ev.trigger(3, "Hello world");
-	return (0);
-
-	dn::Window *win = new dn::Window(600, 400, "loader");
-
+	win->keyEvent(closeApplication);
 	win->setClearColor(37, 44, 56);
 
-	GLuint progId, vao, vbo[2];
-	GLfloat vertices[] = {
-		0, 0.5f,		1, 0, 1, 1,
-		0.5f, -0.5f,	1, 1, 0, 1,
-		-0.5f, -0.5f,	0, 0, 1, 1
+	GLuint vao, vbo[2];
+	dn::Vertex vertices[] = {
+		{{-0.5f, 0.5f},	{1.f, 0.f, 1.f}},
+		{{0.5f, 0.5f},	{1.f, 1.f, 0.f}},
+		{{0.5f, -0.5f},	{0.f, 0.f, 1.f}},
+		{{-0.5f, -0.5f},{0.f, 0.f, 1.f}}
 	};
 	GLuint indices[] = {
-		0, 1, 2
+		1, 0, 2, 3
 	};
-
-	dn::Application::setStartCb([&]() {
-		progId = compileProgram(g_vertexSource, g_fragmentSource);
-		if (progId == -1)
+	
+	win->startEvent.addListener([&](dn::Window *win) {
+		if (!shader->compile())
 		{
+			std::cout << "Shader compilation error: " << shader->infoLog() << std::endl;
 			dn::Application::stop();
 			return ;
 		}
@@ -77,15 +79,15 @@ int main()
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-		GLint positionAttrib = glGetAttribLocation(progId, "position");
-		GLint colorAttrib = glGetAttribLocation(progId, "color");
+		GLint positionAttrib = shader->getAttrib("position");
+		GLint colorAttrib = shader->getAttrib("color");
 
 		glEnableVertexAttribArray(positionAttrib);
-		glVertexAttribPointer(positionAttrib, 2, GL_FLOAT, false, 6 * sizeof(GLfloat), 0);
+		glVertexAttribPointer(positionAttrib, 2, GL_FLOAT, false, sizeof(dn::Vertex), 0);
 		glEnableVertexAttribArray(colorAttrib);
 		glVertexAttribPointer(colorAttrib,
 			4, GL_FLOAT, false,
-			6 * sizeof(GLfloat),
+			sizeof(dn::Vertex),
 			(void *)(2 * sizeof(GLfloat)));
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
@@ -93,35 +95,44 @@ int main()
 
 		glBindVertexArray(0);
 	});
-	dn::Application::setExitCb([&]() {
+	win->closeEvent.addListener([&](dn::Window *win) {
 		glDeleteVertexArrays(1, &vao);
 		glDeleteBuffers(2, vbo);
-		glDeleteProgram(progId);
+		delete shader;
 	});
 
-	win->setStartCb([](dn::Window *win) {
+	win->startEvent.addListener([](dn::Window *win) {
 		glViewport(0, 0, win->framebufferWidth(), win->framebufferHeight());
 	});
-	win->setFramebufferSizeCb([](dn::Window *win, int w, int h) {
+	win->framebufferSizeEvent.addListener([](dn::Window *win, int w, int h) {
 		glViewport(0, 0, w, h);
 	});
-	win->setUpdateCb([&](dn::Window *win) {
 
-		if (win->getKey(DN_KEY_ESCAPE))
-			dn::Application::stop();
+	glm::vec3 position(0.f, 0.f, 0.f);
+	glm::quat rotation(glm::vec3(0.f, 0.f, 0.f));
+	glm::vec3 scale(1.f, 1.f, 1.f);
 
+	win->updateEvent.addListener([&](dn::Window *win) {
 		win->clear();
-		glUseProgram(progId);
+
+/*
+		glm::mat4 transform = glm::translate(position)
+							* glm::toMat4(rotation);
+							* glm::scale(scale);
+*/
+
+		shader->use();
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
-		glUseProgram(0);
-		
+		shader->use(false);
 	});
 
-	return (dn::Application::run());
+	dn::Application::setFlag(DN_FREEWINDOWS, true);
+	dn::Application::run();
+	return (0);
 }
-
+/*
 // Compiles a shader program
 int compileProgram(const char *p_vertex, const char *p_fragment)
 {
@@ -178,4 +189,4 @@ int compileProgram(const char *p_vertex, const char *p_fragment)
 	// After succesfully compiling the shaders and linking the program,
 	// we return the id.
 	return (progId);
-}
+}*/

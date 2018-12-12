@@ -9,11 +9,11 @@ namespace dn
 	
 	typedef std::function<void(dn::Window *)>						startFunc;
 	typedef std::function<void(dn::Window *)>						updateFunc;
-	typedef std::function<void(dn::Window *, int, int)>				keyFunc;
+	typedef std::function<void(dn::Window *, int, int, int)>		keyFunc;
 	typedef std::function<void(dn::Window *, int, int)>				sizeFunc;
 	typedef std::function<void(dn::Window *, int, int)>				posFunc;
 	typedef std::function<void(dn::Window *)>						closeFunc;
-	typedef std::function<void(dn::Window *, int)>					focusFunc;
+	typedef std::function<void(dn::Window *, bool)>					focusFunc;
 	typedef std::function<void(dn::Window *, bool)>					maximizeFunc;
 	typedef std::function<void(dn::Window *, int, int)>				framebufferSizeFunc;
 	typedef std::function<void(dn::Window *)>						refreshFunc;

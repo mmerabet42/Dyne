@@ -2,6 +2,7 @@
 # define EVENT_H
 
 #include <vector>
+#include <map>
 #include <functional>
 
 namespace dn
@@ -19,25 +20,83 @@ namespace dn
 		~Event() { this->clearListeners(); }
 
 		// Listeners are called in the same order they were added
-		void addListener(const func &p_listener)
+		virtual void addListener(const func &p_listener)
 		{
 			this->_listeners.push_back(p_listener);
 		}
-		void clearListeners() { this->_listeners.clear(); }
+		virtual void clearListeners() { this->_listeners.clear(); }
 
 		// Triggers the event, all added listeners are called with the same
 		// argument that this function received
-		void trigger(_Args ... p_args)
+		virtual void trigger(_Args ... p_args)
 		{
+			if (this->_triggered)
+				return ;
 			this->_triggered = true;
 			for (typename std::vector<func>::iterator it = this->_listeners.begin(); it != this->_listeners.end() && this->_triggered; ++it)
 				(*it)(p_args ...);
+			this->_triggered = false;
 		}
 		// Untrigger the event
-		void release() { this->_triggered = false; }
+		virtual void release() { this->_triggered = false; }
 	protected:
 		bool _triggered;
 		std::vector<func> _listeners;
+	};
+
+	template <typename ... _Args>
+	class PriorityEvent : public Event<_Args ...>
+	{
+	public:
+		typedef std::function<void(_Args ...)> func;
+		typedef void(*ptrfunc)(_Args ...);
+		
+		PriorityEvent()
+			: Event<_Args ...>() {}
+		~PriorityEvent() { this->clearListeners(); }
+
+		virtual void operator()(const func &p_listener)
+		{
+			this->addListener(0, p_listener);
+		}
+
+		virtual void operator()(const int &p_channel, const func &p_listener)
+		{
+			this->addListener(p_channel, p_listener);
+		}
+		
+		virtual void addListener(const func &p_listener)
+		{
+			this->addListener(0, p_listener);
+		}
+
+		virtual void addListener(const int &p_channel, const func &p_listener)
+		{
+			this->_chanListeners[p_channel].push_back(p_listener);
+		}
+
+		virtual void trigger(_Args ... p_args)
+		{
+			if (this->_triggered)
+				return ;
+			this->_triggered = true;
+			for (typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin(); this->_triggered && it != this->_chanListeners.end(); ++it)
+				for (typename std::vector<func>::iterator it2 = it->second.begin(); this->_triggered && it2 != it->second.end(); ++it2)
+					(*it2)(p_args ...);
+			this->_triggered = false;
+		}
+
+		virtual void release() { this->_triggered = false; }
+
+		virtual void clearListeners()
+		{
+			for (typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin(); this->_triggered && it != this->_chanListeners.end(); ++it)
+				it->second.clear();
+			this->_chanListeners.clear();
+		}
+
+	private:
+		std::map<int, std::vector<func>> _chanListeners;
 	};
 
 	template <typename ... _Args>

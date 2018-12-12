@@ -19,6 +19,10 @@ int		dn::Application::run()
 	if (!glfwInit())
 		return (DN_GLFW_FAIL);
 
+	glfwSetErrorCallback([](int a, const char *b) {
+		std::cout << "Error : " << a << "; " << b << std::endl;
+	});
+
 	// Settings of some basic window hints.
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -62,7 +66,7 @@ int		dn::Application::run()
 		if (dn::Application::_updateCallback)
 			dn::Application::_updateCallback();
 		// Iterating through the windows using iterators.
-		for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end();)
+		for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); dn::Application::_running && it != dn::Application::_windows.end();)
 		{
 			// Make the current context on the current window, if it is not already.
 			if (dn::Application::_context != *it)
@@ -71,16 +75,18 @@ int		dn::Application::run()
 				dn::Application::_context = *it;
 			}
 
-			// If the DN_AUTOCLEAR flag is enabled,
-			// the application calls the clear function of the window automatically.
+			// The window is cleared automatically if the DN_AUTOCLEAR flag is enabled
 			if ((*it)->_flags & DN_AUTOCLEAR)
 				(*it)->clear();
 			// Calling the update callback of the window.
 			dn::Application::windowUpdateCallback(*it);
 			glfwSwapBuffers((*it)->_glfw);
-			// If the window should close, it is remove from the application
+			// If the window should close, the window is destroy 
+			// and the iterator should points to the next iterator as it is
+			// deleted in the _windows vector while iterating on it
 			if (glfwWindowShouldClose((*it)->_glfw))
 				dn::Application::destroyWindow(it);
+			// Otherwise it is just incremented
 			else
 				++it;
 		}
@@ -99,6 +105,8 @@ void		dn::Application::stop()
 {
 	dn::Application::_running = false;
 	dn::Application::_stopped = true;
+	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end(); ++it)
+		dn::Application::windowCloseCallback((*it)->_glfw);
 }
 
 int			dn::Application::terminate()
@@ -127,6 +135,14 @@ int	dn::Application::addWindow(dn::Window *p_window)
 	return (dn::Application::_windows.size());
 }
 
+dn::Window *dn::Application::context() { return (dn::Application::_context); }
+void dn::Application::setContext(dn::Window *p_window, const bool &p_force)
+{
+	dn::Application::_context = p_window;
+	if (p_window->_glfw)
+		glfwMakeContextCurrent(p_window->_glfw);
+}
+
 // Creates a GLFW window.
 int	dn::Application::createGLFWwindow(dn::Window *p_window)
 {
@@ -138,7 +154,6 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 		return (DN_WINDOW_FAIL);
 	glfwMakeContextCurrent(p_window->_glfw);
 	dn::Application::_context = p_window;
-
 	// If the position of the window has been specified before the application has started,
 	// the GLFW window position is set.
 	if (p_window->_flags & DN_POS_SPECIFIED)
