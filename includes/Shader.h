@@ -1,8 +1,8 @@
 #ifndef SHADER_H
 # define SHADER_H
 
-# include "GL/glew.h"
 # include <string>
+# include "allgl.h"
 
 # define GLSL(CODE) "#version 330 core\n" #CODE
 

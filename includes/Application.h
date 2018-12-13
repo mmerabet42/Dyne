@@ -4,9 +4,9 @@
 # include <vector>
 # include <map>
 # include <functional>
-# include "GLFW/glfw3.h"
+
+# include "allgl.h"
 # include "Codes.h"
-# include <iostream>
 
 namespace dn
 {

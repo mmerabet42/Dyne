@@ -1,7 +1,7 @@
 #ifndef CODES_H
 # define CODES_H
 
-# include "GLFW/glfw3.h"
+# include "allgl.h"
 
 # define DN_PRESS				GLFW_PRESS
 # define DN_REPEAT				GLFW_REPEAT

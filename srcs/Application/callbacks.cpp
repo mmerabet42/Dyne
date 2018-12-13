@@ -1,6 +1,5 @@
 #include "Application.h"
 #include "Window.h"
-#include <iostream>
 
 void	dn::Application::windowStartCallback(dn::Window *p_window)
 {

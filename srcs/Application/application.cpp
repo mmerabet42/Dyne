@@ -1,8 +1,6 @@
-#include "GL/glew.h"
 #include "Application.h"
 #include "Window.h"
 #include <algorithm>
-#include <iostream>
 
 // Returns if the run() function has already been called.
 bool	dn::Application::running() { return (dn::Application::_running); }

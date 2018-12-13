@@ -2,7 +2,8 @@
 # define WINDOW_H
 
 # include <string>
-# include "GLFW/glfw3.h"
+
+# include "allgl.h"
 # include "Color.h"
 # include "Funcs.h"
 # include "Codes.h"

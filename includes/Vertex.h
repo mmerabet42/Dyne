@@ -2,7 +2,7 @@
 # define VERTEX_H
 
 # include "Color.h"
-# include "GL/glew.h"
+# include "allgl.h"
 
 namespace dn
 {

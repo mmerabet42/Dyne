@@ -2,7 +2,6 @@
 # define MESH_H
 
 # include "glm/glm.hpp"
-# include "GL/glew.h"
 # include "Shader.h"
 # include "Shape.h"
 

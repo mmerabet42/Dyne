@@ -1,13 +1,5 @@
 #include <iostream>
 
-#define GLEW_STATIC
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
-#define GLM_ENABLE_EXPERIMENTAL
-#include "glm/gtx/transform.hpp"
-#include "glm/gtx/quaternion.hpp"
-
 #include "Window.h"
 #include "Application.h"
 #include "Model.h"
