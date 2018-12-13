@@ -19,10 +19,6 @@ int		dn::Application::run()
 	if (!glfwInit())
 		return (DN_GLFW_FAIL);
 
-	glfwSetErrorCallback([](int a, const char *b) {
-		std::cout << "Error : " << a << "; " << b << std::endl;
-	});
-
 	// Settings of some basic window hints.
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -75,18 +71,16 @@ int		dn::Application::run()
 				dn::Application::_context = *it;
 			}
 
-			// The window is cleared automatically if the DN_AUTOCLEAR flag is enabled
+			// If the DN_AUTOCLEAR flag is enabled,
+			// the application calls the clear function of the window automatically.
 			if ((*it)->_flags & DN_AUTOCLEAR)
 				(*it)->clear();
 			// Calling the update callback of the window.
 			dn::Application::windowUpdateCallback(*it);
 			glfwSwapBuffers((*it)->_glfw);
-			// If the window should close, the window is destroy 
-			// and the iterator should points to the next iterator as it is
-			// deleted in the _windows vector while iterating on it
+			// If the window should close, it is remove from the application
 			if (glfwWindowShouldClose((*it)->_glfw))
 				dn::Application::destroyWindow(it);
-			// Otherwise it is just incremented
 			else
 				++it;
 		}
@@ -132,14 +126,18 @@ dn::Window	*dn::Application::getWindow(GLFWwindow *p_window)
 int	dn::Application::addWindow(dn::Window *p_window)
 {
 	dn::Application::_windows.push_back(p_window);
+	if (dn::Application::_running)
+	{
+		createGLFWwindow(p_window);
+		dn::Application::windowStartCallback(p_window);
+	}
 	return (dn::Application::_windows.size());
 }
 
-dn::Window *dn::Application::context() { return (dn::Application::_context); }
 void dn::Application::setContext(dn::Window *p_window, const bool &p_force)
 {
 	dn::Application::_context = p_window;
-	if (p_window->_glfw)
+	if (dn::Application::_running && p_window->_glfw)
 		glfwMakeContextCurrent(p_window->_glfw);
 }
 
@@ -154,6 +152,7 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 		return (DN_WINDOW_FAIL);
 	glfwMakeContextCurrent(p_window->_glfw);
 	dn::Application::_context = p_window;
+
 	// If the position of the window has been specified before the application has started,
 	// the GLFW window position is set.
 	if (p_window->_flags & DN_POS_SPECIFIED)

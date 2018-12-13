@@ -9,20 +9,21 @@ OUT			= a.out
 
 OSNAME		= $(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT) -g3 -fsanitize=address
+	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT)
 endif
 ifeq ($(OSNAME),Darwin)
-	COMPILE = $(CC) $(MAIN_FILE) $(NAME) -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT) -g3 -fsanitize=address
+	COMPILE = $(CC) $(MAIN_FILE) $(NAME) -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)
 endif
 
 SRCD		= srcs/
 INCLUDES_D	= includes/
-_INCLUDES	= eng.h Window.h Application.h Color.h Funcs.h Event.h Object.h Shader.h Vertex.h
+_INCLUDES	= eng.h Window.h Application.h Color.h Funcs.h Event.h Object.h Shader.h Vertex.h Shape.h
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp
 _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
 _SHDR_FS	= shader.cpp
+_MESH_FS	= model.cpp shape.cpp
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 
@@ -34,9 +35,11 @@ WIN_FS		= $(addprefix $(SRCD)Window/,$(_WIN_FS))
 WIN_O		= $(_WIN_FS:.cpp=.o)
 SHDR_FS		= $(addprefix $(SRCD)Shader/,$(_SHDR_FS))
 SHDR_O		= $(_SHDR_FS:.cpp=.o)
+MESH_FS		= $(addprefix $(SRCD)Model/,$(_MESH_FS))
+MESH_O		= $(_MESH_FS:.cpp=.o)
 
-SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS)
-OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O)
+SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS)
+OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O)
 OBJD		= .objs/
 OBJB		= $(addprefix $(OBJD),$(OBJS))
 
@@ -68,6 +71,11 @@ $(OBJD)%.o: $(SRCD)Window/%.cpp $(INCLUDES) Makefile
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
 $(OBJD)%.o: $(SRCD)Shader/%.cpp $(INCLUDES) Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+
+$(OBJD)%.o: $(SRCD)Model/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes

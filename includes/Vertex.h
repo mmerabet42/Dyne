@@ -2,13 +2,14 @@
 # define VERTEX_H
 
 # include "Color.h"
+# include "GL/glew.h"
 
 namespace dn
 {
 	struct Vertex
 	{
-		float position[2];
-		float color[4];
+		GLfloat position[3];
+		GLfloat color[4];
 	};
 }
 

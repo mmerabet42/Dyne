@@ -1,10 +1,27 @@
 #include "Shader.h"
-#include <iostream>
+#include <fstream>
+#include <sstream>
 
-dn::Shader::Shader(const std::string &p_vertexSource, const std::string &p_fragmentSource)
-	: _vertexSource(p_vertexSource), _fragmentSource(p_fragmentSource), _programId(0)
+dn::Shader::Shader(const std::string &p_vertexShader, const std::string &p_fragmentShader, const bool &p_file)
+	: _vertexSource(p_vertexShader), _fragmentSource(p_fragmentShader), _programId(0)
 {
-
+	if (!p_file)
+		return ;
+	std::ifstream ofile;
+	ofile.open(p_vertexShader);
+	{
+		std::stringstream strm;
+		strm << ofile.rdbuf();
+		this->_vertexSource = strm.str();
+	}
+	ofile.close();
+	ofile.open(p_fragmentShader);
+	{
+		std::stringstream strm;
+		strm << ofile.rdbuf();
+		this->_fragmentSource = strm.str();
+	}
+	ofile.close();
 }
 
 dn::Shader::~Shader()
@@ -52,6 +69,9 @@ static GLuint compileShader(const char *p_source, const GLenum &p_type, int &p_s
 
 bool dn::Shader::compile()
 {
+	if (this->_programId)
+		return true;
+
 	GLuint vertexId, fragmentId;
 	int status;
 
@@ -84,3 +104,28 @@ void dn::Shader::use(const bool &p_use)
 	if (this->_programId)
 		glUseProgram(p_use ? this->_programId : 0);
 }
+
+static const char *g_vertexSource = GLSL(
+	in vec2 position;
+	in vec4 color;
+
+	uniform mat4 transform;
+
+	out vec4 ocolor;
+	void main()
+	{
+		gl_Position = transform * vec4(position, 0, 1);
+		ocolor = color;
+	}
+);
+
+static const char *g_fragmentSource = GLSL(
+	in vec4 ocolor;
+	out vec4 color;
+	void main()
+	{
+		color = ocolor;
+	}
+);
+
+dn::Shader dn::Shader::defaultShader(g_vertexSource, g_fragmentSource, false);

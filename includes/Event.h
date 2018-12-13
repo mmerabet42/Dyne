@@ -7,7 +7,7 @@
 
 namespace dn
 {
-	// A simple event system for the window class to handle the callbacks differently
+	// A simple event system
 	template <typename ... _Args>
 	class Event
 	{
@@ -37,7 +37,7 @@ namespace dn
 				(*it)(p_args ...);
 			this->_triggered = false;
 		}
-		// Untrigger the event
+		// Release the event
 		virtual void release() { this->_triggered = false; }
 	protected:
 		bool _triggered;

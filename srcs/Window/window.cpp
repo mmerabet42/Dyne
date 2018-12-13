@@ -149,14 +149,14 @@ void		dn::Window::setContext(const bool &p_force)
 
 void		dn::Window::setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height)
 {
-//	if (dn::Application::_context != this)
-//		glfwMakeContextCurrent(this->_glfw);
+	if (dn::Application::_context != this)
+		glfwMakeContextCurrent(this->_glfw);
 	glViewport(p_x, p_y, p_width, p_height);
 }
 
 void		dn::Window::updateViewport()
 {
-//	if (dn::Application::_context != this)
-//		glfwMakeContextCurrent(this->_glfw);
+	if (dn::Application::_context != this)
+		glfwMakeContextCurrent(this->_glfw);
 	glViewport(0, 0, this->_framebufferWidth, this->_framebufferHeight);
 }
