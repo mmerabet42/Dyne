@@ -11,7 +11,8 @@
 
 namespace dn
 {
-	/* Instead of including Application.h */
+	// Forward declaration of the Application class to avoid cycles
+	// as the application header file uses the Window class
 	class Application;
 
 	class Window

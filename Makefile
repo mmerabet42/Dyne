@@ -1,8 +1,8 @@
-NAME		=	libeng.a
+NAME		=	libdn.a
 CC			=	g++ -std=c++14
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
-GET_PACKAGE	=	`pkg-config --static --libs x11 xrandr xi xxf86vm glew glfw3`
+GET_PACKAGE	=	`pkg-config --static --libs x11 glew glfw3`
 
 MAIN_FILE	= main.cpp
 OUT			= a.out
@@ -82,13 +82,11 @@ $(OBJD)%.o: $(SRCD)Model/%.cpp $(INCLUDES) Makefile
 
 clean:
 	@echo "$(CRED)Cleaning$(CEND): $(NAME)"
-	@rm -f $(OBJB)
+	@rm -rf $(OBJD)
 	@rm -f $(NAME)
 
 fclean:
-	@echo "$(CRED)Cleaning$(CEND): $(NAME)"
-	@rm -f $(OBJB)
-	@rm -f $(NAME)
+	@make clean
 
 re:
 	@make clean
