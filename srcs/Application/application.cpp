@@ -73,6 +73,12 @@ int		dn::Application::run()
 			// the application calls the clear function of the window automatically.
 			if ((*it)->_flags & DN_AUTOCLEAR)
 				(*it)->clear();
+
+			// Updating application time and deltaTime
+			double etime = glfwGetTime();
+			dn::Application::_deltaTime = etime - dn::Application::_time;
+			dn::Application::_time = etime;
+
 			// Calling the update callback of the window.
 			dn::Application::windowUpdateCallback(*it);
 			glfwSwapBuffers((*it)->_glfw);

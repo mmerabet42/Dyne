@@ -33,6 +33,9 @@ namespace dn
 		// Returns if the application is currently running
 		static bool running();
 
+		static double time();
+		static double deltaTime();
+
 		// Static function that might be called by the Window class
 
 			static int addWindow(dn::Window *p_window);
@@ -69,6 +72,9 @@ namespace dn
 		static bool	_running;
 		static bool	_stopped;
 		static int	_flags;
+
+		static double _deltaTime;
+		static double _time;
 
 		static dn::Window *_context;
 		static dn::Window *_focused;

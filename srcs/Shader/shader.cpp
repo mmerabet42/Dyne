@@ -106,15 +106,16 @@ void dn::Shader::use(const bool &p_use)
 }
 
 static const char *g_vertexSource = GLSL(
-	in vec2 position;
+	in vec3 position;
 	in vec4 color;
 
 	uniform mat4 transform;
+	uniform mat4 viewProjection;
 
 	out vec4 ocolor;
 	void main()
 	{
-		gl_Position = transform * vec4(position, 0, 1);
+		gl_Position = viewProjection * transform * vec4(position, 1);
 		ocolor = color;
 	}
 );

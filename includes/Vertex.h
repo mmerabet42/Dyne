@@ -1,7 +1,6 @@
 #ifndef VERTEX_H
 # define VERTEX_H
 
-# include "Color.h"
 # include "allgl.h"
 
 namespace dn

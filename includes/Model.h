@@ -34,7 +34,7 @@ namespace dn
 		const glm::mat4 &transform();
 
 		void create();
-		void draw(const GLenum &p_mode);
+		void draw(const GLenum &p_mode = -1);
 
 	private:
 
@@ -61,6 +61,49 @@ namespace dn
 		bool _change;
 
 		bool change() const;
+
+	// Camera
+	public:
+
+		static const float &camFov();
+		static void setCamFov(const float &p_fov);
+
+		static const float &camNear();
+		static void setCamNear(const float &p_near);
+
+		static const float &camFar();
+		static void setCamFar(const float &p_far);
+
+		static const float &camAspectRatio();
+		static void setCamAspectRatio(const float &p_aspectRatio);
+
+		static const glm::vec3 &camPosition();
+		static glm::vec3 &camPositionc();
+
+		static const glm::vec3 &camRotation();
+		static glm::vec3 &camRotationc();
+
+		static glm::vec3 camForward();
+		static glm::vec3 camUp();
+
+		static const glm::mat4 &camViewProjection();
+
+	private:
+		static float _fov;
+		static float _far;
+		static float _near;
+		static float _aspectRatio;
+
+		static glm::vec3 _camPosition;
+		static glm::vec3 _camRotation;
+
+		static bool _viewMod;
+		static bool _projectionMod;
+
+		static glm::mat4 _viewMat;
+		static glm::mat4 _projectionMat;
+
+		static glm::mat4 _viewprojMat;
 	};
 }
 

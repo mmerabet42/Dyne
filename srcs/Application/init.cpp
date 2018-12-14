@@ -1,16 +1,20 @@
 #include "Application.h"
 #include <algorithm>
 
-int										dn::Application::_flags = 0;
-dn::Window								*dn::Application::_context = nullptr;
-dn::Window								*dn::Application::_focused = nullptr;
 std::vector<dn::Window *>				dn::Application::_windows;
 std::map<GLFWwindow *, dn::Window *>	dn::Application::_glfwWindows;
-bool									dn::Application::_running = false;
-bool									dn::Application::_stopped = false;
+
 std::function<void()>					dn::Application::_startCallback;
 std::function<void()>					dn::Application::_updateCallback;
 std::function<void()>					dn::Application::_exitCallback;
+
+dn::Window								*dn::Application::_context = nullptr;
+dn::Window								*dn::Application::_focused = nullptr;
+int										dn::Application::_flags = 0;
+bool									dn::Application::_running = false;
+bool									dn::Application::_stopped = false;
+double									dn::Application::_time = 0;
+double									dn::Application::_deltaTime = 0;
 
 void dn::Application::setStartCb(const std::function<void()> &p_callback)
 {
@@ -52,4 +56,14 @@ void dn::Application::setFlag(const int &p_flag, const bool &p_set)
 bool dn::Application::getFlag(const int &p_flag)
 {
 	return (dn::Application::_flags & p_flag);
+}
+
+double dn::Application::time()
+{
+	return (dn::Application::_time);
+}
+
+double dn::Application::deltaTime()
+{
+	return (dn::Application::_deltaTime);
 }
