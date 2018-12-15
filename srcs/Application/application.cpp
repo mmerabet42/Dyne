@@ -88,11 +88,21 @@ int		dn::Application::run()
 			else
 				++it;
 		}
+		if (dn::Application::_windowsQueue.size() != 0)
+		{
+			for (std::vector<dn::Window *>::iterator it = dn::Application::_windowsQueue.begin(); it != dn::Application::_windowsQueue.end();)
+			{
+				dn::Application::_windows.push_back(*it);
+				createGLFWwindow(*it);
+				dn::Application::windowStartCallback(*it);
+				it = dn::Application::_windowsQueue.erase(it);
+			}
+		}
+
 		// If no more windows, the application stops.
 		if (dn::Application::_windows.empty())
 			dn::Application::_running = false;
 	}
-
 	// Once the main loop is done, we clean and free everything.
 	dn::Application::destroyWindows();
 	glfwTerminate();
@@ -129,19 +139,17 @@ dn::Window	*dn::Application::getWindow(GLFWwindow *p_window)
 // it simply adds the window to the application.
 int	dn::Application::addWindow(dn::Window *p_window)
 {
-	dn::Application::_windows.push_back(p_window);
 	if (dn::Application::_running)
-	{
-		createGLFWwindow(p_window);
-		dn::Application::windowStartCallback(p_window);
-	}
+		dn::Application::_windowsQueue.push_back(p_window);
+	else
+		dn::Application::_windows.push_back(p_window);
 	return (dn::Application::_windows.size());
 }
 
 void dn::Application::setContext(dn::Window *p_window, const bool &p_force)
 {
 	dn::Application::_context = p_window;
-	if (dn::Application::_running && p_window->_glfw)
+	if (dn::Application::_running)
 		glfwMakeContextCurrent(p_window->_glfw);
 }
 

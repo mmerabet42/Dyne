@@ -64,6 +64,7 @@ namespace dn
 		// All the windows added to the Application are stored here
 		// A window is added once the dn::Window constructor is called
 		static std::vector<dn::Window *> _windows;
+		static std::vector<dn::Window *> _windowsQueue;
 		// Maps the windows according to their GLFWwindow pointer which is initiated
 		// once the run() function is called
 		static std::map<GLFWwindow *, dn::Window *> _glfwWindows;

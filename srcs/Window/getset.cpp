@@ -25,6 +25,11 @@ void	dn::Window::height(const int &p_height)
 int		dn::Window::framebufferWidth() const { return (this->_framebufferWidth); }
 int		dn::Window::framebufferHeight() const { return (this->_framebufferHeight); }
 
+float	dn::Window::aspectRatio() const
+{
+	return ((float)this->_framebufferWidth / (float)this->_framebufferHeight);
+}
+
 void	dn::Window::setSize(const int &p_width, const int &p_height)
 {
 	if (p_width < 0 || p_height < 0)

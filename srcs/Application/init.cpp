@@ -2,6 +2,7 @@
 #include <algorithm>
 
 std::vector<dn::Window *>				dn::Application::_windows;
+std::vector<dn::Window *>				dn::Application::_windowsQueue;
 std::map<GLFWwindow *, dn::Window *>	dn::Application::_glfwWindows;
 
 std::function<void()>					dn::Application::_startCallback;

@@ -8,7 +8,7 @@ void closeWinEscape(dn::Window *w, int k, int, int) { if (k == DN_KEY_ESCAPE) w-
 
 int main()
 {
-	dn::Window *win = new dn::Window(600, 400, "loader");
+	dn::Window *win = new dn::Window(600, 400, "Window 1");
 
 	win->keyEvent.addListener(closeWinEscape);
 	win->setClearColor(37, 44, 56);
@@ -39,6 +39,9 @@ int main()
 		5, 4, 0, 2, 6
 	});
 */
+
+	dn::Model lol(squareShape);
+
 	dn::Model square(squareShape);
 	dn::Model square1(squareShape);
 	dn::Model square2(squareShape);
@@ -51,16 +54,11 @@ int main()
 	square3.position().x = 1.5f;
 
 	win->startEvent([&](dn::Window *win) {
-		win->updateViewport();
-		dn::Model::setCamAspectRatio((float)win->framebufferWidth() / (float)win->framebufferHeight());
+		win->setContext();
 		square.create();
 		square1.create();
 		square2.create();
 		square3.create();
-	});
-	win->framebufferSizeEvent([](dn::Window *win, int w, int h) {
-		win->updateViewport();
-		dn::Model::setCamAspectRatio((float)w / (float)h);
 	});
 
 	win->updateEvent([&](dn::Window *win) {
@@ -98,6 +96,9 @@ int main()
 			dn::Model::camPositionc().z -= 0.05f;
 		if (win->getKey(DN_KEY_S))
 			dn::Model::camPositionc().z += 0.05f;
+
+		win->updateViewport();
+		dn::Model::setCamAspectRatio(win->aspectRatio());
 
 		win->clear();
 		square.draw();

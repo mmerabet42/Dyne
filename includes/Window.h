@@ -55,6 +55,8 @@ namespace dn
 			int		framebufferWidth() const;
 			int		framebufferHeight() const;
 
+			float	aspectRatio() const;
+
 			void	setMinLimits(const int &p_width, const int &p_height);
 			void	setMaxLimits(const int &p_width, const int &p_height);
 			void	setSizeLimits(const int &p_minwidth, const int &p_minheight, const int &p_maxwidth, const int &p_maxheight);
