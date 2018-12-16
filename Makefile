@@ -9,21 +9,24 @@ OUT			= a.out
 
 OSNAME		= $(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT)
+	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
 endif
 ifeq ($(OSNAME),Darwin)
-	COMPILE = $(CC) $(MAIN_FILE) $(NAME) -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)
+	COMPILE = $(CC) $(MAIN_FILE) $(NAME) -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
 endif
 
 SRCD		= srcs/
 INCLUDES_D	= includes/
-_INCLUDES	= eng.h Window.h Application.h Color.h Funcs.h Event.h Object.h Shader.h Vertex.h Shape.h
+_INCLUDES	= eng.h Window.h Application.h Color.h Funcs.h Event.h Object.h \
+			Shader.h Vertex.h Shape.h Component.h
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp
 _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
 _SHDR_FS	= shader.cpp
 _MESH_FS	= model.cpp shape.cpp
+_MATH_FS	= smoothDamp.cpp
+_OBJ_FS		= object.cpp component.cpp
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 
@@ -37,9 +40,13 @@ SHDR_FS		= $(addprefix $(SRCD)Shader/,$(_SHDR_FS))
 SHDR_O		= $(_SHDR_FS:.cpp=.o)
 MESH_FS		= $(addprefix $(SRCD)Model/,$(_MESH_FS))
 MESH_O		= $(_MESH_FS:.cpp=.o)
+MATH_FS		= $(addprefix $(SRCD)Math/,$(_MATH_FS))
+MATH_O		= $(_MATH_FS:.cpp=.o)
+OBJ_FS		= $(addprefix $(SRCD)Object/,$(_OBJ_FS))
+OBJ_O		= $(_OBJ_FS:.cpp=.o)
 
-SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS)
-OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O)
+SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS) $(MATH_FS) $(OBJ_FS)
+OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) $(OBJ_O)
 OBJD		= .objs/
 OBJB		= $(addprefix $(OBJD),$(OBJS))
 
@@ -76,6 +83,16 @@ $(OBJD)%.o: $(SRCD)Shader/%.cpp $(INCLUDES) Makefile
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
 $(OBJD)%.o: $(SRCD)Model/%.cpp $(INCLUDES) Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+
+$(OBJD)%.o: $(SRCD)Math/%.cpp $(INCLUDES) Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+
+$(OBJD)%.o: $(SRCD)Object/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes

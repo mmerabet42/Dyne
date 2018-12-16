@@ -3,6 +3,9 @@
 #include "Window.h"
 #include "Application.h"
 #include "Model.h"
+#include "Math.h"
+#include "Object.h"
+#include "Component.h"
 
 void closeWinEscape(dn::Window *w, int k, int, int) { if (k == DN_KEY_ESCAPE) w->close(); }
 
@@ -13,15 +16,6 @@ int main()
 	win->keyEvent.addListener(closeWinEscape);
 	win->setClearColor(37, 44, 56);
 
-	dn::Shape squareShape({
-		{{-0.5f, 0.5f, 0.f},	{1, 1, 1, 1}},
-		{{0.5f, 0.5f, 0.f},		{1, 1, 1, 1}},
-		{{-0.5f, -0.5f, 0.f},	{1, 1, 1, 1}},
-		{{0.5f, -0.5f, 0.f},	{1, 1, 1, 1}},
-	}, DN_TRIANGLE_STRIP, {
-		0, 1, 2, 3,
-	});
-/*
 	dn::Shape cubeShape({
 		{{0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}},
 		{{0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}},
@@ -32,79 +26,61 @@ int main()
 		{{0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}},
 		{{-0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}},
 		{{-0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}},
-	}, {
-		0, 1, 3, 2,
-		6, 7, 3, 1,
-		5, 7, 6, 4,
-		5, 4, 0, 2, 6
+	}, GL_LINE_STRIP, {
+		0, 1, 3, 2, 0, 4, 6, 2, 3, 7, 6, 4, 5, 1, 5, 7
 	});
-*/
 
-	dn::Model lol(squareShape);
+	dn::Model cube(cubeShape);
 
-	dn::Model square(squareShape);
-	dn::Model square1(squareShape);
-	dn::Model square2(squareShape);
-	dn::Model square3(squareShape);
-	square1.setParent(&square);
-	square1.position().x = 1.5f;
-	square2.setParent(&square1);
-	square2.position().y = 1.5f;
-	square3.setParent(&square2);
-	square3.position().x = 1.5f;
+	dn::Model::camPositionc().z = 5.f;
+
+	dn::Object *obj = new dn::Object;
+
+	obj->addComponent<SimpleComp>();
+	obj->removeComponent<SimpleComp>();
 
 	win->startEvent([&](dn::Window *win) {
 		win->setContext();
-		square.create();
-		square1.create();
-		square2.create();
-		square3.create();
+		cube.create();
+		obj->start();
 	});
+
+	float vel = 0.f;
 
 	win->updateEvent([&](dn::Window *win) {
 
 		if (win->getKey(DN_KEY_LEFT))
-			square.position().x -= 2.f * dn::Application::deltaTime();
+			cube.rotation().y -= 1.5f * dn::Application::deltaTime();
 		if (win->getKey(DN_KEY_RIGHT))
-			square.position().x += 2.f * dn::Application::deltaTime();
+			cube.rotation().y += 1.5f * dn::Application::deltaTime();
 
 		if (win->getKey(DN_KEY_UP))
-			square.position().y += 2.f * dn::Application::deltaTime();
+			cube.rotation().x += 1.5f * dn::Application::deltaTime();
 		if (win->getKey(DN_KEY_DOWN))
-			square.position().y -= 2.f * dn::Application::deltaTime();
-
-		if (win->getKey(DN_KEY_E))
-			square.rotation().z += 2.f * dn::Application::deltaTime();
-		if (win->getKey(DN_KEY_R))
-			square.rotation().z -= 2.f * dn::Application::deltaTime();
-
-		if (win->getKey(DN_KEY_D))
-			square1.rotation().z += 2.f * dn::Application::deltaTime();
-		if (win->getKey(DN_KEY_F))
-			square1.rotation().z -= 2.f * dn::Application::deltaTime();
-		if (win->getKey(DN_KEY_C))
-			square2.rotation().z += 2.f * dn::Application::deltaTime();
-		if (win->getKey(DN_KEY_V))
-			square2.rotation().z -= 2.f * dn::Application::deltaTime();
-
-		if (win->getKey(DN_KEY_O))
-			square.rotation().x += 2.f * dn::Application::deltaTime();
-		else if (win->getKey(DN_KEY_P))
-			square.rotation().x -= 2.f * dn::Application::deltaTime();
+			cube.rotation().x -= 1.5f * dn::Application::deltaTime();
 
 		if (win->getKey(DN_KEY_W))
-			dn::Model::camPositionc().z -= 0.05f;
+			dn::Model::camPositionc().z -= 2.5f * dn::Application::deltaTime();
 		if (win->getKey(DN_KEY_S))
-			dn::Model::camPositionc().z += 0.05f;
+			dn::Model::camPositionc().z += 2.5f * dn::Application::deltaTime();
+
+		if (win->getKey(DN_KEY_A))
+			dn::Model::camPositionc().x -= 2.5f * dn::Application::deltaTime();
+		if (win->getKey(DN_KEY_D))
+			dn::Model::camPositionc().x += 2.5f * dn::Application::deltaTime();
+
+		if (win->getKey(DN_KEY_KP_ADD))
+			dn::Model::setCamFov(dn::Model::camFov() + 0.005f);
+		else if (win->getKey(DN_KEY_KP_SUBTRACT))
+			dn::Model::setCamFov(dn::Model::camFov() - 0.005f);
+
+		cube.position().x = dn::math::smoothDamp(cube.position().x, 5.f, vel, 0.05f);
 
 		win->updateViewport();
 		dn::Model::setCamAspectRatio(win->aspectRatio());
 
 		win->clear();
-		square.draw();
-		square1.draw();
-		square2.draw();
-		square3.draw();
+		cube.draw();
 	});
 
 	dn::Application::setFlag(DN_FREEWINDOWS, true);
