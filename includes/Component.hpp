@@ -1,5 +1,5 @@
-#ifndef COMPONENT_H
-# define COMPONENT_H
+#ifndef COMPONENT_HPP
+# define COMPONENT_HPP
 
 # include <string>
 
@@ -11,7 +11,9 @@ namespace dn
 	class Component
 	{
 	public:
-		Component(dn::Object *p_object = nullptr, const std::string &p_name = "");
+		Component(const std::string &p_name = "", dn::Object *p_object = nullptr);
+		Component(dn::Object *p_object, const std::string &p_name = "");
+		virtual ~Component();
 
 		dn::Object *object() const;
 		void setObject(dn::Object *p_object);
@@ -41,19 +43,5 @@ namespace dn
 		bool _active;
 	};
 }
-#include <iostream>
-class SimpleComp: public dn::Component
-{
-public:
-	void start()
-	{
-		std::cout << "Starting component" << std::endl;
-	}
 
-	void update()
-	{
-		std::cout << "Updating component" << std::endl;
-	}
-};
-
-#endif // COMPONENT_H
+#endif // COMPONENT_HPP

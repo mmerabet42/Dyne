@@ -1,13 +1,13 @@
-#ifndef WINDOW_H
-# define WINDOW_H
+#ifndef WINDOW_HPP
+# define WINDOW_HPP
 
 # include <string>
 
-# include "allgl.h"
-# include "Color.h"
-# include "Funcs.h"
-# include "Codes.h"
-# include "Event.h"
+# include "allgl.hpp"
+# include "Color.hpp"
+# include "Funcs.hpp"
+# include "Codes.hpp"
+# include "Event.hpp"
 
 namespace dn
 {

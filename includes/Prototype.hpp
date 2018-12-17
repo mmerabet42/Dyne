@@ -1,20 +1,20 @@
-#ifndef MESH_H
-# define MESH_H
+#ifndef PROTOTYPE_HPP
+# define PROTOTYPE_HPP
 
 # include "glm/glm.hpp"
-# include "Shader.h"
-# include "Shape.h"
+# include "Shader.hpp"
+# include "Model.hpp"
 
 namespace dn
 {
-	class Model
+	class Prototype
 	{
 	public:
-		Model(const dn::Shape &p_shape, dn::Shader *p_shader = &dn::Shader::defaultShader);
-		~Model();
+		Prototype(const dn::Model &p_model, dn::Shader *p_shader = &dn::Shader::defaultShader);
+		~Prototype();
 
-		const dn::Shape &shape() const;
-		void setShape(const dn::Shape &p_shape);
+		const dn::Model &model() const;
+		void setModel(const dn::Model &p_model);
 
 		const dn::Shader *shader() const;
 		void setShader(dn::Shader *p_shader);
@@ -28,8 +28,8 @@ namespace dn
 		glm::vec3 scale() const;
 		glm::vec3 &scale();
 
-		dn::Model *parent() const;
-		void setParent(dn::Model *p_parent);
+		dn::Prototype *parent() const;
+		void setParent(dn::Prototype *p_parent);
 
 		const glm::mat4 &transform();
 
@@ -38,9 +38,9 @@ namespace dn
 
 	private:
 
-		dn::Model *_parent;
+		dn::Prototype *_parent;
 
-		dn::Shape _shape;
+		dn::Model _model;
 		dn::Shader *_shader;
 		GLuint _vao;
 		GLuint _vbos[2];
@@ -107,4 +107,4 @@ namespace dn
 	};
 }
 
-#endif
+#endif // PROTOTYPE_HPP

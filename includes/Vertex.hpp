@@ -1,7 +1,7 @@
-#ifndef VERTEX_H
-# define VERTEX_H
+#ifndef VERTEX_HPP
+# define VERTEX_HPP
 
-# include "allgl.h"
+# include "allgl.hpp"
 
 namespace dn
 {
@@ -12,4 +12,4 @@ namespace dn
 	};
 }
 
-#endif // VERTEX_H
+#endif // VERTEX_HPP

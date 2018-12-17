@@ -1,7 +1,7 @@
-#ifndef CODES_H
-# define CODES_H
+#ifndef CODES_HPP
+# define CODES_HPP
 
-# include "allgl.h"
+# include "allgl.hpp"
 
 # define DN_PRESS				GLFW_PRESS
 # define DN_REPEAT				GLFW_REPEAT
@@ -33,7 +33,7 @@
 # define DN_KEY_E				GLFW_KEY_E
 # define DN_KEY_F				GLFW_KEY_F
 # define DN_KEY_G				GLFW_KEY_G
-# define DN_KEY_H				GLFW_KEY_H
+# define DN_KEY_HPP				GLFW_KEY_HPP
 # define DN_KEY_I				GLFW_KEY_I
 # define DN_KEY_J				GLFW_KEY_J
 # define DN_KEY_K				GLFW_KEY_K
@@ -70,7 +70,7 @@
 # define DN_KEY_UP				GLFW_KEY_UP
 # define DN_KEY_PAGE_UP			GLFW_KEY_PAGE_UP
 # define DN_KEY_PAGE_DOWN		GLFW_KEY_PAGE_DOWN
-# define DN_KEY_HOME			GLFW_KEY_HOME
+# define DN_KEY_HPPOME			GLFW_KEY_HPPOME
 # define DN_KEY_END				GLFW_KEY_END
 # define DN_KEY_CAPS_LOCK		GLFW_KEY_CAPS_LOCK
 # define DN_KEY_SCROLL_LOCK		GLFW_KEY_SCROLL_LOCK
@@ -182,4 +182,4 @@ enum {
 	DN_WINDOW_FAIL,
 };
 
-#endif // CODES_H
+#endif // CODES_HPP

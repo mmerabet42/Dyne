@@ -1,20 +1,20 @@
-#ifndef SHAPE_H
-# define SHAPE_H
+#ifndef MODEL_HPP
+# define MODEL_HPP
 
 # include <vector>
-# include "Vertex.h"
-# include "Codes.h"
+# include "Vertex.hpp"
+# include "Codes.hpp"
 
 namespace dn
 {
 	typedef std::vector<dn::Vertex> VertexArray;
 	typedef std::vector<GLuint> IndiceArray;
 
-	class Shape
+	class Model
 	{
 	public:
-		Shape(const dn::VertexArray &p_vertices, const GLenum &p_method = DN_TRIANGLES, const dn::IndiceArray &p_indices = {});
-		~Shape();
+		Model(const dn::VertexArray &p_vertices, const GLenum &p_method = DN_TRIANGLES, const dn::IndiceArray &p_indices = {});
+		~Model();
 
 		dn::VertexArray vertices() const;
 		dn::IndiceArray indices() const;
@@ -28,6 +28,8 @@ namespace dn
 
 		const void *verticesData() const;
 		const void *indicesData() const;
+
+		static dn::Model generatePoints(const int &p_n, const float &p_radius);
 	private:
 
 		dn::VertexArray _vertices;
@@ -36,4 +38,4 @@ namespace dn
 	};
 }
 
-#endif //SHAPE_H
+#endif //MODEL_HPP

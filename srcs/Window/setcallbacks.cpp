@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "Window.hpp"
 
 /*
  * Setter for all the different callbacks.

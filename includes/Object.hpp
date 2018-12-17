@@ -1,5 +1,5 @@
-#ifndef OBJECT_H
-# define OBJECT_H
+#ifndef OBJECT_HPP
+# define OBJECT_HPP
 
 # include <map>
 # include <typeinfo>
@@ -45,30 +45,28 @@ namespace dn
 		}
 
 		// Attach a component
-		template <typename T>
-		T *addComponent(T *p_component = nullptr)
+		template <typename T, typename ... _Args>
+		T *addComponent(_Args ... p_args)
 		{
 			// Checks if the type is deriving the Component class
 			static_assert(std::is_base_of<dn::Component, T>::value,
 				"Only classes that inherits dn::Component can be attached to objects");
 			// Get the hash value of `T'
 			size_t comp_hash = typeid(T).hash_code();
-			// If a component of the same type is already attached to the object
-			// it is returned
+			// If a component of the same type is already attached to the object, it is returned
 			std::map<size_t, dn::Component *>::iterator it = this->_components.find(comp_hash);
 			if (it != this->_components.end())
 				return (dynamic_cast<T *>(it->second));
-			// If the component is null, create an instanciation of it
-			if (!p_component)
-				p_component = new T();
+			// Create an instanciation of the component, with the given arguments
+			T *comp = new T(p_args ...);
 			// Attach the component to the object
-			this->_components.insert(std::make_pair(comp_hash, p_component));
-			p_component->setObject(this);
+			this->_components.insert(std::make_pair(comp_hash, comp));
+			comp->setObject(this);
 			// If the object has already started, the start function of the component is called
 			if (this->_running)
-				p_component->start();
+				comp->start();
 			// And finally, the component is returned
-			return (p_component);
+			return (comp);
 		}
 
 		// Detach a component
@@ -96,4 +94,4 @@ namespace dn
 	};
 }
 
-#endif // OBJECT_H
+#endif // OBJECT_HPP

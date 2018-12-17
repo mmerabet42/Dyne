@@ -1,4 +1,4 @@
-#include "Color.h"
+#include "Color.hpp"
 
 dn::Color::Color(const float &p_r, const float &p_g, const float &p_b, const float &p_a)
 	: _r(p_r), _g(p_g), _b(p_b), _a(p_a)

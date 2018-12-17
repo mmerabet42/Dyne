@@ -1,8 +1,8 @@
-#ifndef SHADER_H
-# define SHADER_H
+#ifndef SHADER_HPP
+# define SHADER_HPP
 
 # include <string>
-# include "allgl.h"
+# include "allgl.hpp"
 
 # define GLSL(CODE) "#version 330 core\n" #CODE
 
@@ -37,4 +37,4 @@ namespace dn
 	};
 }
 
-#endif // SHADER_H
+#endif // SHADER_HPP

@@ -1,10 +1,18 @@
-#include "Component.h"
+#include "Component.hpp"
 
-dn::Component::Component(dn::Object *p_object, const std::string &p_name)
+dn::Component::Component(const std::string &p_name, dn::Object *p_object)
 	: _object(p_object), _name(p_name), _active(true)
 {
 
 }
+
+dn::Component::Component(dn::Object *p_object, const std::string &p_name)
+	: Component(p_name, p_object)
+{
+
+}
+
+dn::Component::~Component() {}
 
 dn::Object *dn::Component::object() const
 {

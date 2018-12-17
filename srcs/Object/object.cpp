@@ -1,5 +1,5 @@
-#include "Object.h"
-#include "Component.h"
+#include "Object.hpp"
+#include "Component.hpp"
 
 dn::Object::Object(const std::string &p_name)
 	: _name(p_name), _running(false), _active(true)

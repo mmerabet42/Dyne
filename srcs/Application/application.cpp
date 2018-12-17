@@ -1,5 +1,5 @@
-#include "Application.h"
-#include "Window.h"
+#include "Application.hpp"
+#include "Window.hpp"
 #include <algorithm>
 
 // Returns if the run() function has already been called.
@@ -50,7 +50,14 @@ int		dn::Application::run()
 
 	// Calling the start callback of each window.
 	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end(); ++it)
+	{
+		if (dn::Application::_context != *it)
+		{
+			glfwMakeContextCurrent((*it)->_glfw);
+			dn::Application::_context = *it;
+		}
 		dn::Application::windowStartCallback(*it);
+	}
 
 	// The main loop.
 	while (dn::Application::_running)

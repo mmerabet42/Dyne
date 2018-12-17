@@ -1,0 +1,87 @@
+#include "MeshRenderer.hpp"
+#include "Prototype.hpp"
+#include "Transform.hpp"
+#include "Camera.hpp"
+#include "Object.hpp"
+
+dn::MeshRenderer::MeshRenderer(dn::Model *p_model, dn::Shader *p_shader)
+	: Component("MeshRenderer"), _model(p_model), _shader(p_shader), _vao(0), _vbos{0, 0}
+{
+	
+}
+
+dn::MeshRenderer::~MeshRenderer()
+{
+	if (this->_vao)
+	{
+		glDeleteVertexArrays(1, &this->_vao);
+		glDeleteBuffers(2, this->_vbos);
+	}
+}
+
+dn::Model *dn::MeshRenderer::model() const { return (this->_model); }
+void dn::MeshRenderer::setModel(dn::Model *p_model)
+{
+	this->_model = p_model;
+}
+
+dn::Shader *dn::MeshRenderer::shader() const { return (this->_shader); }
+void dn::MeshRenderer::setShader(dn::Shader *p_shader)
+{
+	this->_shader = p_shader;
+}
+
+void dn::MeshRenderer::start()
+{
+	if (!this->_model || !this->_shader)
+		return ;
+	if (!this->_shader->compile())
+		return ;
+
+	glGenVertexArrays(1, &this->_vao);
+	glBindVertexArray(this->_vao);
+
+	glGenBuffers(2, this->_vbos);
+
+	glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[0]);
+	glBufferData(GL_ARRAY_BUFFER, this->_model->verticesSize(), this->_model->verticesData(), GL_STATIC_DRAW);
+
+	GLuint positionAttrib = this->_shader->getAttrib("position");
+	GLuint colorAttrib = this->_shader->getAttrib("color");
+
+	glEnableVertexAttribArray(positionAttrib);
+	glVertexAttribPointer(positionAttrib, 3, GL_FLOAT, false, sizeof(dn::Vertex), nullptr);
+	glEnableVertexAttribArray(colorAttrib);
+	glVertexAttribPointer(colorAttrib, 4, GL_FLOAT, false, sizeof(dn::Vertex), (void *)sizeof(dn::Vertex::position));
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbos[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_model->indicesSize(), this->_model->indicesData(), GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+}
+
+void dn::MeshRenderer::update()
+{
+	if (!this->_model || !this->_shader)
+		return ;
+	this->_shader->use();
+	// The braces are definetely useless
+	{
+		dn::Transform *transform = this->object()->getComponent<dn::Transform>();
+		if (transform)
+		{
+			GLuint transformUni = this->_shader->getUniform("transform");
+			glUniformMatrix4fv(transformUni, 1, GL_FALSE, &transform->transformMat()[0][0]);
+			if (dn::Camera::main)
+			{
+				GLuint viewProjectUni = this->_shader->getUniform("viewProjection");
+				glUniformMatrix4fv(viewProjectUni, 1, GL_FALSE, &dn::Camera::main->viewProjectionMat()[0][0]);
+			}
+		}
+
+		glBindVertexArray(this->_vao);
+		glDrawElements(this->_model->method(), this->_model->indices().size(), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
+	}
+	this->_shader->use(false);
+}

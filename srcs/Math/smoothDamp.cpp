@@ -1,4 +1,4 @@
-#include "Math.h"
+#include "Math.hpp"
 #include <cmath>
 
 float dn::math::smoothDamp(const float &current, const float &target, float &vel, const float &smoothDamp)

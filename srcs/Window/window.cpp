@@ -1,5 +1,5 @@
-#include "Window.h"
-#include "Application.h"
+#include "Window.hpp"
+#include "Application.hpp"
 
 /* Constructors */
 

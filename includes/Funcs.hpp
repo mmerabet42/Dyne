@@ -1,5 +1,5 @@
-#ifndef FUNCS_H
-# define FUNCS_H
+#ifndef FUNCS_HPP
+# define FUNCS_HPP
 
 # include <functional>
 

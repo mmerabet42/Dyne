@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Application.hpp"
 #include <algorithm>
 
 std::vector<dn::Window *>				dn::Application::_windows;

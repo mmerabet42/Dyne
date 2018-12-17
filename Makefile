@@ -17,16 +17,17 @@ endif
 
 SRCD		= srcs/
 INCLUDES_D	= includes/
-_INCLUDES	= eng.h Window.h Application.h Color.h Funcs.h Event.h Object.h \
-			Shader.h Vertex.h Shape.h Component.h
+_INCLUDES	= eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Object.hpp \
+			Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
+			Prototype.hpp Camera.hpp
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp
 _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
 _SHDR_FS	= shader.cpp
-_MESH_FS	= model.cpp shape.cpp
-_MATH_FS	= smoothDamp.cpp
-_OBJ_FS		= object.cpp component.cpp
+_MESH_FS	= prototype.cpp model.cpp
+_MATH_FS	= smoothDamp.cpp random.cpp
+_OBJ_FS		= object.cpp component.cpp transform.cpp meshrenderer.cpp camera.cpp
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 
