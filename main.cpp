@@ -80,6 +80,7 @@ int main()
 	float target = 100.f;
 	float smooth = 0.1f;
 	float speedMove = 0.1f;
+	float cubesMove = 0.1f;
 
 	win->keyEvent.addListener([&](dn::Window *win, int k, int a, int) {
 		if (k == DN_KEY_G && a == DN_PRESS)
@@ -118,13 +119,17 @@ int main()
 		else if (win->getKey(DN_KEY_KP_SUBTRACT))
 			camera->getComponent<dn::Camera>()->fov() -= 0.005f;
 
-		pointsTransform->scale() += 0.1f;
-
+		pointsTransform->scale() += 0.001f;
 
 		if (win->getKey(DN_KEY_LEFT_CONTROL))
 			speedMove = (win->getKey(DN_KEY_RIGHT_CONTROL) ? 100.f : 2.f);
 		else
 			speedMove = 0.1f;
+
+		if (win->getKey(DN_KEY_H))
+			cubesMove += 0.01f;
+		if (win->getKey(DN_KEY_J))
+			cubesMove -= 0.01f;
 
 		cubeTransform->position().x = dn::math::smoothDamp(cubeTransform->position().x, target, vel, smooth);
 		cube1Transform->lookAt(cubeTransform->position());
@@ -136,7 +141,7 @@ int main()
 		for (int i = 0; i < nCubes; ++i)
 		{
 			dn::Transform *transform = cubes[i]->getComponent<dn::Transform>();
-			transform->position() += transform->forward() * 0.01f;
+			transform->position() += transform->forward() * cubesMove;
 			transform->lookAt(cubeTransform->position());
 			cubes[i]->update();
 		}

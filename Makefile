@@ -19,7 +19,7 @@ SRCD		= srcs/
 INCLUDES_D	= includes/
 _INCLUDES	= eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Object.hpp \
 			Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
-			Prototype.hpp Camera.hpp stb_image.h
+			Prototype.hpp Camera.hpp stb_image.h Codes.hpp
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp

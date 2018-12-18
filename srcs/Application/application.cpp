@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "Texture.hpp"
+#include "Shader.hpp"
 
 // Returns if the run() function has already been called.
 bool	dn::Application::running() { return (dn::Application::_running); }
@@ -46,8 +47,20 @@ int		dn::Application::run()
 
 	dn::Texture::createTextures();
 
+	for (size_t i = 0; i < dn::Application::_shaders.size(); ++i)
+	{
+		if (!dn::Application::_shaders[i]->compile())
+		{
+			dn::Application::terminate(std::string("Shader compilation error: ") + dn::Application::_shaders[i]->infoLog(), DN_SHADER_FAIL);
+			dn::Application::_shaders.clear();
+			return (DN_SHADER_FAIL);
+		}
+	}
+	dn::Application::_shaders.clear();
+
 	// At this point the application is running.
 	dn::Application::_running = true;
+	dn::Application::_return  = DN_OK;
 	// Calling the start callback of the application.
 	if (dn::Application::_startCallback)
 		dn::Application::_startCallback();
@@ -117,7 +130,7 @@ int		dn::Application::run()
 	// Once the main loop is done, we clean and free everything.
 	dn::Application::destroyWindows();
 	glfwTerminate();
-	return (0);
+	return (dn::Application::_return);
 }
 
 void		dn::Application::stop()
@@ -128,12 +141,14 @@ void		dn::Application::stop()
 		dn::Application::windowCloseCallback((*it)->_glfw);
 }
 
-int			dn::Application::terminate()
+int			dn::Application::terminate(const std::string &p_msg, const int &p_return)
 {
 	dn::Application::destroyWindows();
 	if (dn::Application::_running)
 		glfwTerminate();
+	std::cout << p_msg << std::endl;
 	dn::Application::_running = false;
+	dn::Application::_return = p_return;
 	return (0);
 }
 
@@ -162,6 +177,17 @@ void dn::Application::setContext(dn::Window *p_window, const bool &p_force)
 	dn::Application::_context = p_window;
 	if (dn::Application::_running)
 		glfwMakeContextCurrent(p_window->_glfw);
+}
+
+void dn::Application::addShader(dn::Shader *p_shader)
+{
+	if (dn::Application::_running)
+	{
+		if (!p_shader->compile())
+			dn::Application::terminate(std::string("Shader compilation error: ") + p_shader->infoLog(), DN_SHADER_FAIL);
+	}
+	else
+		dn::Application::_shaders.push_back(p_shader);
 }
 
 // Creates a GLFW window.

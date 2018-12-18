@@ -33,7 +33,7 @@
 # define DN_KEY_E				GLFW_KEY_E
 # define DN_KEY_F				GLFW_KEY_F
 # define DN_KEY_G				GLFW_KEY_G
-# define DN_KEY_HPP				GLFW_KEY_HPP
+# define DN_KEY_H				GLFW_KEY_H
 # define DN_KEY_I				GLFW_KEY_I
 # define DN_KEY_J				GLFW_KEY_J
 # define DN_KEY_K				GLFW_KEY_K
@@ -180,6 +180,7 @@ enum {
 	DN_GLEW_FAIL,
 	DN_ALRDY_RUNNING,
 	DN_WINDOW_FAIL,
+	DN_SHADER_FAIL
 };
 
 #endif // CODES_HPP

@@ -9,6 +9,8 @@
 
 namespace dn
 {
+	class Application;
+
 	class Shader
 	{
 	public:
@@ -30,15 +32,11 @@ namespace dn
 
 		static dn::Shader defaultShader;
 
-		
-
 	private:
 		char _infoLog[512];
 		GLuint _programId;
 		std::string _vertexSource;
 		std::string _fragmentSource;
-	
-		static std::vector<dn::Shader *> _shaders;
 	};
 }
 

@@ -14,6 +14,10 @@ namespace dn
 	// as the window header file uses the Application class
 	class Window;
 
+	// Forward declaration of the Shader class, as it is not needed to include
+	// all the shader header file
+	class Shader;
+
 	// The Application class is just a set of static functions that abstracts
 	// window additions, event callbacks etc.
 	class Application
@@ -26,7 +30,7 @@ namespace dn
 		static int run();
 		// The terminate() function destroys all windows and terminate glfw,
 		// then it sets the _running attribute to false
-		static int terminate();
+		static int terminate(const std::string &p_msg = "", const int &p_return = DN_OK);
 		// The stop() function closes all windows and stop the application by setting the
 		// _running attribute to false
 		static void stop();
@@ -47,6 +51,8 @@ namespace dn
 			// on the window that has the current context
 			static void setContext(dn::Window *p_window, const bool &p_force = false);
 			static dn::Window *context();
+
+			static void addShader(dn::Shader *p_shader);
 
 		// The start callback is called once the run() function is called,
 		// glew and glfw were initiated and all windows were created
@@ -69,10 +75,14 @@ namespace dn
 		// once the run() function is called
 		static std::map<GLFWwindow *, dn::Window *> _glfwWindows;
 
+		// All the shaders are stored here
+		static std::vector<dn::Shader *> _shaders;
+
 		// Attributes for memorizing the current state of the Application
 		static bool	_running;
 		static bool	_stopped;
 		static int	_flags;
+		static int	_return;
 
 		static double _deltaTime;
 		static double _time;

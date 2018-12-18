@@ -90,7 +90,7 @@ void dn::Transform::lookAt(const glm::vec3 &p_target)
 	this->_rotation = glm::eulerAngles(
 		glm::toQuat(
 			glm::transpose(
-				glm::lookAt(this->_position, p_target, this->up()))));
+				glm::lookAt(this->_position, p_target - this->_position, this->up()))));
 }
 
 void dn::Transform::start() { }

@@ -1,27 +1,30 @@
 #include "Shader.hpp"
+#include "Application.hpp"
 #include <fstream>
 #include <sstream>
 
 dn::Shader::Shader(const std::string &p_vertexShader, const std::string &p_fragmentShader, const bool &p_file)
 	: _vertexSource(p_vertexShader), _fragmentSource(p_fragmentShader), _programId(0)
 {
-	if (!p_file)
-		return ;
-	std::ifstream ofile;
-	ofile.open(p_vertexShader);
+	if (p_file)
 	{
-		std::stringstream strm;
-		strm << ofile.rdbuf();
-		this->_vertexSource = strm.str();
+		std::ifstream ofile;
+		ofile.open(p_vertexShader);
+		{
+			std::stringstream strm;
+			strm << ofile.rdbuf();
+			this->_vertexSource = strm.str();
+		}
+		ofile.close();
+		ofile.open(p_fragmentShader);
+		{
+			std::stringstream strm;
+			strm << ofile.rdbuf();
+			this->_fragmentSource = strm.str();
+		}
+		ofile.close();
 	}
-	ofile.close();
-	ofile.open(p_fragmentShader);
-	{
-		std::stringstream strm;
-		strm << ofile.rdbuf();
-		this->_fragmentSource = strm.str();
-	}
-	ofile.close();
+	dn::Application::addShader(this);
 }
 
 dn::Shader::~Shader()
@@ -119,7 +122,7 @@ static const char *g_vertexSource = GLSL(
 	{
 		gl_Position = viewProjection * transform * vec4(position, 1);
 		ocolor = color;
-		otext = tex;
+		otex = tex;
 	}
 );
 
