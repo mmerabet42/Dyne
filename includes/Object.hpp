@@ -3,11 +3,12 @@
 
 # include <map>
 # include <typeinfo>
+# include <string>
+# include "Component.hpp"
 
 namespace dn
 {
 	// Forward declaration of the Component class, so no need to include the component header file
-	class Component;
 
 	// An object is a component container
 	class Object

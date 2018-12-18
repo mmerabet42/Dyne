@@ -2,7 +2,7 @@ NAME		=	libdn.a
 CC			=	g++ -std=c++14
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
-GET_PACKAGE	=	`pkg-config --static --libs x11 glew glfw3`
+GET_PACKAGE	=	`pkg-config --static --libs glew glfw3`
 
 MAIN_FILE	= main.cpp
 OUT			= a.out
@@ -12,7 +12,7 @@ ifeq ($(OSNAME),Linux)
 	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
 endif
 ifeq ($(OSNAME),Darwin)
-	COMPILE = $(CC) $(MAIN_FILE) $(NAME) -L ~/.brew/lib -lglfw -lglew -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
+	COMPILE = $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
 endif
 
 SRCD		= srcs/
