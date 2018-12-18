@@ -45,8 +45,6 @@ int		dn::Application::run()
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	dn::Texture::createTextures();
-
 	for (size_t i = 0; i < dn::Application::_shaders.size(); ++i)
 	{
 		if (!dn::Application::_shaders[i]->compile())

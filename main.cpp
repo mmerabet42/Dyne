@@ -35,7 +35,7 @@ int main()
 	}, GL_LINE_STRIP, {
 		0, 1, 3, 2, 0, 4, 6, 2, 3, 7, 6, 4, 5, 1, 5, 7
 	});
-	dn::Model pointsModel = dn::Model::generatePoints(5000, 1000.f);
+	dn::Model pointsModel = dn::Model::generatePoints(50000, 10000.f);
 
 	dn::Object *cube = new dn::Object;
 	dn::Object *cube1 = new dn::Object;
@@ -119,7 +119,7 @@ int main()
 		else if (win->getKey(DN_KEY_KP_SUBTRACT))
 			camera->getComponent<dn::Camera>()->fov() -= 0.005f;
 
-		pointsTransform->scale() += 0.001f;
+		pointsTransform->scale() += 0.01f;
 
 		if (win->getKey(DN_KEY_LEFT_CONTROL))
 			speedMove = (win->getKey(DN_KEY_RIGHT_CONTROL) ? 100.f : 2.f);
