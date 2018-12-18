@@ -2,6 +2,7 @@
 # define SHADER_HPP
 
 # include <string>
+# include <vector>
 # include "allgl.hpp"
 
 # define GLSL(CODE) "#version 330 core\n" #CODE
@@ -29,11 +30,15 @@ namespace dn
 
 		static dn::Shader defaultShader;
 
+		
+
 	private:
 		char _infoLog[512];
 		GLuint _programId;
 		std::string _vertexSource;
 		std::string _fragmentSource;
+	
+		static std::vector<dn::Shader *> _shaders;
 	};
 }
 

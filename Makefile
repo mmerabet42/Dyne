@@ -19,7 +19,7 @@ SRCD		= srcs/
 INCLUDES_D	= includes/
 _INCLUDES	= eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Object.hpp \
 			Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
-			Prototype.hpp Camera.hpp
+			Prototype.hpp Camera.hpp stb_image.h
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp
@@ -28,6 +28,7 @@ _SHDR_FS	= shader.cpp
 _MESH_FS	= prototype.cpp model.cpp
 _MATH_FS	= smoothDamp.cpp random.cpp
 _OBJ_FS		= object.cpp component.cpp transform.cpp meshrenderer.cpp camera.cpp
+_TXTR_FS	= texture.cpp
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 
@@ -45,9 +46,11 @@ MATH_FS		= $(addprefix $(SRCD)Math/,$(_MATH_FS))
 MATH_O		= $(_MATH_FS:.cpp=.o)
 OBJ_FS		= $(addprefix $(SRCD)Object/,$(_OBJ_FS))
 OBJ_O		= $(_OBJ_FS:.cpp=.o)
+TXTR_FS		= $(addprefix $(SRCD)Texture/,$(_TXTR_FS))
+TXTR_O		= $(_TXTR_FS:.cpp=.o)
 
-SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS) $(MATH_FS) $(OBJ_FS)
-OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) $(OBJ_O)
+SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS) $(MATH_FS) $(OBJ_FS) $(TXTR_FS)
+OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) $(OBJ_O) $(TXTR_O)
 OBJD		= .objs/
 OBJB		= $(addprefix $(OBJD),$(OBJS))
 
@@ -94,6 +97,11 @@ $(OBJD)%.o: $(SRCD)Math/%.cpp $(INCLUDES) Makefile
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
 $(OBJD)%.o: $(SRCD)Object/%.cpp $(INCLUDES) Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+
+$(OBJD)%.o: $(SRCD)Texture/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes

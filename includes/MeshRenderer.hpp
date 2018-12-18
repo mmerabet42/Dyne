@@ -7,6 +7,8 @@
 
 namespace dn
 {
+	class Texture;
+
 	class MeshRenderer: public dn::Component
 	{
 	public:
@@ -19,12 +21,17 @@ namespace dn
 		dn::Shader *shader() const;
 		void setShader(dn::Shader *p_shader);
 
+		dn::Texture *texture() const;
+		void setTexture(dn::Texture *p_texture);
+
 		void start();
 		void update();
 
 	private:
 		dn::Model *_model;
 		dn::Shader *_shader;
+
+		dn::Texture *_texture;
 
 		GLuint _vao;
 		GLuint _vbos[2];

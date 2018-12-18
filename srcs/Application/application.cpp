@@ -2,6 +2,8 @@
 #include "Window.hpp"
 #include <algorithm>
 
+#include "Texture.hpp"
+
 // Returns if the run() function has already been called.
 bool	dn::Application::running() { return (dn::Application::_running); }
 int		dn::Application::run()
@@ -41,6 +43,8 @@ int		dn::Application::run()
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	dn::Texture::createTextures();
 
 	// At this point the application is running.
 	dn::Application::_running = true;

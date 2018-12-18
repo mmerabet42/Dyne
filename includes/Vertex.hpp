@@ -9,6 +9,7 @@ namespace dn
 	{
 		GLfloat position[3];
 		GLfloat color[4];
+		GLfloat tex[2];
 	};
 }
 

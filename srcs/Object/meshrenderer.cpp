@@ -3,9 +3,11 @@
 #include "Transform.hpp"
 #include "Camera.hpp"
 #include "Object.hpp"
+#include "Texture.hpp"
 
 dn::MeshRenderer::MeshRenderer(dn::Model *p_model, dn::Shader *p_shader)
-	: Component("MeshRenderer"), _model(p_model), _shader(p_shader), _vao(0), _vbos{0, 0}
+	: Component("MeshRenderer"), _model(p_model), _shader(p_shader), _vao(0), _vbos{0, 0},
+	_texture(nullptr)
 {
 	
 }
@@ -31,13 +33,18 @@ void dn::MeshRenderer::setShader(dn::Shader *p_shader)
 	this->_shader = p_shader;
 }
 
+dn::Texture *dn::MeshRenderer::texture() const { return (this->_texture); }
+void dn::MeshRenderer::setTexture(dn::Texture *p_texture)
+{
+	this->_texture = p_texture;
+}
+
 void dn::MeshRenderer::start()
 {
 	if (!this->_model || !this->_shader)
 		return ;
 	if (!this->_shader->compile())
 		return ;
-
 	glGenVertexArrays(1, &this->_vao);
 	glBindVertexArray(this->_vao);
 
@@ -48,12 +55,12 @@ void dn::MeshRenderer::start()
 
 	GLuint positionAttrib = this->_shader->getAttrib("position");
 	GLuint colorAttrib = this->_shader->getAttrib("color");
+	GLuint texAttrib = this->_shader->getAttrib("tex");
 
 	glEnableVertexAttribArray(positionAttrib);
 	glVertexAttribPointer(positionAttrib, 3, GL_FLOAT, false, sizeof(dn::Vertex), nullptr);
 	glEnableVertexAttribArray(colorAttrib);
 	glVertexAttribPointer(colorAttrib, 4, GL_FLOAT, false, sizeof(dn::Vertex), (void *)sizeof(dn::Vertex::position));
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbos[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_model->indicesSize(), this->_model->indicesData(), GL_STATIC_DRAW);
 
@@ -67,6 +74,7 @@ void dn::MeshRenderer::update()
 	this->_shader->use();
 	// The braces are definetely useless
 	{
+		// Getting the transform component at each update is really stupid
 		dn::Transform *transform = this->object()->getComponent<dn::Transform>();
 		if (transform)
 		{
@@ -78,9 +86,20 @@ void dn::MeshRenderer::update()
 				glUniformMatrix4fv(viewProjectUni, 1, GL_FALSE, &dn::Camera::main->viewProjectionMat()[0][0]);
 			}
 		}
-
 		glBindVertexArray(this->_vao);
+
+		if (this->_texture)
+		{
+			GLuint samplerUni = this->_shader->getUniform("unit");
+			glUniform1i(samplerUni, GL_TEXTURE0);
+			this->_texture->bind(0);
+		}
+
 		glDrawElements(this->_model->method(), this->_model->indices().size(), GL_UNSIGNED_INT, nullptr);
+
+		if (this->_texture)
+			this->_texture->unbind();
+
 		glBindVertexArray(0);
 	}
 	this->_shader->use(false);

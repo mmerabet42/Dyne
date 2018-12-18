@@ -11,6 +11,7 @@
 #include "Transform.hpp"
 #include "MeshRenderer.hpp"
 #include "Camera.hpp"
+#include "Texture.hpp"
 
 void closeWinEscape(dn::Window *w, int k, int, int) { if (k == DN_KEY_ESCAPE) w->close(); }
 
@@ -22,15 +23,15 @@ int main()
 	win->setClearColor(37, 44, 56);
 
 	dn::Model cubeModel({
-		{{0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}},
-		{{0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}},
-		{{-0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}},
-		{{-0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}},
+		{{0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+		{{0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+		{{-0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+		{{-0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
 
-		{{0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}},
-		{{0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}},
-		{{-0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}},
-		{{-0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}},
+		{{0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+		{{0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+		{{-0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+		{{-0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
 	}, GL_LINE_STRIP, {
 		0, 1, 3, 2, 0, 4, 6, 2, 3, 7, 6, 4, 5, 1, 5, 7
 	});
@@ -40,6 +41,20 @@ int main()
 	dn::Object *cube1 = new dn::Object;
 	dn::Object *points = new dn::Object;
 	dn::Object *camera = new dn::Object;
+
+	std::vector<dn::Object *> cubes;
+	int nCubes = 100;
+	float area = 100.f;
+	for (int i = 0; i < nCubes; ++i)
+	{
+		dn::Object *newCube = new dn::Object;
+		newCube->addComponent<dn::Transform>(
+			dn::math::random(-area, area),
+			dn::math::random(-area, area),
+			dn::math::random(-area, area));
+		newCube->addComponent<dn::MeshRenderer>(&cubeModel);
+		cubes.push_back(newCube);
+	}
 
 	dn::Transform *cubeTransform = cube->addComponent<dn::Transform>();
 	cube->addComponent<dn::MeshRenderer>(&cubeModel);
@@ -51,22 +66,24 @@ int main()
 	points->addComponent<dn::MeshRenderer>(&pointsModel);
 
 	dn::Transform *cameraTransform = camera->addComponent<dn::Transform>(0.f, 0.f, 5.f);
-	camera->addComponent<dn::Camera>(70.f, 0.02f, 10000.f);
+	camera->addComponent<dn::Camera>(70.f, 0.02f, 100000000.f);
 
 	win->startEvent([&](dn::Window *win) {
 		cube->start();
 		cube1->start();
 		points->start();
+		for (int i = 0; i < nCubes; ++i)
+			cubes[i]->start();
 	});
 
 	float vel = 0.f;
-	float target = 5.f;
+	float target = 100.f;
 	float smooth = 0.1f;
 	float speedMove = 0.1f;
 
 	win->keyEvent.addListener([&](dn::Window *win, int k, int a, int) {
 		if (k == DN_KEY_G && a == DN_PRESS)
-			target = (target == 5.f ? -5.f : 5.f);
+			target = (target == 100.f ? -100.f : 100.f);
 	});
 
 	win->updateEvent([&](dn::Window *win) {
@@ -101,21 +118,28 @@ int main()
 		else if (win->getKey(DN_KEY_KP_SUBTRACT))
 			camera->getComponent<dn::Camera>()->fov() -= 0.005f;
 
-		pointsTransform->scale() += 0.001f;
+		pointsTransform->scale() += 0.1f;
+
 
 		if (win->getKey(DN_KEY_LEFT_CONTROL))
-			speedMove = 2.f;
+			speedMove = (win->getKey(DN_KEY_RIGHT_CONTROL) ? 100.f : 2.f);
 		else
 			speedMove = 0.1f;
 
 		cubeTransform->position().x = dn::math::smoothDamp(cubeTransform->position().x, target, vel, smooth);
 		cube1Transform->lookAt(cubeTransform->position());
-		cameraTransform->lookAt(cubeTransform->position());
 
 		win->updateViewport();
 		camera->getComponent<dn::Camera>()->setAspectRatio(win->aspectRatio());
 
 		win->clear();
+		for (int i = 0; i < nCubes; ++i)
+		{
+			dn::Transform *transform = cubes[i]->getComponent<dn::Transform>();
+			transform->position() += transform->forward() * 0.01f;
+			transform->lookAt(cubeTransform->position());
+			cubes[i]->update();
+		}
 		cube->update();
 		cube1->update();
 		points->update();
