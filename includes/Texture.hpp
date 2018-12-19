@@ -26,7 +26,6 @@ namespace dn
 		void create();
 
 		static unsigned char *load(const std::string &p_path, int &p_width, int &p_height);
-		static void createTextures();
 
 	private:
 		int _width;
@@ -37,8 +36,6 @@ namespace dn
 		GLuint _tex;
 
 		std::string _path;
-
-		static std::vector<dn::Texture *> _textures;
 	};
 }
 

@@ -135,7 +135,7 @@ static const char *g_fragmentSource = GLSL(
 	out vec4 color;
 	void main()
 	{
-		color = ocolor;
+		color = texture(unit, otex) * ocolor;
 	}
 );
 

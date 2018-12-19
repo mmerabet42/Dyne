@@ -45,6 +45,8 @@ void dn::MeshRenderer::start()
 		return ;
 	if (!this->_shader->compile())
 		return ;
+	if (this->_texture)
+		this->_texture->create();
 	glGenVertexArrays(1, &this->_vao);
 	glBindVertexArray(this->_vao);
 
@@ -58,9 +60,16 @@ void dn::MeshRenderer::start()
 	GLuint texAttrib = this->_shader->getAttrib("tex");
 
 	glEnableVertexAttribArray(positionAttrib);
-	glVertexAttribPointer(positionAttrib, 3, GL_FLOAT, false, sizeof(dn::Vertex), nullptr);
+	glVertexAttribPointer(positionAttrib, 3, GL_FLOAT, false,
+		sizeof(dn::Vertex), nullptr);
 	glEnableVertexAttribArray(colorAttrib);
-	glVertexAttribPointer(colorAttrib, 4, GL_FLOAT, false, sizeof(dn::Vertex), (void *)sizeof(dn::Vertex::position));
+	glVertexAttribPointer(colorAttrib, 4, GL_FLOAT, false,
+		sizeof(dn::Vertex), (void *)sizeof(dn::Vertex::position));
+	glEnableVertexAttribArray(texAttrib);
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, false,
+		sizeof(dn::Vertex), (void *)(sizeof(GLfloat) * 7));
+		
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbos[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_model->indicesSize(), this->_model->indicesData(), GL_STATIC_DRAW);
 

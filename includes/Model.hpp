@@ -29,6 +29,9 @@ namespace dn
 		const void *verticesData() const;
 		const void *indicesData() const;
 
+		static dn::Model cube;
+		static dn::Model cubeEdges;
+
 		static dn::Model generatePoints(const int &p_n, const float &p_radius);
 	private:
 

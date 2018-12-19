@@ -77,6 +77,7 @@ namespace dn
 
 		// All the shaders are stored here
 		static std::vector<dn::Shader *> _shaders;
+		// All the texture created, before the application has run are stored here
 
 		// Attributes for memorizing the current state of the Application
 		static bool	_running;

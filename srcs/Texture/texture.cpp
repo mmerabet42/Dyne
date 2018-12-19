@@ -10,19 +10,16 @@ dn::Texture::Texture(const std::string &p_path)
 	this->_data = dn::Texture::load(p_path, this->_width, this->_height);
 	if (dn::Application::running())
 		this->create();
-	else
-		dn::Texture::_textures.push_back(this);
 }
 
 void dn::Texture::create()
 {
-	if (dn::Application::running())
+	if (!dn::Application::running() || this->_tex)
 		return ;
 	glGenTextures(1, &this->_tex);
 	glBindTexture(GL_TEXTURE_2D, this->_tex);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->_width, this->_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->_data);
@@ -60,14 +57,3 @@ unsigned char *dn::Texture::load(const std::string &p_path, int &p_width, int &p
 	int comp;
 	return (stbi_load(p_path.c_str(), &p_width, &p_height, &comp, 4));
 }
-
-void dn::Texture::createTextures()
-{
-	if (!dn::Application::running())
-		return ;
-	for (size_t i = 0; i < dn::Texture::_textures.size(); ++i)
-		dn::Texture::_textures.at(i)->create();
-	dn::Texture::_textures.clear();
-}
-
-std::vector<dn::Texture *> dn::Texture::_textures;
