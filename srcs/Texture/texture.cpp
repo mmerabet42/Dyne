@@ -8,14 +8,18 @@ dn::Texture::Texture(const std::string &p_path)
 	: _path(p_path), _tex(0)
 {
 	this->_data = dn::Texture::load(p_path, this->_width, this->_height);
-	if (dn::Application::running())
-		this->create();
+	dn::Application::addTexture(this);
+}
+
+dn::Texture::~Texture()
+{
+	if (this->_tex)
+		glDeleteTextures(1, &this->_tex);
+	stbi_image_free(this->_data);
 }
 
 void dn::Texture::create()
 {
-	if (!dn::Application::running() || this->_tex)
-		return ;
 	glGenTextures(1, &this->_tex);
 	glBindTexture(GL_TEXTURE_2D, this->_tex);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);

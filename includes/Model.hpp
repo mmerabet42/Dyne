@@ -33,6 +33,8 @@ namespace dn
 		static dn::Model cubeEdges;
 
 		static dn::Model generatePoints(const int &p_n, const float &p_radius);
+
+		static dn::Model generateGridPlane(const int &p_n, const float &p_distance);
 	private:
 
 		dn::VertexArray _vertices;

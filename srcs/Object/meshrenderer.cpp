@@ -7,9 +7,15 @@
 
 dn::MeshRenderer::MeshRenderer(dn::Model *p_model, dn::Shader *p_shader)
 	: Component("MeshRenderer"), _model(p_model), _shader(p_shader), _vao(0), _vbos{0, 0},
-	_texture(nullptr)
+	_texture(nullptr), _modelAllocated(false)
 {
 	
+}
+
+dn::MeshRenderer::MeshRenderer(const dn::Model &p_model, dn::Shader *p_shader)
+	: MeshRenderer(new dn::Model(p_model), p_shader)
+{
+	this->_modelAllocated = true;
 }
 
 dn::MeshRenderer::~MeshRenderer()
@@ -19,12 +25,24 @@ dn::MeshRenderer::~MeshRenderer()
 		glDeleteVertexArrays(1, &this->_vao);
 		glDeleteBuffers(2, this->_vbos);
 	}
+	if (this->_modelAllocated)
+		delete this->_model;
 }
 
 dn::Model *dn::MeshRenderer::model() const { return (this->_model); }
 void dn::MeshRenderer::setModel(dn::Model *p_model)
 {
+	if (this->_modelAllocated)
+		delete this->_model;
+	this->_modelAllocated = false;
 	this->_model = p_model;
+}
+void dn::MeshRenderer::setModel(const dn::Model &p_model)
+{
+	if (this->_modelAllocated)
+		delete this->_model;
+	this->_modelAllocated = true;
+	this->_model = new dn::Model(p_model);
 }
 
 dn::Shader *dn::MeshRenderer::shader() const { return (this->_shader); }
@@ -43,10 +61,6 @@ void dn::MeshRenderer::start()
 {
 	if (!this->_model || !this->_shader)
 		return ;
-	if (!this->_shader->compile())
-		return ;
-	if (this->_texture)
-		this->_texture->create();
 	glGenVertexArrays(1, &this->_vao);
 	glBindVertexArray(this->_vao);
 

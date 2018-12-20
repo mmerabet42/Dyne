@@ -25,6 +25,7 @@ int main()
 	dn::Object *camera = new dn::Object;
 	dn::Object *cube = new dn::Object;
 	dn::Object *surroundCube = new dn::Object;
+	dn::Object *gridPlane = new dn::Object;
 
 	cube->addComponent<dn::Transform>();
 	cube->addComponent<dn::MeshRenderer>(&dn::Model::cube);
@@ -36,9 +37,13 @@ int main()
 	dn::Transform *cameraTransform = camera->addComponent<dn::Transform>(0.f, 0.f, 5.f);
 	camera->addComponent<dn::Camera>(70.f, 0.02f, 100000000.f);
 
+	gridPlane->addComponent<dn::Transform>();
+	gridPlane->addComponent<dn::MeshRenderer>(dn::Model::generateGridPlane(101, 2.f));
+
 	win->startEvent([&](dn::Window *win) {
 		cube->start();
 		surroundCube->start();
+		gridPlane->start();
 	});
 
 	float speedMove = 0.1f;
@@ -85,13 +90,13 @@ int main()
 		if (win->getKey(DN_KEY_P))
 			cube->getComponent<dn::Transform>()->position() -= cube->getComponent<dn::Transform>()->right();
 
-
 		win->updateViewport();
 		camera->getComponent<dn::Camera>()->setAspectRatio(win->aspectRatio());
 
 		win->clear();
 		cube->update();
 		surroundCube->update();
+		gridPlane->update();
 	});
 
 	dn::Application::setFlag(DN_FREEWINDOWS, true);

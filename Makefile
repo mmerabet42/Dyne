@@ -18,14 +18,15 @@ endif
 SRCD		= srcs/
 INCLUDES_D	= includes/
 _INCLUDES	= eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Object.hpp \
-			Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
-			Prototype.hpp Camera.hpp stb_image.h Codes.hpp
+			  Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
+			  Prototype.hpp Camera.hpp stb_image.h Codes.hpp
 
 _MAIN_FS	=
-_APP_FS		= application.cpp callbacks.cpp init.cpp
+_APP_FS		= application.cpp callbacks.cpp init.cpp \
+			  manage_shader.cpp manage_window.cpp manage_texture.cpp
 _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
-_SHDR_FS	= shader.cpp
-_MESH_FS	= prototype.cpp model.cpp
+_SHDR_FS	= shader.cpp defaultShader.cpp
+_MESH_FS	= prototype.cpp model.cpp models.cpp
 _MATH_FS	= smoothDamp.cpp random.cpp
 _OBJ_FS		= object.cpp component.cpp transform.cpp meshrenderer.cpp camera.cpp
 _TXTR_FS	= texture.cpp

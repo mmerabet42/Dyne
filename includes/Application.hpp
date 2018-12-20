@@ -11,15 +11,19 @@
 namespace dn
 {
 	// Forward declaration of the Window class to avoid cycles
-	// as the window header file uses the Application class
+	// as the window header file uses the Application class too
 	class Window;
 
 	// Forward declaration of the Shader class, as it is not needed to include
 	// all the shader header file
 	class Shader;
 
+	// Forward declaring the Texture class
+	class Texture;
+
 	// The Application class is just a set of static functions that abstracts
-	// window additions, event callbacks etc.
+	// window additions, event callbacks, shader creations etc.
+	// It centralize all the underlying and ugly but necessary stuff
 	class Application
 	{
 	public:
@@ -40,7 +44,7 @@ namespace dn
 		static double time();
 		static double deltaTime();
 
-		// Static function that might be called by the Window class
+		// Manage windows
 
 			static int addWindow(dn::Window *p_window);
 			static dn::Window *focusedWindow();
@@ -52,7 +56,16 @@ namespace dn
 			static void setContext(dn::Window *p_window, const bool &p_force = false);
 			static dn::Window *context();
 
+		// Manage shaders
+
 			static void addShader(dn::Shader *p_shader);
+			// Compiles all the shaders stored in the _shaders list
+			static int compileShaders();
+
+		// Manage textures
+
+			static void addTexture(dn::Texture *p_texture);
+			static void createTextures();
 
 		// The start callback is called once the run() function is called,
 		// glew and glfw were initiated and all windows were created
@@ -77,7 +90,9 @@ namespace dn
 
 		// All the shaders are stored here
 		static std::vector<dn::Shader *> _shaders;
-		// All the texture created, before the application has run are stored here
+		// All the textures are stored here
+		static std::vector<dn::Texture *> _textures;
+		
 
 		// Attributes for memorizing the current state of the Application
 		static bool	_running;

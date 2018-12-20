@@ -10,6 +10,7 @@ namespace dn
 	{
 	public:
 		Texture(const std::string &p_path);
+		~Texture();
 
 		int width() const;
 		int height() const;
