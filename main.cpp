@@ -87,7 +87,7 @@ int main()
 		if (win->getKey(DN_KEY_P))
 			cube->getComponent<dn::Transform>()->position() -= cube->getComponent<dn::Transform>()->right();
 
-		if (win->getButtonDown(DN_MOUSE_LEFT))
+		if (win->getButton(DN_MOUSE_LEFT))
 		{
 			dn::Object *obj = new dn::Object;
 			dn::Object *obj2 = new dn::Object;
