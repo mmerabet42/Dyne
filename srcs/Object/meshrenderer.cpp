@@ -97,17 +97,17 @@ void dn::MeshRenderer::update()
 	this->_shader->use();
 	// The braces are definetely useless
 	{
-		// Getting the transform component at each update is really stupid
+		// The mesh renderer needs the transform component in order to create the transform matrix,
+		// that is going to be sent to the shader
+		// Requesting the transform component at each update is really stupid
 		dn::Transform *transform = this->object()->getComponent<dn::Transform>();
 		if (transform)
 		{
-			GLuint transformUni = this->_shader->getUniform("transform");
-			glUniformMatrix4fv(transformUni, 1, GL_FALSE, &transform->transformMat()[0][0]);
+			glm::mat4 transformMat = transform->transformMat();
 			if (dn::Camera::main)
-			{
-				GLuint viewProjectUni = this->_shader->getUniform("viewProjection");
-				glUniformMatrix4fv(viewProjectUni, 1, GL_FALSE, &dn::Camera::main->viewProjectionMat()[0][0]);
-			}
+				transformMat = dn::Camera::main->viewProjectionMat() * transformMat;
+			GLuint transformUni = this->_shader->getUniform("transform");
+			glUniformMatrix4fv(transformUni, 1, GL_FALSE, &transformMat[0][0]);
 		}
 		glBindVertexArray(this->_vao);
 

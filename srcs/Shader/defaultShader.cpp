@@ -6,13 +6,12 @@ static const char *g_vertexSource = GLSL(
 	in vec2 tex;
 
 	uniform mat4 transform;
-	uniform mat4 viewProjection;
 
 	out vec2 otex;
 	out vec4 ocolor;
 	void main()
 	{
-		gl_Position = viewProjection * transform * vec4(position, 1);
+		gl_Position = transform * vec4(position, 1);
 		ocolor = color;
 		otex = tex;
 	}
@@ -27,7 +26,7 @@ static const char *g_fragmentSource = GLSL(
 	out vec4 color;
 	void main()
 	{
-		color = texture(unit, otex) * ocolor;
+		color = ocolor;
 	}
 );
 
