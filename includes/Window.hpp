@@ -2,6 +2,7 @@
 # define WINDOW_HPP
 
 # include <string>
+# include <map>
 
 # include "allgl.hpp"
 # include "Color.hpp"
@@ -21,28 +22,36 @@ namespace dn
 		Window(const int &p_width, const int &p_height, const std::string &p_title = "Window");
 		Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title = "Window");
 
-		void	clear() const;
-		void	clear(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.0f) const;
+		void clear() const;
+		void clear(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.0f) const;
 
-		void	close();
-		void	open();
+		void close();
+		void open();
 
-		void	iconify();
-		void	restore();
-		bool	iconified() const;
+		void iconify();
+		void restore();
+		bool iconified() const;
 	
-		void	hide();
-		void	show();
-		bool	visible() const;
+		void hide();
+		void show();
+		bool visible() const;
 
-		void	focus();
-		bool	focused() const;
+		void focus();
+		bool focused() const;
 
-		void	setContext(const bool &p_force = false);
-		void	setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height);
-		void	updateViewport();
+		void setMouseLock(const bool &p_lock);
 
-		int		getKey(const int &p_keycode) const;
+		void setContext(const bool &p_force = false);
+		void setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height);
+		void updateViewport();
+
+		bool getKey(const int &p_keycode);
+		bool getKeyDown(const int &p_keycode);
+		bool getKeyUp(const int &p_keycode);
+
+		bool getButton(const int &p_button);
+		bool getButtonDown(const int &p_button);
+		bool getButtonUp(const int &p_button);
 
 		/* Getters and setters */
 
@@ -72,6 +81,11 @@ namespace dn
 
 			std::string	title() const;
 			void		title(const std::string &p_title);
+
+			double mouseX() const;
+			double mouseY() const;
+			double mouseDeltaX();
+			double mouseDeltaY();
 
 			dn::Color	clearColor() const;
 			void		setClearColor(const float &p_r, const float &p_g, const float &p_b);
@@ -138,6 +152,12 @@ namespace dn
 		std::string	_title;
 
 		float		_opacity;
+
+		// Stores the state of keys and mouses buttons (pressed, held, released)
+		std::map<int, int> _keyLogger;
+		std::map<int, int> _mouseLogger;
+		// Mouse position and delta
+		double _mousePos[4];
 
 		/* Initialized by dn::Application */
 		GLFWwindow	*_glfw;

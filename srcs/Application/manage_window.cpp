@@ -76,12 +76,16 @@ int	dn::Application::createGLFWwindow(dn::Window *p_window)
 	// Same for the visibility.
 	if (!(p_window->_flags & DN_VISIBLE))
 		p_window->hide();
+	// Lock of the mouse
+	if (p_window->_flags & DN_MOUSELOCKED)
+		p_window->setMouseLock(true);
 	// Sets the opacity of the window.
 	glfwSetWindowOpacity(p_window->_glfw, p_window->_opacity);
 	glfwSetWindowSizeLimits(p_window->_glfw,
 		p_window->_minwidth, p_window->_minheight,
 		p_window->_maxwidth, p_window->_maxheight);
 	glfwGetFramebufferSize(p_window->_glfw, &p_window->_framebufferWidth, &p_window->_framebufferHeight);
+	glfwGetCursorPos(p_window->_glfw, &p_window->_mousePos[0], &p_window->_mousePos[1]);
 
 	// Links all the callbacks to the application callbacks.
 	glfwSetKeyCallback(p_window->_glfw, dn::Application::windowKeyCallback);

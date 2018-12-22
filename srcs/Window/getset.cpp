@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "Application.hpp"
 
 /* Getters and setters */
 
@@ -74,6 +75,26 @@ void	dn::Window::setPos(const int &p_x, const int &p_y)
 		glfwSetWindowPos(this->_glfw, this->_x, this->_y);
 	else
 		this->_flags |= DN_POS_SPECIFIED;
+}
+
+double dn::Window::mouseX() const
+{
+	return (this->_mousePos[0]);
+}
+
+double dn::Window::mouseY() const
+{
+	return (this->_mousePos[1]);
+}
+
+double dn::Window::mouseDeltaX()
+{
+	return (this->_mousePos[2] *= dn::Application::deltaTime() * 0.1f);
+}
+
+double dn::Window::mouseDeltaY()
+{
+	return (this->_mousePos[3] *= dn::Application::deltaTime() * 0.1f);
 }
 
 std::string	dn::Window::title() const { return (this->_title); }

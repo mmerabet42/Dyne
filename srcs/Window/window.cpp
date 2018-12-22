@@ -9,6 +9,7 @@ dn::Window::Window(const int &p_width, const int &p_height, const std::string &p
 	_flags(DN_VISIBLE), _clearColor(0.f, 0.f, 0.f, 1.f), _opacity(1.f),
 	_framebufferWidth(0), _framebufferHeight(0),
 	_minwidth(DN_NONE), _minheight(DN_NONE), _maxwidth(DN_NONE), _maxheight(DN_NONE),
+	_mousePos{0.0, 0.0, 0.0, 0.0},
 
 	// Initializing all function pointer to null
 	_keyCb(nullptr), _startCb(nullptr), _updateCb(nullptr), _sizeCb(nullptr),
@@ -16,7 +17,7 @@ dn::Window::Window(const int &p_width, const int &p_height, const std::string &p
 	_refreshCb(nullptr), _mouseButtonCb(nullptr), _mouseMoveCb(nullptr), _mouseEnterCb(nullptr),
 	_scrollCb(nullptr), _dropCb(nullptr),
 
-	// Calling the constructor of each event callback
+	// Calling the constructor of each event
 	startEvent(), updateEvent(), closeEvent(), keyEvent(), sizeEvent(), posEvent(), focusEvent(),
 	maximizeEvent(), refreshEvent(), mouseButtonEvent(), mouseMoveEvent(), mouseEnterEvent(),
 	scrollEvent(), dropEvent()
@@ -121,9 +122,80 @@ void		dn::Window::focus()
 		glfwFocusWindow(this->_glfw);
 }
 
-int			dn::Window::getKey(const int &p_keycode) const
+void dn::Window::setMouseLock(const bool &p_lock)
 {
-	return (glfwGetKey(this->_glfw, p_keycode));
+	this->setFlag(DN_MOUSELOCKED, p_lock);
+	if (this->_glfw)
+	{
+		if (p_lock)
+			glfwSetInputMode(this->_glfw, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		else
+			glfwSetInputMode(this->_glfw, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+}
+
+bool dn::Window::getKey(const int &p_keycode)
+{
+	if (this->_keyLogger[p_keycode] == DN_PRESS)
+	{
+		this->_keyLogger[p_keycode] = DN_REPEAT;
+		return (true);
+	}
+	else if (this->_keyLogger[p_keycode] == DN_REPEAT)
+		return (true);
+	return (false);
+}
+
+bool dn::Window::getKeyDown(const int &p_keycode)
+{
+	if (this->_keyLogger[p_keycode] == DN_PRESS)
+	{
+		this->_keyLogger[p_keycode] = DN_REPEAT;
+		return (true);
+	}
+	return (false);
+}
+
+bool dn::Window::getKeyUp(const int &p_keycode)
+{
+	if (this->_keyLogger[p_keycode] == DN_RELEASE)
+	{
+		this->_keyLogger[p_keycode] = 0;
+		return (true);
+	}
+	return (false);
+}
+
+bool dn::Window::getButton(const int &p_button)
+{
+	if (this->_mouseLogger[p_button] == DN_PRESS)
+	{
+		this->_mouseLogger[p_button] = DN_REPEAT;
+		return (true);
+	}
+	else if (this->_mouseLogger[p_button] == DN_REPEAT)
+		return (true);
+	return (false);
+}
+
+bool dn::Window::getButtonDown(const int &p_button)
+{
+	if (this->_mouseLogger[p_button] == DN_PRESS)
+	{
+		this->_mouseLogger[p_button] = DN_REPEAT;
+		return (true);
+	}
+	return (false);
+}
+
+bool dn::Window::getButtonUp(const int &p_button)
+{
+	if (this->_mouseLogger[p_button] == DN_RELEASE)
+	{
+		this->_mouseLogger[p_button] = 0;
+		return (true);
+	}
+	return (false);
 }
 
 int			dn::Window::flags() const { return (this->_flags); }

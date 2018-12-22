@@ -3,9 +3,9 @@
 
 # include "allgl.hpp"
 
-# define DN_PRESS				GLFW_PRESS
-# define DN_REPEAT				GLFW_REPEAT
-# define DN_RELEASE				GLFW_RELEASE
+# define DN_PRESS				1
+# define DN_REPEAT				2
+# define DN_RELEASE				3
 
 # define DN_KEY_UNKNOWN			GLFW_KEY_UNKNOWN
 # define DN_KEY_SPACE			GLFW_KEY_SPACE
@@ -153,7 +153,8 @@
 # define DN_MAXIMIZED			(1 << 5)
 # define DN_FREEATCLOSE			(1 << 6)
 # define DN_FREEWINDOWS			(1 << 7)
-# define DN_FLAG_NUM			8
+# define DN_MOUSELOCKED			(1 << 8)
+# define DN_FLAG_NUM			9
 
 # define DN_CUSTOM_FLAG0		(1 << (DN_FLAG_NUM + 0))
 # define DN_CUSTOM_FLAG1		(1 << (DN_FLAG_NUM + 1))

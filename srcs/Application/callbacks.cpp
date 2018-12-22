@@ -25,6 +25,12 @@ void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int
 	dn::Window *win = dn::Application::getWindow(p_window);
 	if (!win)
 		return ;
+	if (p_action == GLFW_PRESS)
+		win->_keyLogger[p_keycode] = DN_PRESS;
+	else if (p_action == GLFW_REPEAT)
+		win->_keyLogger[p_keycode] = DN_REPEAT;
+	else if (p_action == GLFW_RELEASE)
+		win->_keyLogger[p_keycode] = DN_RELEASE;
 	/* Calling the appropriate callback */
 	if (win->_keyCb)
 		win->_keyCb(win, p_keycode, p_action, p_mods);
@@ -146,6 +152,12 @@ void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_butt
 	dn::Window *win = dn::Application::getWindow(p_window);
 	if (!win)
 		return ;
+	if (p_action == GLFW_PRESS)
+		win->_mouseLogger[p_button] = DN_PRESS;
+	else if (p_action == GLFW_REPEAT)
+		win->_mouseLogger[p_button] = DN_REPEAT;
+	else if (p_action == GLFW_RELEASE)
+		win->_mouseLogger[p_button] = DN_RELEASE;
 	/* calling the appropriate callback */
 	if (win->_mouseButtonCb)
 		win->_mouseButtonCb(win, p_button, p_action, p_mods);
@@ -159,6 +171,10 @@ void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, 
 	dn::Window *win = dn::Application::getWindow(p_window);
 	if (!win)
 		return ;
+	win->_mousePos[2] = p_x - win->_mousePos[0];
+	win->_mousePos[3] = p_y - win->_mousePos[1];
+	win->_mousePos[0] = p_x;
+	win->_mousePos[1] = p_y;
 	/* calling the appropriate callback */
 	if (win->_mouseMoveCb)
 		win->_mouseMoveCb(win, p_x, p_y);
