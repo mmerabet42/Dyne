@@ -1,4 +1,7 @@
 #include <iostream>
+#include <sndfile.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 #include "Window.hpp"
 #include "Application.hpp"
@@ -55,6 +58,36 @@ int main()
 
 	float speedMove = 0.1f;
 
+	ALCdevice *device = alcOpenDevice(nullptr);
+	ALCcontext *context = alcCreateContext(device, nullptr);
+
+	alcMakeContextCurrent(context);
+
+	SF_INFO fileInfos;
+	SNDFILE *file = sf_open("res/bounce.wav", SFM_READ, &fileInfos);
+
+	ALsizei nbSamples = (ALsizei)(fileInfos.channels * fileInfos.frames);
+	ALsizei samplerate = (ALsizei)fileInfos.samplerate;
+
+	ALshort *samples = new ALshort[nbSamples];
+	sf_read_short(file, samples, nbSamples);
+	sf_close(file);
+
+	ALenum format = (fileInfos.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16);
+
+	ALuint buffer;
+	alGenBuffers(1, &buffer);
+	alBufferData(buffer, format, samples, nbSamples * sizeof(ALsizei), samplerate);
+
+	ALuint source;
+	alGenSources(1, &source);
+	alSourcei(source, AL_BUFFER, buffer);
+	alSourcei(source, AL_LOOPING, AL_TRUE);
+
+	alSource3f(source, AL_POSITION, 0.f, 0.f, 0.f);
+
+	alSourcePlay(source);
+
 	win->updateEvent([&](dn::Window *win) {
 
 		if (win->getKey(DN_KEY_W))
@@ -103,8 +136,13 @@ int main()
 			minecraftObjects.push_back(obj2);
 		}
 
-		cameraTransform->rotation().x -= win->mouseDeltaY() * 2.f;
-		cameraTransform->rotation().y -= win->mouseDeltaX() * 2.f;
+		if (win->getKeyDown(DN_KEY_C))
+			win->setMouseLock(!win->getFlag(DN_MOUSELOCKED));
+
+		cameraTransform->rotation().x += win->mouseDeltaY() * 0.1f;
+		cameraTransform->rotation().y += win->mouseDeltaX() * 0.1f;
+
+		alListener3f(AL_POSITION, cameraTransform->position().x, cameraTransform->position().y, cameraTransform->position().z);
 
 		preCube->getComponent<dn::Transform>()->position() = cameraTransform->position() + cameraTransform->forward() * 5.f;
 
@@ -121,5 +159,17 @@ int main()
 	});
 
 	dn::Application::setFlag(DN_FREEWINDOWS, true);
-	return (dn::Application::run());
+	dn::Application::run();
+
+	delete[] samples;
+
+	alDeleteBuffers(1, &buffer);
+	alSourcei(source, AL_BUFFER, 0);
+	alDeleteSources(1, &source);
+
+	alcMakeContextCurrent(nullptr);
+	alcDestroyContext(context);
+	alcCloseDevice(device);
+	
+	return (0);
 }

@@ -89,12 +89,12 @@ double dn::Window::mouseY() const
 
 double dn::Window::mouseDeltaX()
 {
-	return (this->_mousePos[2] *= dn::Application::deltaTime() * 0.1f);
+	return (this->_mousePos[2] *= 0.1);
 }
 
 double dn::Window::mouseDeltaY()
 {
-	return (this->_mousePos[3] *= dn::Application::deltaTime() * 0.1f);
+	return (this->_mousePos[3] *= 0.1);
 }
 
 std::string	dn::Window::title() const { return (this->_title); }

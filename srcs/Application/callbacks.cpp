@@ -171,8 +171,8 @@ void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, 
 	dn::Window *win = dn::Application::getWindow(p_window);
 	if (!win)
 		return ;
-	win->_mousePos[2] = p_x - win->_mousePos[0];
-	win->_mousePos[3] = p_y - win->_mousePos[1];
+	win->_mousePos[2] = win->_mousePos[0] - p_x;
+	win->_mousePos[3] = win->_mousePos[1] - p_y;
 	win->_mousePos[0] = p_x;
 	win->_mousePos[1] = p_y;
 	/* calling the appropriate callback */

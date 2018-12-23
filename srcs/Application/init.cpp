@@ -17,8 +17,8 @@ int										dn::Application::_flags = 0;
 int										dn::Application::_return = DN_OK;
 bool									dn::Application::_running = false;
 bool									dn::Application::_stopped = false;
-double									dn::Application::_time = 0;
-double									dn::Application::_deltaTime = 0;
+double									dn::Application::_time = 0.0;
+double									dn::Application::_deltaTime = 0.0;
 
 void dn::Application::setStartCb(const std::function<void()> &p_callback)
 {
