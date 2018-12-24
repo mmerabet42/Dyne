@@ -50,7 +50,12 @@ void dn::Application::setContext(dn::Window *p_window, const bool &p_force)
 int	dn::Application::createGLFWwindow(dn::Window *p_window)
 {
 	// Creates the GLFW window.
-	p_window->_glfw = glfwCreateWindow(p_window->_width, p_window->_height, p_window->_title.c_str(), nullptr, nullptr);
+	p_window->_glfw = glfwCreateWindow(
+		p_window->_width,
+		p_window->_height,
+		p_window->_title.c_str(),
+		nullptr,
+		(p_window->_share ? p_window->_share->_glfw : nullptr));
 
 	// If GLFW failed to create the window, an error is returned.
 	if (!p_window->_glfw)

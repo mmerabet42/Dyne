@@ -3,9 +3,9 @@
 
 /* Constructors */
 
-dn::Window::Window(const int &p_width, const int &p_height, const std::string &p_title)
+dn::Window::Window(const int &p_width, const int &p_height, const std::string &p_title, dn::Window *p_share)
 	// Initializing the window attributes to default
-	: _x(0), _y(0), _width(p_width), _height(p_height), _title(p_title), _glfw(nullptr),
+	: _x(0), _y(0), _width(p_width), _height(p_height), _title(p_title), _glfw(nullptr), _share(p_share),
 	_flags(DN_VISIBLE), _clearColor(0.f, 0.f, 0.f, 1.f), _opacity(1.f),
 	_framebufferWidth(0), _framebufferHeight(0),
 	_minwidth(DN_NONE), _minheight(DN_NONE), _maxwidth(DN_NONE), _maxheight(DN_NONE),
@@ -26,8 +26,8 @@ dn::Window::Window(const int &p_width, const int &p_height, const std::string &p
 	this->_windowid = dn::Application::addWindow(this);
 }
 
-dn::Window::Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title)
-	: Window(p_width, p_height, p_title)
+dn::Window::Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title, dn::Window *p_share)
+	: Window(p_width, p_height, p_title, p_share)
 {
 	this->_x = p_x;
 	this->_y = p_y;

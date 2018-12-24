@@ -44,6 +44,9 @@ int		dn::Application::run()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
+	if (!(dn::Application::_device = alcOpenDevice(nullptr)))
+		return (dn::Application::destroyWindows(), DN_ALC_FAIL);
+
 	// Compiling the shaders, if a shader failed to compile, the application stops
 	if (dn::Application::compileShaders() == DN_SHADER_FAIL)
 		return (DN_SHADER_FAIL);

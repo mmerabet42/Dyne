@@ -49,6 +49,7 @@ int main()
 	gridPlane->addComponent<dn::MeshRenderer>(dn::Model::generateGridPlane(101, 2.f));
 
 	win->startEvent([&](dn::Window *win) {
+		win->focus();
 		win->setMouseLock(true);
 		cube->start();
 		surroundCube->start();
@@ -64,7 +65,7 @@ int main()
 	alcMakeContextCurrent(context);
 
 	SF_INFO fileInfos;
-	SNDFILE *file = sf_open("res/bounce.wav", SFM_READ, &fileInfos);
+	SNDFILE *file = sf_open("res/rain2.wav", SFM_READ, &fileInfos);
 
 	ALsizei nbSamples = (ALsizei)(fileInfos.channels * fileInfos.frames);
 	ALsizei samplerate = (ALsizei)fileInfos.samplerate;
@@ -74,6 +75,12 @@ int main()
 	sf_close(file);
 
 	ALenum format = (fileInfos.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16);
+
+	if (format == AL_FORMAT_STEREO16)
+	{
+		format = AL_FORMAT_MONO16;
+		nbSamples /= 2;
+	}
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
@@ -85,6 +92,7 @@ int main()
 	alSourcei(source, AL_LOOPING, AL_TRUE);
 
 	alSource3f(source, AL_POSITION, 0.f, 0.f, 0.f);
+	alSourcef(source, AL_GAIN, 100.f);
 
 	alSourcePlay(source);
 
@@ -139,10 +147,14 @@ int main()
 		if (win->getKeyDown(DN_KEY_C))
 			win->setMouseLock(!win->getFlag(DN_MOUSELOCKED));
 
-		cameraTransform->rotation().x += win->mouseDeltaY() * 0.1f;
-		cameraTransform->rotation().y += win->mouseDeltaX() * 0.1f;
+		cameraTransform->rotation().x += win->mouseDeltaY() * dn::Application::deltaTime();
+		cameraTransform->rotation().y += win->mouseDeltaX() * dn::Application::deltaTime();
 
 		alListener3f(AL_POSITION, cameraTransform->position().x, cameraTransform->position().y, cameraTransform->position().z);
+		float ori[] = {
+			cameraTransform->forward().x, cameraTransform->forward().y, cameraTransform->forward().y,
+			cameraTransform->up().x, cameraTransform->up().y, cameraTransform->up().z};
+		alListenerfv(AL_ORIENTATION, ori);
 
 		preCube->getComponent<dn::Transform>()->position() = cameraTransform->position() + cameraTransform->forward() * 5.f;
 

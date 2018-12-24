@@ -80,6 +80,11 @@ namespace dn
 		static bool getFlag(const int &p_flag);
 
 	private:
+
+		// For sound management
+		static ALCdevice *_device;
+		static ALCcontext *_context;
+
 		// All the windows added to the Application are stored here
 		// A window is added once the dn::Window constructor is called
 		static std::vector<dn::Window *> _windows;

@@ -19,8 +19,8 @@ namespace dn
 	class Window
 	{
 	public:
-		Window(const int &p_width, const int &p_height, const std::string &p_title = "Window");
-		Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title = "Window");
+		Window(const int &p_width, const int &p_height, const std::string &p_title, dn::Window *p_share = nullptr);
+		Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title, dn::Window *p_share = nullptr);
 
 		void clear() const;
 		void clear(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.0f) const;
@@ -152,6 +152,8 @@ namespace dn
 		std::string	_title;
 
 		float		_opacity;
+
+		dn::Window *_share;
 
 		// Stores the state of keys and mouses buttons (pressed, held, released)
 		std::map<int, int> _keyLogger;
