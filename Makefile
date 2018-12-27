@@ -19,17 +19,19 @@ SRCD		= srcs/
 INCLUDES_D	= includes/
 _INCLUDES	= eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Object.hpp \
 			  Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
-			  Prototype.hpp Camera.hpp stb_image.h Codes.hpp
+			  Prototype.hpp Camera.hpp stb_image.h Codes.hpp \
+			  Audio.hpp AudioSource.hpp AudioListener.hpp
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp \
-			  manage_shader.cpp manage_window.cpp manage_texture.cpp
+			  manage_shader.cpp manage_window.cpp manage_texture.cpp manage_audio.cpp
 _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
 _SHDR_FS	= shader.cpp defaultShader.cpp
 _MESH_FS	= prototype.cpp model.cpp models.cpp
 _MATH_FS	= smoothDamp.cpp random.cpp
 _OBJ_FS		= object.cpp component.cpp transform.cpp meshrenderer.cpp camera.cpp
 _TXTR_FS	= texture.cpp
+_AUDIO_FS	= audio.cpp audioSource.cpp audioListener.cpp
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 
@@ -49,9 +51,13 @@ OBJ_FS		= $(addprefix $(SRCD)Object/,$(_OBJ_FS))
 OBJ_O		= $(_OBJ_FS:.cpp=.o)
 TXTR_FS		= $(addprefix $(SRCD)Texture/,$(_TXTR_FS))
 TXTR_O		= $(_TXTR_FS:.cpp=.o)
+AUDIO_FS	= $(addprefix $(SRCD)Audio/,$(_AUDIO_FS))
+AUDIO_O		= $(_AUDIO_FS:.cpp=.o)
 
-SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS) $(MATH_FS) $(OBJ_FS) $(TXTR_FS)
-OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) $(OBJ_O) $(TXTR_O)
+SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS) $(MATH_FS) \
+			  $(OBJ_FS) $(TXTR_FS) $(AUDIO_FS)
+OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) \
+			  $(OBJ_O) $(TXTR_O) $(AUDIO_O)
 OBJD		= .objs/
 OBJB		= $(addprefix $(OBJD),$(OBJS))
 
@@ -67,42 +73,47 @@ $(NAME): $(OBJB)
 	@ranlib $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
-$(OBJD)%.o: $(SRCD)main/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)main/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
-$(OBJD)%.o: $(SRCD)Application/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Application/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
-$(OBJD)%.o: $(SRCD)Window/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Window/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
-$(OBJD)%.o: $(SRCD)Shader/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Shader/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
-$(OBJD)%.o: $(SRCD)Model/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Model/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
-$(OBJD)%.o: $(SRCD)Math/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Math/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
-$(OBJD)%.o: $(SRCD)Object/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Object/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
 
-$(OBJD)%.o: $(SRCD)Texture/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Texture/%.cpp $(INCLUDES) Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+
+$(OBJD)%.o: $(SRCD)Audio/%.cpp $(INCLUDES) Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes

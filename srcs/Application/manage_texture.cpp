@@ -12,8 +12,6 @@ void dn::Application::addTexture(dn::Texture *p_texture)
 void dn::Application::createTextures()
 {
 	for (size_t i = 0; i < dn::Application::_textures.size(); ++i)
-	{
 		dn::Application::_textures[i]->create();
-	}
 	dn::Application::_textures.clear();
 }

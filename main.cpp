@@ -15,6 +15,9 @@
 #include "MeshRenderer.hpp"
 #include "Camera.hpp"
 #include "Texture.hpp"
+#include "Audio.hpp"
+#include "AudioListener.hpp"
+#include "AudioSource.hpp"
 
 void closeWinEscape(dn::Window *w, int k, int, int) { if (k == DN_KEY_ESCAPE) w->close(); }
 
@@ -32,10 +35,15 @@ int main()
 	dn::Object *preCube = new dn::Object;
 	std::vector<dn::Object *> minecraftObjects;
 
+	dn::Audio bounceClip("res/rain2.wav");
+
 	cube->addComponent<dn::Transform>();
 	cube->addComponent<dn::MeshRenderer>(&dn::Model::cube);
+	cube->addComponent<dn::AudioSource>();
 	cube->getComponent<dn::MeshRenderer>()->setTexture(new dn::Texture("res/minecraft_grass.png"));
-	
+	cube->getComponent<dn::AudioSource>()->setAudioClip(&bounceClip);
+	cube->getComponent<dn::AudioSource>()->setLooping(true);
+
 	surroundCube->addComponent<dn::Transform>(cube->getComponent<dn::Transform>());
 	surroundCube->addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
 
@@ -44,6 +52,7 @@ int main()
 
 	dn::Transform *cameraTransform = camera->addComponent<dn::Transform>(0.f, 0.f, 5.f);
 	camera->addComponent<dn::Camera>(70.f, 0.02f, 100000000.f);
+	camera->addComponent<dn::AudioListener>();
 
 	gridPlane->addComponent<dn::Transform>();
 	gridPlane->addComponent<dn::MeshRenderer>(dn::Model::generateGridPlane(101, 2.f));
@@ -51,51 +60,16 @@ int main()
 	win->startEvent([&](dn::Window *win) {
 		win->focus();
 		win->setMouseLock(true);
+		camera->start();
 		cube->start();
+		cube->getComponent<dn::AudioSource>()->play();
 		surroundCube->start();
 		gridPlane->start();
 		preCube->start();
 	});
 
 	float speedMove = 0.1f;
-
-	ALCdevice *device = alcOpenDevice(nullptr);
-	ALCcontext *context = alcCreateContext(device, nullptr);
-
-	alcMakeContextCurrent(context);
-
-	SF_INFO fileInfos;
-	SNDFILE *file = sf_open("res/rain2.wav", SFM_READ, &fileInfos);
-
-	ALsizei nbSamples = (ALsizei)(fileInfos.channels * fileInfos.frames);
-	ALsizei samplerate = (ALsizei)fileInfos.samplerate;
-
-	ALshort *samples = new ALshort[nbSamples];
-	sf_read_short(file, samples, nbSamples);
-	sf_close(file);
-
-	ALenum format = (fileInfos.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16);
-
-	if (format == AL_FORMAT_STEREO16)
-	{
-		format = AL_FORMAT_MONO16;
-		nbSamples /= 2;
-	}
-
-	ALuint buffer;
-	alGenBuffers(1, &buffer);
-	alBufferData(buffer, format, samples, nbSamples * sizeof(ALsizei), samplerate);
-
-	ALuint source;
-	alGenSources(1, &source);
-	alSourcei(source, AL_BUFFER, buffer);
-	alSourcei(source, AL_LOOPING, AL_TRUE);
-
-	alSource3f(source, AL_POSITION, 0.f, 0.f, 0.f);
-	alSourcef(source, AL_GAIN, 100.f);
-
-	alSourcePlay(source);
-
+	
 	win->updateEvent([&](dn::Window *win) {
 
 		if (win->getKey(DN_KEY_W))
@@ -114,9 +88,9 @@ int main()
 			cameraTransform->position() += cameraTransform->up() * speedMove;
 
 		if (win->getKey(DN_KEY_KP_ADD))
-			camera->getComponent<dn::Camera>()->fov() += 0.005f;
+			camera->getComponent<dn::AudioListener>()->setVolume(0.1f, true);
 		if (win->getKey(DN_KEY_KP_SUBTRACT))
-			camera->getComponent<dn::Camera>()->fov() -= 0.005f;
+			camera->getComponent<dn::AudioListener>()->setVolume(-0.1f, true);
 
 		if (win->getKey(DN_KEY_LEFT_CONTROL))
 			speedMove = (win->getKeyDown(DN_KEY_RIGHT_CONTROL) ? 100.f : 2.f);
@@ -128,17 +102,20 @@ int main()
 		if (win->getKey(DN_KEY_P))
 			cube->getComponent<dn::Transform>()->position() -= cube->getComponent<dn::Transform>()->right();
 
-		if (win->getButton(DN_MOUSE_LEFT))
+		if (win->getButtonDown(DN_MOUSE_LEFT))
 		{
 			dn::Object *obj = new dn::Object;
 			dn::Object *obj2 = new dn::Object;
 			glm::vec3 frwrd = cameraTransform->position() + cameraTransform->forward() * 5.f;
 			obj->addComponent<dn::Transform>()->position() = frwrd;
 			obj->addComponent<dn::MeshRenderer>(&dn::Model::cube)->setTexture(new dn::Texture("res/minecraft_grass.png"));
+			obj->addComponent<dn::AudioSource>(&bounceClip)->setLooping(true);
+
 			obj2->addComponent<dn::Transform>()->position() = frwrd;
 			obj2->addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
 
 			obj->start();
+			obj->getComponent<dn::AudioSource>()->play();
 			obj2->start();
 			minecraftObjects.push_back(obj);
 			minecraftObjects.push_back(obj2);
@@ -149,18 +126,19 @@ int main()
 
 		cameraTransform->rotation().x += win->mouseDeltaY() * dn::Application::deltaTime();
 		cameraTransform->rotation().y += win->mouseDeltaX() * dn::Application::deltaTime();
-
+/*
 		alListener3f(AL_POSITION, cameraTransform->position().x, cameraTransform->position().y, cameraTransform->position().z);
 		float ori[] = {
-			cameraTransform->forward().x, cameraTransform->forward().y, cameraTransform->forward().y,
+			cameraTransform->forward().x, cameraTransform->forward().y, cameraTransform->forward().z,
 			cameraTransform->up().x, cameraTransform->up().y, cameraTransform->up().z};
 		alListenerfv(AL_ORIENTATION, ori);
-
+*/
 		preCube->getComponent<dn::Transform>()->position() = cameraTransform->position() + cameraTransform->forward() * 5.f;
 
 		win->updateViewport();
 		camera->getComponent<dn::Camera>()->setAspectRatio(win->aspectRatio());
 
+		camera->update();
 		win->clear();
 		cube->update();
 		surroundCube->update();
@@ -172,16 +150,14 @@ int main()
 
 	dn::Application::setFlag(DN_FREEWINDOWS, true);
 	dn::Application::run();
-
-	delete[] samples;
-
-	alDeleteBuffers(1, &buffer);
+/*
+	delete audioClip;
 	alSourcei(source, AL_BUFFER, 0);
 	alDeleteSources(1, &source);
 
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(context);
 	alcCloseDevice(device);
-	
+*/
 	return (0);
 }

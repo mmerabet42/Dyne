@@ -6,11 +6,14 @@ std::vector<dn::Window *>				dn::Application::_windowsQueue;
 std::map<GLFWwindow *, dn::Window *>	dn::Application::_glfwWindows;
 std::vector<dn::Shader *>				dn::Application::_shaders;
 std::vector<dn::Texture *>				dn::Application::_textures;
+std::vector<dn::Audio *>				dn::Application::_audios;
 
 std::function<void()>					dn::Application::_startCallback;
 std::function<void()>					dn::Application::_updateCallback;
 std::function<void()>					dn::Application::_exitCallback;
 
+ALCdevice								*dn::Application::_alcDevice = nullptr;
+ALCcontext								*dn::Application::_alcContext = nullptr;
 dn::Window								*dn::Application::_context = nullptr;
 dn::Window								*dn::Application::_focused = nullptr;
 int										dn::Application::_flags = 0;

@@ -21,6 +21,9 @@ namespace dn
 	// Forward declaring the Texture class
 	class Texture;
 
+	// Forward declaring the Sound class
+	class Audio;
+
 	// The Application class is just a set of static functions that abstracts
 	// window additions, event callbacks, shader creations etc.
 	// It centralize all the underlying and ugly but necessary stuff
@@ -67,6 +70,11 @@ namespace dn
 			static void addTexture(dn::Texture *p_texture);
 			static void createTextures();
 
+		// Manage sounds
+
+			static void addAudio(dn::Audio *p_audio);
+			static void createAudios();
+
 		// The start callback is called once the run() function is called,
 		// glew and glfw were initiated and all windows were created
 		static void setStartCb(const std::function<void()> &p_callback);
@@ -82,8 +90,9 @@ namespace dn
 	private:
 
 		// For sound management
-		static ALCdevice *_device;
-		static ALCcontext *_context;
+		static ALCdevice *_alcDevice;
+		static ALCcontext *_alcContext;
+		static std::vector<dn::Audio *> _audios;
 
 		// All the windows added to the Application are stored here
 		// A window is added once the dn::Window constructor is called

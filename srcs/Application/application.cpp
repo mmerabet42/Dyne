@@ -44,10 +44,16 @@ int		dn::Application::run()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	if (!(dn::Application::_device = alcOpenDevice(nullptr)))
-		return (dn::Application::destroyWindows(), DN_ALC_FAIL);
+	// Opening sound device and creating context
+	dn::Application::_alcDevice = alcOpenDevice(nullptr);
+	dn::Application::_alcContext = alcCreateContext(dn::Application::_alcDevice, nullptr);
 
-	// Compiling the shaders, if a shader failed to compile, the application stops
+	alcMakeContextCurrent(dn::Application::_alcContext);
+
+	// Creating audios
+	dn::Application::createAudios();
+
+	// Compiling the shaders, if a shader has failed to compile, the application stops
 	if (dn::Application::compileShaders() == DN_SHADER_FAIL)
 		return (DN_SHADER_FAIL);
 	// Creating textures
@@ -129,6 +135,9 @@ int		dn::Application::run()
 	// Once the main loop is done, we clean and free everything.
 	dn::Application::destroyWindows();
 	glfwTerminate();
+	alcMakeContextCurrent(nullptr);
+	alcDestroyContext(dn::Application::_alcContext);
+	alcCloseDevice(dn::Application::_alcDevice);
 	return (dn::Application::_return);
 }
 
