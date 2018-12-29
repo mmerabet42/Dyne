@@ -5,6 +5,7 @@
 # include "Shader.hpp"
 # include "Model.hpp"
 # include "glm/vec4.hpp"
+# include "glm/vec3.hpp"
 
 namespace dn
 {
@@ -37,6 +38,8 @@ namespace dn
 		void start();
 		void update();
 
+		static glm::vec3 lightPosition;
+		static glm::vec3 lightColor;
 	private:
 		dn::Model *_model;
 		dn::Shader *_shader;

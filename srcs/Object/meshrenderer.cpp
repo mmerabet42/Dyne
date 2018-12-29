@@ -5,6 +5,9 @@
 #include "Object.hpp"
 #include "Texture.hpp"
 
+glm::vec3 dn::MeshRenderer::lightPosition(0.f, 100.f, 100.f);
+glm::vec3 dn::MeshRenderer::lightColor(1.f, 1.f, 1.f);
+
 dn::MeshRenderer::MeshRenderer(dn::Model *p_model, dn::Shader *p_shader)
 	: Component("MeshRenderer"), _model(p_model), _shader(p_shader), _vao(0), _vbos{0, 0},
 	_texture(nullptr), _modelAllocated(false), _renderMode(DN_TEXTURE_COLOR | DN_MESH_COLOR),
@@ -92,6 +95,7 @@ void dn::MeshRenderer::start()
 	GLuint positionAttrib = this->_shader->getAttrib("position");
 	GLuint colorAttrib = this->_shader->getAttrib("color");
 	GLuint texAttrib = this->_shader->getAttrib("tex");
+	GLuint normalAttrib = this->_shader->getAttrib("normal");
 
 	glEnableVertexAttribArray(positionAttrib);
 	glVertexAttribPointer(positionAttrib, 3, GL_FLOAT, false,
@@ -102,6 +106,9 @@ void dn::MeshRenderer::start()
 	glEnableVertexAttribArray(texAttrib);
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, false,
 		sizeof(dn::Vertex), (void *)offsetof(dn::Vertex, tex));
+	glEnableVertexAttribArray(normalAttrib);
+	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, false,
+		sizeof(dn::Vertex), (void *)offsetof(dn::Vertex, normal));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbos[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_model->indicesSize(), this->_model->indicesData(), GL_STATIC_DRAW);
@@ -119,6 +126,8 @@ void dn::MeshRenderer::update()
 		// The mesh renderer needs the transform component in order to send
 		// the transform matrix to the shader
 		// Requesting the transform component at each update is really stupid
+		glBindVertexArray(this->_vao);
+
 		GLuint renderModeUni = this->_shader->getUniform("renderMode");
 		if (renderModeUni != -1)
 			glUniform1i(renderModeUni, this->_renderMode);
@@ -126,13 +135,14 @@ void dn::MeshRenderer::update()
 		dn::Transform *transform = this->object()->getComponent<dn::Transform>();
 		if (transform)
 		{
-			glm::mat4 transformMat = transform->transformMat();
-			if (dn::Camera::main)
-				transformMat = dn::Camera::main->viewProjectionMat() * transformMat;
 			GLuint transformUni = this->_shader->getUniform("transform");
-			glUniformMatrix4fv(transformUni, 1, GL_FALSE, &transformMat[0][0]);
+			glUniformMatrix4fv(transformUni, 1, GL_FALSE, &transform->transformMat()[0][0]);
 		}
-		glBindVertexArray(this->_vao);
+		if (dn::Camera::main)
+		{
+			GLuint viewprojectionUni = this->_shader->getUniform("viewprojection");
+			glUniformMatrix4fv(viewprojectionUni, 1, GL_FALSE, &dn::Camera::main->viewProjectionMat()[0][0]);
+		}
 
 		if ((this->_renderMode & DN_TEXTURE_COLOR) && this->_texture)
 		{
@@ -146,6 +156,11 @@ void dn::MeshRenderer::update()
 			if (meshColorUni != -1)
 				glUniform4f(meshColorUni, this->_color.r, this->_color.g, this->_color.b, this->_color.a);
 		}
+
+		GLuint lightPosUni = this->_shader->getUniform("lightPosition");
+		GLuint lightColorUni = this->_shader->getUniform("lightColor");
+		glUniform3f(lightPosUni, dn::MeshRenderer::lightPosition.x, dn::MeshRenderer::lightPosition.y, dn::MeshRenderer::lightPosition.z);
+		glUniform3f(lightColorUni, dn::MeshRenderer::lightColor.x, dn::MeshRenderer::lightColor.y, dn::MeshRenderer::lightColor.z);
 
 		glDrawElements(this->_model->method(), this->_model->indices().size(), GL_UNSIGNED_INT, nullptr);
 

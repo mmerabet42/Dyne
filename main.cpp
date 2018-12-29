@@ -59,12 +59,12 @@ int main()
 	gridPlane->addComponent<dn::Transform>();
 	gridPlane->addComponent<dn::MeshRenderer>(dn::Model::generateGridPlane(101, 2.f));
 	gridPlane->getComponent<dn::MeshRenderer>()->setColor(1.f, 1.f, 1.f, 0.1f);
-	gridPlane->getComponent<dn::MeshRenderer>()->setRenderMode(DN_MESH_COLOR);
 
-	dn::Model stallModel = dn::Model::parse("stall.obj");
-	stall.addComponent<dn::Transform>();
+	dn::Model stallModel = dn::Model::parse("./dragon.obj");
+	stall.addComponent<dn::Transform>()->scale() = glm::vec3(50.f, 50.f, 50.f);
 	stall.addComponent<dn::MeshRenderer>(&stallModel);
-//	stall.getComponent<dn::MeshRenderer>()->setTexture(new dn::Texture("stallTexture.png"));
+//	stall.getComponent<dn::MeshRenderer>()->setTexture(new dn::Texture("res/stallTexture.png"));
+	stall.getComponent<dn::MeshRenderer>()->setRenderMode(DN_MESH_COLOR);
 
 	win->startEvent([&](dn::Window *win) {
 		win->focus();
@@ -136,6 +136,8 @@ int main()
 
 		cameraTransform->rotation().x += win->mouseDeltaY() * dn::Application::deltaTime();
 		cameraTransform->rotation().y += win->mouseDeltaX() * dn::Application::deltaTime();
+
+		dn::MeshRenderer::lightPosition = cameraTransform->position();
 
 		preCube->getComponent<dn::Transform>()->position() = cameraTransform->position() + cameraTransform->forward() * 5.f;
 

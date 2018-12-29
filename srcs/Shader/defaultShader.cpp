@@ -4,22 +4,34 @@ static const char *g_vertexSource = GLSL(
 	in vec3 position;
 	in vec4 color;
 	in vec2 tex;
+	in vec3 normal;
 
 	uniform mat4 transform;
+	uniform mat4 viewprojection;
+	uniform vec3 lightPosition;
 
 	out vec2 otex;
 	out vec4 ocolor;
+	out vec3 onormal;
+	out vec3 lightDir;
+
 	void main()
 	{
-		gl_Position = transform * vec4(position, 1);
+		vec4 worldPosition = transform * vec4(position, 1.0);
+
+		gl_Position = viewprojection * worldPosition;
 		ocolor = color;
 		otex = tex;
+		onormal = normalize((transform * vec4(normal, 0.0)).xyz);
+		lightDir = normalize(lightPosition - worldPosition.xyz);
 	}
 );
 
 static const char *g_fragmentSource = GLSL(
 	in vec4 ocolor;
 	in vec2 otex;
+	in vec3 onormal;
+	in vec3 lightDir;
 
 	const int DN_VERTEX_COLOR = (1 << 0);
 	const int DN_TEXTURE_COLOR = (1 << 1);
@@ -28,30 +40,32 @@ static const char *g_fragmentSource = GLSL(
 	uniform sampler2D unit;
 	uniform int renderMode;
 	uniform vec4 meshColor;
+	uniform vec3 lightColor;
 
 	out vec4 color;
 	void main()
 	{
-		vec4 fragColor;
+		vec4 usedColor;
 
 		if (bool(renderMode & DN_VERTEX_COLOR))
-			fragColor = ocolor;
+			usedColor = ocolor;
 		if (bool(renderMode & DN_TEXTURE_COLOR))
 		{
 			if (bool(renderMode & DN_VERTEX_COLOR))
-				fragColor = fragColor * texture(unit, otex);
+				usedColor = usedColor * texture(unit, otex);
 			else
-				fragColor = texture(unit, otex);
+				usedColor = texture(unit, otex);
 		}
 		if (bool(renderMode & DN_MESH_COLOR))
 		{
 			if (bool(renderMode & (DN_VERTEX_COLOR | DN_TEXTURE_COLOR)))
-				fragColor = fragColor * meshColor;
+				usedColor = usedColor * meshColor;
 			else
-				fragColor = meshColor;
+				usedColor = meshColor;
 		}
 
-		color = fragColor;
+		vec3 diffuse = max(dot(onormal, lightDir), 0.0) * lightColor;
+		color = vec4(diffuse, 1.0) * usedColor;
 	}
 );
 
