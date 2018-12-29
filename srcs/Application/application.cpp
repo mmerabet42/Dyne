@@ -32,7 +32,7 @@ int		dn::Application::run()
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 		// By destroying all the windows first, then returning
-		return (dn::Application::destroyWindows(), DN_GLEW_FAIL);
+		return (dn::Application::cleanup(), DN_GLEW_FAIL);
 
 	// Settings of some basic OpenGL flags.
 	glEnable(GL_DEPTH);
@@ -55,7 +55,7 @@ int		dn::Application::run()
 
 	// Compiling the shaders, if a shader has failed to compile, the application stops
 	if (dn::Application::compileShaders() == DN_SHADER_FAIL)
-		return (DN_SHADER_FAIL);
+		return (dn::Application::cleanup(), DN_SHADER_FAIL);
 	// Creating textures
 	dn::Application::createTextures();
 
@@ -133,11 +133,7 @@ int		dn::Application::run()
 			dn::Application::_running = false;
 	}
 	// Once the main loop is done, we clean and free everything.
-	dn::Application::destroyWindows();
-	glfwTerminate();
-	alcMakeContextCurrent(nullptr);
-	alcDestroyContext(dn::Application::_alcContext);
-	alcCloseDevice(dn::Application::_alcDevice);
+	dn::Application::cleanup();
 	return (dn::Application::_return);
 }
 
@@ -158,4 +154,13 @@ int			dn::Application::terminate(const std::string &p_msg, const int &p_return)
 	dn::Application::_running = false;
 	dn::Application::_return = p_return;
 	return (0);
+}
+
+void dn::Application::cleanup()
+{
+	dn::Application::destroyWindows();
+	glfwTerminate();
+	alcMakeContextCurrent(nullptr);
+	alcDestroyContext(dn::Application::_alcContext);
+	alcCloseDevice(dn::Application::_alcDevice);
 }

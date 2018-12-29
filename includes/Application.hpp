@@ -38,6 +38,7 @@ namespace dn
 		// The terminate() function destroys all windows and terminate glfw,
 		// then it sets the _running attribute to false
 		static int terminate(const std::string &p_msg = "", const int &p_return = DN_OK);
+		static void cleanup();
 		// The stop() function closes all windows and stop the application by setting the
 		// _running attribute to false
 		static void stop();

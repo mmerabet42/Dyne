@@ -8,7 +8,7 @@ dn::Audio::Audio(const std::string &p_path)
 }
 dn::Audio::~Audio()
 {
-	delete this->_samples;
+	delete[] this->_samples;
 	alDeleteBuffers(1, &this->_buffer);
 }
 

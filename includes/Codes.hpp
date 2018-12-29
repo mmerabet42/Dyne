@@ -7,6 +7,7 @@
 # define DN_REPEAT				2
 # define DN_RELEASE				3
 
+// GLFW key codes
 # define DN_KEY_UNKNOWN			GLFW_KEY_UNKNOWN
 # define DN_KEY_SPACE			GLFW_KEY_SPACE
 # define DN_KEY_APPOSTROPHE		GLFW_KEY_APOSTROPHE
@@ -130,6 +131,7 @@
 # define DN_KEY_MENU			GLFW_KEY_MENU
 # define DN_KEY_LAST			GLFW_KEY_LAST
 
+// GLFW mouse buttons
 # define DN_MOUSE_1				GLFW_MOUSE_BUTTON_1
 # define DN_MOUSE_2				GLFW_MOUSE_BUTTON_2
 # define DN_MOUSE_3				GLFW_MOUSE_BUTTON_3
@@ -145,6 +147,7 @@
 
 # define DN_NONE				GLFW_DONT_CARE
 
+// Window flags
 # define DN_CLOSED				(1 << 0)
 # define DN_POS_SPECIFIED		(1 << 1)
 # define DN_ICONIFIED			(1 << 2)
@@ -156,12 +159,14 @@
 # define DN_MOUSELOCKED			(1 << 8)
 # define DN_FLAG_NUM			9
 
+// Custom flags
 # define DN_CUSTOM_FLAG0		(1 << (DN_FLAG_NUM + 0))
 # define DN_CUSTOM_FLAG1		(1 << (DN_FLAG_NUM + 1))
 # define DN_CUSTOM_FLAG2		(1 << (DN_FLAG_NUM + 2))
 # define DN_CUSTOM_FLAG4		(1 << (DN_FLAG_NUM + 3))
 # define DN_CUSTOM_FLAG5		(1 << (DN_FLAG_NUM + 4))
 
+// OpenGL primitives
 # define DN_POINTS				GL_POINTS
 # define DN_LINES				GL_LINES
 # define DN_LINE_LOOP			GL_LINE_LOOP
@@ -173,6 +178,11 @@
 # define DN_LINE_STRIP_ADJ		GL_LINE_STRIP_ADJACENCY
 # define DN_TRIANGLES_ADJ		GL_TRIANGLES_ADJACENCY
 # define DN_TRIANGLE_STRIP_ADJ	GL_TRIANGLE_STRIP_ADJACENCY
+
+// MeshRenderer renderin modes
+# define DN_VERTEX_COLOR		(1 << 0)
+# define DN_TEXTURE_COLOR		(1 << 1)
+# define DN_MESH_COLOR			(1 << 2)
 
 enum {
 	DN_OK,

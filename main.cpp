@@ -25,6 +25,7 @@ int main()
 {
 	dn::Window *win = new dn::Window(600, 400, "Window 1");
 
+
 	win->keyEvent.addListener(closeWinEscape);
 	win->setClearColor(37, 44, 56);
 	
@@ -34,8 +35,9 @@ int main()
 	dn::Object *gridPlane = new dn::Object;
 	dn::Object *preCube = new dn::Object;
 	std::vector<dn::Object *> minecraftObjects;
+	dn::Object stall;
 
-	dn::Audio bounceClip("res/rain2.wav");
+	dn::Audio bounceClip("res/rain3.wav");
 
 	cube->addComponent<dn::Transform>();
 	cube->addComponent<dn::MeshRenderer>(&dn::Model::cube);
@@ -56,6 +58,13 @@ int main()
 
 	gridPlane->addComponent<dn::Transform>();
 	gridPlane->addComponent<dn::MeshRenderer>(dn::Model::generateGridPlane(101, 2.f));
+	gridPlane->getComponent<dn::MeshRenderer>()->setColor(1.f, 1.f, 1.f, 0.1f);
+	gridPlane->getComponent<dn::MeshRenderer>()->setRenderMode(DN_MESH_COLOR);
+
+	dn::Model stallModel = dn::Model::parse("stall.obj");
+	stall.addComponent<dn::Transform>();
+	stall.addComponent<dn::MeshRenderer>(&stallModel);
+//	stall.getComponent<dn::MeshRenderer>()->setTexture(new dn::Texture("stallTexture.png"));
 
 	win->startEvent([&](dn::Window *win) {
 		win->focus();
@@ -66,6 +75,7 @@ int main()
 		surroundCube->start();
 		gridPlane->start();
 		preCube->start();
+		stall.start();
 	});
 
 	float speedMove = 0.1f;
@@ -126,13 +136,7 @@ int main()
 
 		cameraTransform->rotation().x += win->mouseDeltaY() * dn::Application::deltaTime();
 		cameraTransform->rotation().y += win->mouseDeltaX() * dn::Application::deltaTime();
-/*
-		alListener3f(AL_POSITION, cameraTransform->position().x, cameraTransform->position().y, cameraTransform->position().z);
-		float ori[] = {
-			cameraTransform->forward().x, cameraTransform->forward().y, cameraTransform->forward().z,
-			cameraTransform->up().x, cameraTransform->up().y, cameraTransform->up().z};
-		alListenerfv(AL_ORIENTATION, ori);
-*/
+
 		preCube->getComponent<dn::Transform>()->position() = cameraTransform->position() + cameraTransform->forward() * 5.f;
 
 		win->updateViewport();
@@ -144,6 +148,7 @@ int main()
 		surroundCube->update();
 		gridPlane->update();
 		preCube->update();
+		stall.update();
 		for (size_t i = 0; i < minecraftObjects.size(); ++i)
 			minecraftObjects[i]->update();
 	});

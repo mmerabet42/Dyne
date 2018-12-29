@@ -35,6 +35,9 @@ namespace dn
 		static dn::Model generatePoints(const int &p_n, const float &p_radius);
 
 		static dn::Model generateGridPlane(const int &p_n, const float &p_distance);
+
+		static dn::Model parse(const std::string &p_path);
+
 	private:
 
 		dn::VertexArray _vertices;

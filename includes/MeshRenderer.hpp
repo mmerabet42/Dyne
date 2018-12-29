@@ -4,6 +4,7 @@
 # include "Component.hpp"
 # include "Shader.hpp"
 # include "Model.hpp"
+# include "glm/vec4.hpp"
 
 namespace dn
 {
@@ -26,6 +27,13 @@ namespace dn
 		dn::Texture *texture() const;
 		void setTexture(dn::Texture *p_texture);
 
+		glm::vec4 color() const;
+		glm::vec4 &color();
+		void setColor(const glm::vec4 &p_color);
+		void setColor(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.f);
+
+		void setRenderMode(const int &p_mode);
+
 		void start();
 		void update();
 
@@ -33,7 +41,10 @@ namespace dn
 		dn::Model *_model;
 		dn::Shader *_shader;
 
+		// Different rendering modes
 		dn::Texture *_texture;
+		glm::vec4 _color;
+		int _renderMode;
 
 		GLuint _vao;
 		GLuint _vbos[2];

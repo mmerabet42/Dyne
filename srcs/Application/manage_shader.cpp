@@ -7,11 +7,9 @@ int dn::Application::compileShaders()
 	{
 		if (!dn::Application::_shaders[i]->compile())
 		{
-			dn::Application::terminate(
-				std::string("Shader compilation error: ") + dn::Application::_shaders[i]->infoLog(),
-				DN_SHADER_FAIL);
+			std::cout << "Shader compilation error: " << dn::Application::_shaders[i]->infoLog() << std::endl;
 			dn::Application::_shaders.clear();
-			return (DN_SHADER_FAIL);
+			return (dn::Application::_return = DN_SHADER_FAIL);
 		}
 	}
 	dn::Application::_shaders.clear();

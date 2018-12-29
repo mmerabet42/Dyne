@@ -21,12 +21,37 @@ static const char *g_fragmentSource = GLSL(
 	in vec4 ocolor;
 	in vec2 otex;
 
+	const int DN_VERTEX_COLOR = (1 << 0);
+	const int DN_TEXTURE_COLOR = (1 << 1);
+	const int DN_MESH_COLOR = (1 << 2);
+
 	uniform sampler2D unit;
+	uniform int renderMode;
+	uniform vec4 meshColor;
 
 	out vec4 color;
 	void main()
 	{
-		color = texture(unit, otex) * ocolor;
+		vec4 fragColor;
+
+		if (bool(renderMode & DN_VERTEX_COLOR))
+			fragColor = ocolor;
+		if (bool(renderMode & DN_TEXTURE_COLOR))
+		{
+			if (bool(renderMode & DN_VERTEX_COLOR))
+				fragColor = fragColor * texture(unit, otex);
+			else
+				fragColor = texture(unit, otex);
+		}
+		if (bool(renderMode & DN_MESH_COLOR))
+		{
+			if (bool(renderMode & (DN_VERTEX_COLOR | DN_TEXTURE_COLOR)))
+				fragColor = fragColor * meshColor;
+			else
+				fragColor = meshColor;
+		}
+
+		color = fragColor;
 	}
 );
 
