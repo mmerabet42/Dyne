@@ -26,11 +26,12 @@ void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int
 	if (!win)
 		return ;
 	if (p_action == GLFW_PRESS)
-		win->_keyLogger[p_keycode] = DN_PRESS;
+		p_action == DN_PRESS;
 	else if (p_action == GLFW_REPEAT)
-		win->_keyLogger[p_keycode] = DN_REPEAT;
+		p_action = DN_REPEAT;
 	else if (p_action == GLFW_RELEASE)
-		win->_keyLogger[p_keycode] = DN_RELEASE;
+		p_action = DN_RELEASE;
+	win->_keyLogger[p_keycode] = p_action;
 	/* Calling the appropriate callback */
 	if (win->_keyCb)
 		win->_keyCb(win, p_keycode, p_action, p_mods);

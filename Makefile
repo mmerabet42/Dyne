@@ -2,14 +2,14 @@ NAME		=	libdn.a
 CC			=	g++ -std=c++14
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
-GET_PACKAGE	=	`pkg-config --static --libs glew glfw3`
+GET_PACKAGE	=	`pkg-config --static --libs glew glfw3 openal`
 
 MAIN_FILE	= main.cpp
 OUT			= a.out
 
 OSNAME		= $(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -lopenal -lsndfile -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
+	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -lsndfile -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
 endif
 ifeq ($(OSNAME),Darwin)
 	COMPILE = $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
@@ -24,7 +24,7 @@ _INCLUDES	= eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Obj
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp \
-			  manage_shader.cpp manage_window.cpp manage_dependents.cpp applicationDependent.cpp
+			  manage_window.cpp manage_dependents.cpp applicationDependent.cpp
 _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
 _SHDR_FS	= shader.cpp defaultShader.cpp
 _MESH_FS	= prototype.cpp model.cpp models.cpp
