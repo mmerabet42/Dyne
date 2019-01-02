@@ -19,12 +19,12 @@ SRCD		= srcs/
 INCLUDES_D	= includes/
 _INCLUDES	= eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Object.hpp \
 			  Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
-			  Prototype.hpp Camera.hpp stb_image.h Codes.hpp \
+			  Prototype.hpp Camera.hpp stb_image.h Codes.hpp ApplicationDependent.hpp \
 			  Audio.hpp AudioSource.hpp AudioListener.hpp utils.hpp
 
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp \
-			  manage_shader.cpp manage_window.cpp manage_texture.cpp manage_audio.cpp
+			  manage_shader.cpp manage_window.cpp manage_dependents.cpp applicationDependent.cpp
 _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
 _SHDR_FS	= shader.cpp defaultShader.cpp
 _MESH_FS	= prototype.cpp model.cpp models.cpp

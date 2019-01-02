@@ -3,16 +3,15 @@
 
 # include <string>
 # include "allgl.hpp"
+# include "ApplicationDependent.hpp"
 
 namespace dn
 {
-	class Audio
+	class Audio: public dn::ApplicationDependent
 	{
 	public:
-		Audio(const std::string &p_path);
+		Audio(const std::string &p_path, const bool &p_forceMono = false);
 		~Audio();
-
-		void create();
 
 		SF_INFO fileInfo() const;
 		std::string path() const;
@@ -22,6 +21,9 @@ namespace dn
 		ALshort *samples() const;
 		ALsizei nbSamples() const;
 
+		void create();
+		void destroy();
+
 	private:
 		SF_INFO _fileInfo;
 		std::string _path;
@@ -30,6 +32,8 @@ namespace dn
 
 		ALshort *_samples;
 		ALsizei _nbSamples;
+
+		bool _forceMono;
 	};
 }
 

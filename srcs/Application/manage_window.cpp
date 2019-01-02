@@ -2,6 +2,12 @@
 #include "Window.hpp"
 #include <algorithm>
 
+std::vector<dn::Window *>				dn::Application::_windows;
+std::vector<dn::Window *>				dn::Application::_windowsQueue;
+std::map<GLFWwindow *, dn::Window *>	dn::Application::_glfwWindows;
+dn::Window								*dn::Application::_context = nullptr;
+dn::Window								*dn::Application::_focused = nullptr;
+
 dn::Window *dn::Application::getWindow(const size_t &p_index)
 {
 	if (p_index < dn::Application::_windows.size())
@@ -129,11 +135,5 @@ void	dn::Application::destroyWindow(std::vector<dn::Window * >::iterator &p_it)
 	(*p_it)->setFlag(DN_CLOSED, true);
 	dn::Application::_glfwWindows.erase((*p_it)->_glfw);
 	glfwDestroyWindow((*p_it)->_glfw);
-	// If DN_APPLICATION_FREEWINDOWS_DEFINED is defined,
-	// or if the DN_FREEATCLOSE flag of the window is enabled,
-	// or if the DN_FREEWINDOWS flag of the application is enabled,
-	// the window is freed.
-	if ((*p_it)->getFlag(DN_FREEATCLOSE) || (dn::Application::_flags & DN_FREEWINDOWS))
-		delete *p_it;
-p_it = dn::Application::_windows.erase(p_it);
+	p_it = dn::Application::_windows.erase(p_it);
 }

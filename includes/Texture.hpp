@@ -2,11 +2,12 @@
 # define TEXTURE_HPP
 
 # include <vector>
+# include "ApplicationDependent.hpp"
 # include "allgl.hpp"
 
 namespace dn
 {
-	class Texture
+	class Texture: public dn::ApplicationDependent
 	{
 	public:
 		Texture(const std::string &p_path);
@@ -25,6 +26,7 @@ namespace dn
 		void unbind();
 
 		void create();
+		void destroy();
 
 		static unsigned char *load(const std::string &p_path, int &p_width, int &p_height);
 

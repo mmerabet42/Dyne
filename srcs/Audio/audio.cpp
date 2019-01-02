@@ -1,15 +1,15 @@
 #include "Audio.hpp"
 #include "Application.hpp"
 
-dn::Audio::Audio(const std::string &p_path)
-	: _path(p_path), _fileInfo(), _buffer(0), _samples(nullptr), _nbSamples(0)
+dn::Audio::Audio(const std::string &p_path, const bool &p_forceMono)
+	: _path(p_path), _fileInfo(), _buffer(0), _samples(nullptr), _nbSamples(0),
+	_forceMono(p_forceMono), ApplicationDependent()
 {
-	dn::Application::addAudio(this);
+	dn::Application::addDependent(this);
 }
 dn::Audio::~Audio()
 {
-	delete[] this->_samples;
-	alDeleteBuffers(1, &this->_buffer);
+	dn::Application::destroyDependent(this);
 }
 
 SF_INFO dn::Audio::fileInfo() const
@@ -48,13 +48,27 @@ void dn::Audio::create()
 	sf_read_short(file, this->_samples, this->_nbSamples);
 	sf_close(file);
 
-	if (this->_fileInfo.channels == 2)
+	ALenum format;
+	if (this->_fileInfo.channels == 1)
+		format = AL_FORMAT_MONO16;
+	else if (this->_forceMono)
+	{
+		format = AL_FORMAT_MONO16;
 		this->_nbSamples /= 2;
+	}
+	else
+		format = AL_FORMAT_STEREO16;
 
 	alGenBuffers(1, &this->_buffer);
 	alBufferData(this->_buffer,
-		AL_FORMAT_MONO16,
+		format,
 		this->_samples,
 		this->_nbSamples * sizeof(ALshort),
 		(ALsizei)this->_fileInfo.samplerate);
+}
+
+void dn::Audio::destroy()
+{
+	delete[] this->_samples;
+	alDeleteBuffers(1, &this->_buffer);
 }

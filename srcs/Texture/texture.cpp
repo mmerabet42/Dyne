@@ -5,21 +5,20 @@
 #include "stb_image.h"
 
 dn::Texture::Texture(const std::string &p_path)
-	: _path(p_path), _tex(0)
+	: ApplicationDependent(), _path(p_path), _tex(0)
 {
-	this->_data = dn::Texture::load(p_path, this->_width, this->_height);
-	dn::Application::addTexture(this);
+	dn::Application::addDependent(this);
 }
 
 dn::Texture::~Texture()
 {
-	if (this->_tex)
-		glDeleteTextures(1, &this->_tex);
-	stbi_image_free(this->_data);
+	dn::Application::destroyDependent(this);
 }
 
 void dn::Texture::create()
 {
+	this->_data = dn::Texture::load(this->_path, this->_width, this->_height);
+
 	glGenTextures(1, &this->_tex);
 	glBindTexture(GL_TEXTURE_2D, this->_tex);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -31,6 +30,11 @@ void dn::Texture::create()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void dn::Texture::destroy()
+{
+	glDeleteTextures(1, &this->_tex);
+	stbi_image_free(this->_data);
+}
 
 int dn::Texture::width() const { return (this->_width); }
 int dn::Texture::height() const { return (this->_height); }

@@ -16,6 +16,7 @@ namespace dn { namespace math
 
 	// Generate a random floating point number between two other floating point
 	float random(const float &p_min, const float &p_max);
+	glm::vec3 randomVector(const float &p_min, const float &p_max);
 }}
 
 #endif // MATH_HPP

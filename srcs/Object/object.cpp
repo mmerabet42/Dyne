@@ -33,8 +33,8 @@ void dn::Object::update()
 {
 	// The object must have started first
 	if (!this->_running)
-		// TODO: Maybe using assert is better for cases like this ?
 		return ;
+	// updating each attached components
 	for (std::map<size_t, dn::Component *>::iterator it = this->_components.begin(); it != this->_components.end(); ++it)
 		if (it->second && it->second->active())
 			it->second->update();

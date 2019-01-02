@@ -4,7 +4,7 @@
 #include <sstream>
 
 dn::Shader::Shader(const std::string &p_vertexShader, const std::string &p_fragmentShader, const bool &p_file)
-	: _vertexSource(p_vertexShader), _fragmentSource(p_fragmentShader), _programId(0)
+	: ApplicationDependent(), _vertexSource(p_vertexShader), _fragmentSource(p_fragmentShader), _programId(0)
 {
 	if (p_file)
 	{
@@ -24,13 +24,12 @@ dn::Shader::Shader(const std::string &p_vertexShader, const std::string &p_fragm
 		}
 		ofile.close();
 	}
-	dn::Application::addShader(this);
+	dn::Application::addDependent(this);
 }
 
 dn::Shader::~Shader()
 {
-	if (this->_programId)
-		glDeleteProgram(this->_programId);
+	dn::Application::destroyDependent(this);
 }
 
 std::string dn::Shader::vertexSource() const { return (this->_vertexSource); }
@@ -70,18 +69,15 @@ static GLuint compileShader(const char *p_source, const GLenum &p_type, int &p_s
 	return (shaderId);
 }
 
-bool dn::Shader::compile()
+void dn::Shader::create()
 {
-	if (this->_programId)
-		return true;
-
 	GLuint vertexId, fragmentId;
 	int status;
 
 	if (!(vertexId = compileShader(this->_vertexSource.c_str(), GL_VERTEX_SHADER, status, this->_infoLog)))
-		return (false);
+		return ;
 	if (!(fragmentId = compileShader(this->_fragmentSource.c_str(), GL_FRAGMENT_SHADER, status, this->_infoLog)))
-		return (false);
+		return ;
 	this->_programId = glCreateProgram();
 	glAttachShader(this->_programId, vertexId);
 	glAttachShader(this->_programId, fragmentId);
@@ -97,9 +93,12 @@ bool dn::Shader::compile()
 	{
 		glGetProgramInfoLog(this->_programId, 512, nullptr, this->_infoLog);
 		glDeleteProgram(this->_programId);
-		return (false);
 	}
-	return (true);
+}
+
+void dn::Shader::destroy()
+{
+	glDeleteProgram(this->_programId);
 }
 
 void dn::Shader::use(const bool &p_use)

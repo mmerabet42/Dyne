@@ -43,6 +43,7 @@ namespace dn
 	private:
 		dn::Model *_model;
 		dn::Shader *_shader;
+		bool _modelAllocated;
 
 		// Different rendering modes
 		dn::Texture *_texture;
@@ -52,7 +53,14 @@ namespace dn
 		GLuint _vao;
 		GLuint _vbos[2];
 
-		bool _modelAllocated;
+		GLuint _renderModeU;
+		GLuint _transformU;
+		GLuint _viewprojectionU;
+		GLuint _unitU;
+		GLuint _meshColorU;
+		GLuint _lightPositionU;
+		GLuint _lightColorU;
+		void updateUniforms();
 	};
 }
 

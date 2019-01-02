@@ -14,37 +14,34 @@ namespace dn
 	// as the window header file uses the Application class too
 	class Window;
 
-	// Forward declaration of the Shader class, as it is not needed to include
-	// all the shader header file
-	class Shader;
-
-	// Forward declaring the Texture class
-	class Texture;
-
-	// Forward declaring the Sound class
-	class Audio;
+	// Forward declaration of the ApplicationDependent class
+	class ApplicationDependent;
 
 	// The Application class is just a set of static functions that abstracts
 	// window additions, event callbacks, shader creations etc.
-	// It centralize all the underlying and ugly but necessary stuff
+	// It centralizes all the underlying and ugly but necessary stuff
 	class Application
 	{
 	public:
 
 		// The run() function must be called to run the Application, all added
-		// windows are created and shown after this call.
-		// The function returns once no more window is open.
+		// windows are created and shown after this call, and all ressources are created
+		// The function returns once the stop() function is called or if no more
+		// window is available
 		static int run();
-		// The terminate() function destroys all windows and terminate glfw,
-		// then it sets the _running attribute to false
-		static int terminate(const std::string &p_msg = "", const int &p_return = DN_OK);
-		static void cleanup();
 		// The stop() function closes all windows and stop the application by setting the
 		// _running attribute to false
 		static void stop();
+		// Clean up everything the application has allocated, it is called at the end
+		// of the run() function
+		static void cleanup();
 		// Returns if the application is currently running
 		static bool running();
+		// The terminate() function destroys all windows and terminate glfw,
+		// then it sets the _running attribute to false (useless lol)
+		static int terminate(const std::string &p_msg = "", const int &p_return = DN_OK);
 
+		// The time and delta time respectively
 		static double time();
 		static double deltaTime();
 
@@ -60,21 +57,15 @@ namespace dn
 			static void setContext(dn::Window *p_window, const bool &p_force = false);
 			static dn::Window *context();
 
-		// Manage shaders
+		// Manage stuff that depends on the application. Meaning that they
+		// must be created only once the application has started and destroyed once
+		// the application has done or if they are destroyed manually.
+		// They are more known as ressources
 
-			static void addShader(dn::Shader *p_shader);
-			// Compiles all the shaders stored in the _shaders list
-			static int compileShaders();
-
-		// Manage textures
-
-			static void addTexture(dn::Texture *p_texture);
-			static void createTextures();
-
-		// Manage sounds
-
-			static void addAudio(dn::Audio *p_audio);
-			static void createAudios();
+			static void addDependent(dn::ApplicationDependent *p_dependent);
+			static void createDependents();
+			static void destroyDependent(dn::ApplicationDependent *p_dependent);
+			static void destroyDependents();
 
 		// The start callback is called once the run() function is called,
 		// glew and glfw were initiated and all windows were created
@@ -82,6 +73,7 @@ namespace dn
 		// The update callback is called at every cycles of the main loop in the run() function
 		static void setUpdateCb(const std::function<void()> &p_callback);
 		// The exit callback is called at the end of the main loop in the run() function
+		// and before the cleanup
 		static void setExitCb(const std::function<void()> &p_callback);
 
 		// Flag getter, enabler and disabler
@@ -93,7 +85,6 @@ namespace dn
 		// For sound management
 		static ALCdevice *_alcDevice;
 		static ALCcontext *_alcContext;
-		static std::vector<dn::Audio *> _audios;
 
 		// All the windows added to the Application are stored here
 		// A window is added once the dn::Window constructor is called
@@ -103,11 +94,8 @@ namespace dn
 		// once the run() function is called
 		static std::map<GLFWwindow *, dn::Window *> _glfwWindows;
 
-		// All the shaders are stored here
-		static std::vector<dn::Shader *> _shaders;
-		// All the textures are stored here
-		static std::vector<dn::Texture *> _textures;
-		
+		// The application dependents
+		static std::vector<dn::ApplicationDependent *> _dependents;
 
 		// Attributes for memorizing the current state of the Application
 		static bool	_running;
@@ -132,11 +120,11 @@ namespace dn
 		static void	destroyWindows();
 
 		// Callback pointers, the reason why std::function is used instead of
-		// a function pointer is that std::function can capture variables when
+		// raw function pointer is that std::function can capture variables when
 		// using lambdas
-		static std::function<void()>	_startCallback;
-		static std::function<void()>	_updateCallback;
-		static std::function<void()>	_exitCallback;
+		static std::function<void()>	_startCb;
+		static std::function<void()>	_updateCb;
+		static std::function<void()>	_exitCb;
 
 		// Callback functions called directly by the GLFW api, each window has
 		// his callbacks connected to these functions, then the application sends

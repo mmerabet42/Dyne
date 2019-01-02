@@ -114,6 +114,7 @@ void dn::MeshRenderer::start()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_model->indicesSize(), this->_model->indicesData(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+	this->updateUniforms();
 }
 
 void dn::MeshRenderer::update()
@@ -128,39 +129,26 @@ void dn::MeshRenderer::update()
 		// Requesting the transform component at each update is really stupid
 		glBindVertexArray(this->_vao);
 
-		GLuint renderModeUni = this->_shader->getUniform("renderMode");
-		if (renderModeUni != -1)
-			glUniform1i(renderModeUni, this->_renderMode);
+
+		if (this->_renderModeU != -1)
+			glUniform1i(this->_renderModeU, this->_renderMode);
 
 		dn::Transform *transform = this->object()->getComponent<dn::Transform>();
 		if (transform)
-		{
-			GLuint transformUni = this->_shader->getUniform("transform");
-			glUniformMatrix4fv(transformUni, 1, GL_FALSE, &transform->transformMat()[0][0]);
-		}
+			glUniformMatrix4fv(this->_transformU, 1, GL_FALSE, &transform->transformMat()[0][0]);
 		if (dn::Camera::main)
-		{
-			GLuint viewprojectionUni = this->_shader->getUniform("viewprojection");
-			glUniformMatrix4fv(viewprojectionUni, 1, GL_FALSE, &dn::Camera::main->viewProjectionMat()[0][0]);
-		}
+			glUniformMatrix4fv(this->_viewprojectionU, 1, GL_FALSE, &dn::Camera::main->viewProjectionMat()[0][0]);
 
 		if ((this->_renderMode & DN_TEXTURE_COLOR) && this->_texture)
 		{
-			GLuint samplerUni = this->_shader->getUniform("unit");
-			glUniform1i(samplerUni, GL_TEXTURE0);
+			glUniform1i(this->_unitU, GL_TEXTURE0);
 			this->_texture->bind(0);
 		}
-		if (this->_renderMode & DN_MESH_COLOR)
-		{
-			GLuint meshColorUni = this->_shader->getUniform("meshColor");
-			if (meshColorUni != -1)
-				glUniform4f(meshColorUni, this->_color.r, this->_color.g, this->_color.b, this->_color.a);
-		}
+		if ((this->_renderMode & DN_MESH_COLOR) && this->_meshColorU != -1)
+				glUniform4f(this->_meshColorU, this->_color.r, this->_color.g, this->_color.b, this->_color.a);
 
-		GLuint lightPosUni = this->_shader->getUniform("lightPosition");
-		GLuint lightColorUni = this->_shader->getUniform("lightColor");
-		glUniform3f(lightPosUni, dn::MeshRenderer::lightPosition.x, dn::MeshRenderer::lightPosition.y, dn::MeshRenderer::lightPosition.z);
-		glUniform3f(lightColorUni, dn::MeshRenderer::lightColor.x, dn::MeshRenderer::lightColor.y, dn::MeshRenderer::lightColor.z);
+		glUniform3f(this->_lightPositionU, dn::MeshRenderer::lightPosition.x, dn::MeshRenderer::lightPosition.y, dn::MeshRenderer::lightPosition.z);
+		glUniform3f(this->_lightColorU, dn::MeshRenderer::lightColor.x, dn::MeshRenderer::lightColor.y, dn::MeshRenderer::lightColor.z);
 
 		glDrawElements(this->_model->method(), this->_model->indices().size(), GL_UNSIGNED_INT, nullptr);
 
@@ -170,4 +158,17 @@ void dn::MeshRenderer::update()
 		glBindVertexArray(0);
 	}
 	this->_shader->use(false);
+}
+
+void dn::MeshRenderer::updateUniforms()
+{
+	if (!this->_shader)
+		return ;
+	this->_renderModeU = this->_shader->getUniform("renderMode");
+	this->_transformU = this->_shader->getUniform("transform");
+	this->_viewprojectionU = this->_shader->getUniform("viewprojection");
+	this->_unitU = this->_shader->getUniform("unit");
+	this->_meshColorU = this->_shader->getUniform("meshColor");
+	this->_lightPositionU = this->_shader->getUniform("lightPosition");
+	this->_lightColorU = this->_shader->getUniform("lightColor");
 }

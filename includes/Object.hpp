@@ -86,7 +86,7 @@ namespace dn
 	private:
 		// Is true if the object has started
 		bool _running;
-		// An object can deactivated and activated
+		// An object can be deactivated and activated
 		bool _active;
 		// The object name
 		std::string _name;

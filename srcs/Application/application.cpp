@@ -50,21 +50,14 @@ int		dn::Application::run()
 
 	alcMakeContextCurrent(dn::Application::_alcContext);
 
-	// Creating audios
-	dn::Application::createAudios();
-
-	// Compiling the shaders, if a shader has failed to compile, the application stops
-	if (dn::Application::compileShaders() == DN_SHADER_FAIL)
-		return (dn::Application::cleanup(), DN_SHADER_FAIL);
-	// Creating textures
-	dn::Application::createTextures();
+	dn::Application::createDependents();
 
 	// Everything has been initialized at this point
 	dn::Application::_running = true;
 	dn::Application::_return  = DN_OK;
 	// Calling the start callback of the application.
-	if (dn::Application::_startCallback)
-		dn::Application::_startCallback();
+	if (dn::Application::_startCb)
+		dn::Application::_startCb();
 
 	// Calling the start callback of each window.
 	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end(); ++it)
@@ -89,8 +82,8 @@ int		dn::Application::run()
 		dn::Application::_time = etime;
 
 		// Calling the update callback of the application.
-		if (dn::Application::_updateCallback)
-			dn::Application::_updateCallback();
+		if (dn::Application::_updateCb)
+			dn::Application::_updateCb();
 		// Iterating through the windows using iterators.
 		for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); dn::Application::_running && it != dn::Application::_windows.end();)
 		{
@@ -115,8 +108,7 @@ int		dn::Application::run()
 			else
 				++it;
 		}
-		// If a window has been created during the for loop above, it is stored
-		// in the _windowsQueue list
+		// If a window has been created during the main loop, it is added to the windows they've all been updated
 		if (dn::Application::_windowsQueue.size() != 0)
 		{
 			for (std::vector<dn::Window *>::iterator it = dn::Application::_windowsQueue.begin(); it != dn::Application::_windowsQueue.end();)
@@ -132,6 +124,8 @@ int		dn::Application::run()
 		if (dn::Application::_windows.empty())
 			dn::Application::_running = false;
 	}
+	if (dn::Application::_exitCb)
+		dn::Application::_exitCb();
 	// Once the main loop is done, we clean and free everything.
 	dn::Application::cleanup();
 	return (dn::Application::_return);
@@ -160,6 +154,7 @@ void dn::Application::cleanup()
 {
 	dn::Application::destroyWindows();
 	glfwTerminate();
+	dn::Application::destroyDependents();
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(dn::Application::_alcContext);
 	alcCloseDevice(dn::Application::_alcDevice);

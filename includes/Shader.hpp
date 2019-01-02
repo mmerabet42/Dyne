@@ -3,21 +3,23 @@
 
 # include <string>
 # include <vector>
+# include "ApplicationDependent.hpp"
 # include "allgl.hpp"
 
 # define GLSL(CODE) "#version 330 core\n" #CODE
 
 namespace dn
 {
-	class Application;
-
-	class Shader
+	class Shader: public dn::ApplicationDependent
 	{
 	public:
 		Shader(const std::string &p_vertexShader, const std::string &p_fragmentShader, const bool &p_files = true);
 		~Shader();
 
-		bool compile();
+		void create();
+		void destroy();
+
+		bool compile() {}
 
 		std::string vertexSource() const;
 		std::string fragmentSource() const;
