@@ -2,6 +2,7 @@
 #include "Application.hpp"
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 dn::Shader::Shader(const std::string &p_vertexShader, const std::string &p_fragmentShader, const bool &p_file)
 	: ApplicationDependent(), _vertexSource(p_vertexShader), _fragmentSource(p_fragmentShader), _programId(0)
@@ -42,14 +43,24 @@ GLint dn::Shader::getAttrib(const std::string &p_name)
 {
 	if (!this->_programId)
 		return (-1);
-	return (glGetAttribLocation(this->_programId, p_name.c_str()));
+	std::map<std::string, GLint>::iterator it = this->_attribs.find(p_name);
+	if (it != this->_attribs.end())
+		return (it->second);
+	GLint v = glGetAttribLocation(this->_programId, p_name.c_str());
+	this->_attribs.insert(std::make_pair(p_name, v));
+	return (v);
 }
 
 GLint dn::Shader::getUniform(const std::string &p_name)
 {
 	if (!this->_programId)
 		return (-1);
-	return (glGetUniformLocation(this->_programId, p_name.c_str()));
+	std::map<std::string, GLint>::iterator it = this->_uniforms.find(p_name);
+	if (it != this->_uniforms.end())
+		return (it->second);
+	GLint v = glGetUniformLocation(this->_programId, p_name.c_str());
+	this->_uniforms.insert(std::make_pair(p_name, v));
+	return (v);
 }
 
 static GLuint compileShader(const char *p_source, const GLenum &p_type, int &p_status, char p_log[512])

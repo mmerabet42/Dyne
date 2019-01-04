@@ -7,7 +7,10 @@ void dn::Application::addDependent(dn::ApplicationDependent *p_dependent)
 {
 	dn::Application::_dependents.push_back(p_dependent);
 	if (dn::Application::_running)
+	{
+		p_dependent->_created = true;
 		p_dependent->create();
+	}
 }
 
 void dn::Application::createDependents()

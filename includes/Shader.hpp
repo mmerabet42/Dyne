@@ -3,6 +3,7 @@
 
 # include <string>
 # include <vector>
+# include <map>
 # include "ApplicationDependent.hpp"
 # include "allgl.hpp"
 
@@ -18,8 +19,6 @@ namespace dn
 
 		void create();
 		void destroy();
-
-		bool compile() {}
 
 		std::string vertexSource() const;
 		std::string fragmentSource() const;
@@ -39,6 +38,9 @@ namespace dn
 		GLuint _programId;
 		std::string _vertexSource;
 		std::string _fragmentSource;
+
+		std::map<std::string, GLint> _attribs;
+		std::map<std::string, GLint> _uniforms;
 	};
 }
 

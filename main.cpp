@@ -18,6 +18,7 @@
 #include "Audio.hpp"
 #include "AudioListener.hpp"
 #include "AudioSource.hpp"
+#include "Scene.hpp"
 
 void closeWinEscape(dn::Window *w, int k, int, int) { if (k == DN_KEY_ESCAPE) w->close(); }
 
@@ -27,7 +28,28 @@ int main()
 
 	win.keyEvent.addListener(closeWinEscape);
 	win.setClearColor(37, 44, 56);
-	
+/*	win.setFlag(DN_AUTOCLEAR);
+
+	dn::Scene scene;
+
+	dn::Object obj1;
+	obj1.addComponent<dn::MeshRenderer>(&dn::Model::cube);
+
+	dn::Texture txt("res/minecraft_grass.png");
+
+	dn::Object obj2;
+	obj2.addComponent<dn::MeshRenderer>(&dn::Model::cube);
+
+	scene.addObject(&obj1);
+	scene.addObject(&obj2);
+
+	return (dn::Application::run());
+*/
+
+
+
+
+
 	dn::Object camera;
 	dn::Object cube;
 	dn::Object surroundCube;

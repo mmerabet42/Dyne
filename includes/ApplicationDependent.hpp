@@ -6,10 +6,10 @@ namespace dn
 	// Forward declaration of the Application class to avoid including its header file
 	class Application;
 
-	// Every that depends on the application state inherits this class.
+	// Every thing that depends on the application state inherits this class.
 	// When i say it depends on the application i mean that it must be created only once
 	// the application has run and destroyed once the application has done or if
-	// destroyed manually. They are commonly known as resources.
+	// destroyed manually. They are commonly known as ressources.
 
 	class ApplicationDependent
 	{

@@ -78,7 +78,6 @@ void dn::Prototype::create()
 {
 	if (!this->_shader)
 		return ;
-	this->_shader->compile();
 
 	glGenVertexArrays(1, &this->_vao);
 	glBindVertexArray(this->_vao);

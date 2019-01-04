@@ -75,6 +75,7 @@ void dn::MeshRenderer::setColor(const float &p_r, const float &p_g, const float 
 	this->_color = glm::vec4(p_r, p_g, p_b, p_a);
 }
 
+int dn::MeshRenderer::renderMode() const { return (this->_renderMode); }
 void dn::MeshRenderer::setRenderMode(const int &p_mode)
 {
 	this->_renderMode = p_mode;
@@ -115,6 +116,8 @@ void dn::MeshRenderer::start()
 
 	glBindVertexArray(0);
 	this->updateUniforms();
+
+	this->_transform = this->object()->getComponent<dn::Transform>();
 }
 
 void dn::MeshRenderer::update()

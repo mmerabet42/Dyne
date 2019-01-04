@@ -10,6 +10,7 @@
 namespace dn
 {
 	class Texture;
+	class Transform;
 
 	class MeshRenderer: public dn::Component
 	{
@@ -33,10 +34,13 @@ namespace dn
 		void setColor(const glm::vec4 &p_color);
 		void setColor(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.f);
 
+		int renderMode() const;
 		void setRenderMode(const int &p_mode);
 
 		void start();
 		void update();
+
+		dn::Transform *transform();
 
 		static glm::vec3 lightPosition;
 		static glm::vec3 lightColor;
@@ -44,6 +48,8 @@ namespace dn
 		dn::Model *_model;
 		dn::Shader *_shader;
 		bool _modelAllocated;
+
+		dn::Transform *_transform;
 
 		// Different rendering modes
 		dn::Texture *_texture;
