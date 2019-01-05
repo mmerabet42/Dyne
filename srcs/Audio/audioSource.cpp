@@ -73,6 +73,8 @@ void dn::AudioSource::start()
 	alSourcef(this->_sourceId, AL_GAIN, this->_volume);
 	alSourcef(this->_sourceId, AL_PITCH, this->_pitch);
 	this->update();
+	if (this->_played)
+		alSourcePlay(this->_sourceId);
 }
 
 void dn::AudioSource::update()
@@ -91,4 +93,31 @@ void dn::AudioSource::play()
 {
 	if (this->_sourceId)
 		alSourcePlay(this->_sourceId);
+	else
+		this->_played = true;
+}
+
+void dn::AudioSource::pause()
+{
+	if (this->_sourceId)
+		alSourcePause(this->_sourceId);
+}
+
+void dn::AudioSource::stop()
+{
+	if (this->_sourceId)
+		alSourceStop(this->_sourceId);
+}
+
+dn::State dn::AudioSource::state() const
+{
+	if (!this->_sourceId)
+		return (dn::State::stopped);
+	int state;
+	alGetSourcei(this->_sourceId, AL_SOURCE_STATE, &state);
+	if (state == AL_PLAYING)
+		return (dn::State::playing);
+	else if (state == AL_PAUSED)
+		return (dn::State::paused);
+	return (dn::State::stopped);
 }

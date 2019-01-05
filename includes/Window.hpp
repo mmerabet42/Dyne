@@ -2,6 +2,7 @@
 # define WINDOW_HPP
 
 # include <string>
+# include <vector>
 # include <map>
 
 # include "allgl.hpp"
@@ -9,6 +10,7 @@
 # include "Funcs.hpp"
 # include "Codes.hpp"
 # include "Event.hpp"
+# include "KeyCode.hpp"
 
 namespace dn
 {
@@ -48,10 +50,16 @@ namespace dn
 		bool getKey(const int &p_keycode);
 		bool getKeyDown(const int &p_keycode);
 		bool getKeyUp(const int &p_keycode);
+		bool getKey(const dn::KeyCode &p_keycode);
+		bool getKeyDown(const dn::KeyCode &p_keycode);
+		bool getKeyUp(const dn::KeyCode &p_keycode);
 
 		bool getButton(const int &p_button);
 		bool getButtonDown(const int &p_button);
 		bool getButtonUp(const int &p_button);
+		bool getButton(const dn::MouseButton &p_button);
+		bool getButtonDown(const dn::MouseButton &p_button);
+		bool getButtonUp(const dn::MouseButton &p_button);
 
 		/* Getters and setters */
 
@@ -117,22 +125,22 @@ namespace dn
 		void	setScrollCb(const dn::scrollFunc &p_callback);
 		void	setDropCb(const dn::dropFunc &p_callback);
 
-		dn::PriorityEvent<dn::Window *>						startEvent;
-		dn::PriorityEvent<dn::Window *>						updateEvent;
-		dn::PriorityEvent<dn::Window *>						closeEvent;
+		dn::PriorityEvent<dn::Window &>						startEvent;
+		dn::PriorityEvent<dn::Window &>						updateEvent;
+		dn::PriorityEvent<dn::Window &>						closeEvent;
 
-		dn::PriorityEvent<dn::Window *, int, int, int>		keyEvent;
-		dn::PriorityEvent<dn::Window *, int, int>			sizeEvent;
-		dn::PriorityEvent<dn::Window *, int, int>			posEvent;
-		dn::PriorityEvent<dn::Window *, bool>				focusEvent;
-		dn::PriorityEvent<dn::Window *, bool>				maximizeEvent;
-		dn::PriorityEvent<dn::Window *, int, int>			framebufferSizeEvent;
-		dn::PriorityEvent<dn::Window *>						refreshEvent;
-		dn::PriorityEvent<dn::Window *, int, int, int>		mouseButtonEvent;
-		dn::PriorityEvent<dn::Window *, double, double>		mouseMoveEvent;
-		dn::PriorityEvent<dn::Window *, bool>				mouseEnterEvent;
-		dn::PriorityEvent<dn::Window *, double, double>		scrollEvent;
-		dn::PriorityEvent<dn::Window *, int, const char **>	dropEvent;
+		dn::PriorityEvent<dn::Window &, dn::KeyCode, dn::Action, dn::Mod>	keyEvent;
+		dn::PriorityEvent<dn::Window &, int, int>			sizeEvent;
+		dn::PriorityEvent<dn::Window &, int, int>			posEvent;
+		dn::PriorityEvent<dn::Window &, bool>				focusEvent;
+		dn::PriorityEvent<dn::Window &, bool>				maximizeEvent;
+		dn::PriorityEvent<dn::Window &, int, int>			framebufferSizeEvent;
+		dn::PriorityEvent<dn::Window &>						refreshEvent;
+		dn::PriorityEvent<dn::Window &, dn::MouseButton, dn::Action, dn::Mod>	mouseButtonEvent;
+		dn::PriorityEvent<dn::Window &, double, double>		mouseMoveEvent;
+		dn::PriorityEvent<dn::Window &, bool>				mouseEnterEvent;
+		dn::PriorityEvent<dn::Window &, double, double>		scrollEvent;
+		dn::PriorityEvent<dn::Window &, const std::vector<std::string> &>	dropEvent;
 
 	private:
 		int			_x;

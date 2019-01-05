@@ -10,16 +10,9 @@ glm::vec3 dn::MeshRenderer::lightColor(1.f, 1.f, 1.f);
 
 dn::MeshRenderer::MeshRenderer(dn::Model *p_model, dn::Shader *p_shader)
 	: Component("MeshRenderer"), _model(p_model), _shader(p_shader), _vao(0), _vbos{0, 0},
-	_texture(nullptr), _modelAllocated(false), _renderMode(DN_TEXTURE_COLOR | DN_MESH_COLOR),
-	_color(1.f, 1.f, 1.f, 1.f)
+	_texture(nullptr), _renderMode(DN_TEXTURE_COLOR | DN_MESH_COLOR), _color(1.f, 1.f, 1.f, 1.f)
 {
 	
-}
-
-dn::MeshRenderer::MeshRenderer(const dn::Model &p_model, dn::Shader *p_shader)
-	: MeshRenderer(new dn::Model(p_model), p_shader)
-{
-	this->_modelAllocated = true;
 }
 
 dn::MeshRenderer::~MeshRenderer()
@@ -29,24 +22,12 @@ dn::MeshRenderer::~MeshRenderer()
 		glDeleteVertexArrays(1, &this->_vao);
 		glDeleteBuffers(2, this->_vbos);
 	}
-	if (this->_modelAllocated)
-		delete this->_model;
 }
 
 dn::Model *dn::MeshRenderer::model() const { return (this->_model); }
 void dn::MeshRenderer::setModel(dn::Model *p_model)
 {
-	if (this->_modelAllocated)
-		delete this->_model;
-	this->_modelAllocated = false;
 	this->_model = p_model;
-}
-void dn::MeshRenderer::setModel(const dn::Model &p_model)
-{
-	if (this->_modelAllocated)
-		delete this->_model;
-	this->_modelAllocated = true;
-	this->_model = new dn::Model(p_model);
 }
 
 dn::Shader *dn::MeshRenderer::shader() const { return (this->_shader); }
@@ -80,9 +61,12 @@ void dn::MeshRenderer::setRenderMode(const int &p_mode)
 {
 	this->_renderMode = p_mode;
 }
+dn::Transform *dn::MeshRenderer::transform() const { return (this->_transform); }
 
 void dn::MeshRenderer::start()
 {
+	this->_transform = this->object()->getComponent<dn::Transform>();
+	return ;
 	if (!this->_model || !this->_shader)
 		return ;
 	glGenVertexArrays(1, &this->_vao);
@@ -116,12 +100,11 @@ void dn::MeshRenderer::start()
 
 	glBindVertexArray(0);
 	this->updateUniforms();
-
-	this->_transform = this->object()->getComponent<dn::Transform>();
 }
 
 void dn::MeshRenderer::update()
 {
+	return ;
 	if (!this->_model || !this->_shader)
 		return ;
 	this->_shader->use();

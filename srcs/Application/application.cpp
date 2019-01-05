@@ -10,7 +10,7 @@ int		dn::Application::run()
 		return (0);
 	// If the application has been stopped before it has run, then DN_STOPPED is returned.
 	else if (dn::Application::_stopped)
-		return (DN_STOPPED);
+		return (DN_APPLICATION_STOPPED);
 
 	// We first need to initialize the GLFW API. If it failed, the function stops
 	if (!glfwInit())

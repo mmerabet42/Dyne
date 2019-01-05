@@ -9,7 +9,7 @@
 #include <algorithm>
 
 dn::Scene::Scene()
-	: _objects(), _instances()
+	: _objects(), _instances(), _started(false), _camera(nullptr)
 {
 
 }
@@ -107,7 +107,6 @@ void dn::Scene::update()
 	if (!this->_started)
 		return ;
 	for (size_t i = 0; i < this->_objects.size(); ++i)
-		if (this->_objects[i]->active())
 			this->_objects[i]->update();
 	this->render();
 }
@@ -118,6 +117,14 @@ void dn::Scene::render()
 	if (!this->_camera)
 		return ;
 
+	GLint renderModeU;
+	GLint transformU;
+	GLint viewprojectionU;
+	GLint meshColorU;
+	GLint unitU;
+	GLint lightColorU;
+	GLint lightPositionU;
+
 	dn::map_Shader::iterator shader_it = this->_instances.begin();
 	//  v he smiles lol
 	for (; shader_it != this->_instances.end(); ++shader_it)
@@ -126,12 +133,20 @@ void dn::Scene::render()
 		shader_it->first->use(true);
 
 		// send the view projection matrix of the camera to the shader
-		glUniformMatrix4fv(
-			shader_it->first->getUniform("viewprojection"),
-			1, GL_FALSE,
-			&this->_camera->viewProjectionMat()[0][0]);
-		// send the texture unit, it never changes, it is always GL_TEXTURE0
-		glUniform1i(shader_it->first->getUniform("unit"), GL_TEXTURE0);
+		viewprojectionU = shader_it->first->getUniform("viewprojection");
+		if (viewprojectionU != -1)
+			glUniformMatrix4fv(viewprojectionU, 1, GL_FALSE, &this->_camera->viewProjectionMat()[0][0]);
+		// send the texture unit, for now it never changes, it is always GL_TEXTURE0
+		unitU = shader_it->first->getUniform("unit");
+		if (unitU != -1)
+			glUniform1i(unitU, GL_TEXTURE0);
+
+		lightPositionU = shader_it->first->getUniform("lightPosition");
+		if (lightPositionU != -1)
+			glUniform3fv(lightPositionU, 1, &dn::MeshRenderer::lightPosition[0]);
+		lightColorU = shader_it->first->getUniform("lightColor");
+		if (lightColorU != -1)
+			glUniform3fv(lightColorU, 1, &dn::MeshRenderer::lightColor[0]);
 
 		dn::map_Model::iterator model_it = shader_it->second.begin();
 		for (; model_it != shader_it->second.end(); ++model_it)
@@ -144,18 +159,21 @@ void dn::Scene::render()
 			{
 				// there can be no texture at all
 				if (texture_it->first)
+				{
 					// bind the texture
 					texture_it->first->bind(0);
+				}
 
 				dn::vector_MeshRenderer::iterator mesh_it = texture_it->second.begin();
 				for (; mesh_it != texture_it->second.end(); ++mesh_it)
 				{
 					// send the used render mode to the shader
-					GLint renderModeU = shader_it->first->getUniform("renderMode");
+					// checking first is better
+					renderModeU = shader_it->first->getUniform("renderMode");
 					if (renderModeU != -1)
 						glUniform1i(renderModeU, (*mesh_it)->renderMode());
-					
-					GLint transformU = shader_it->first->getUniform("transform");
+
+					transformU = shader_it->first->getUniform("transform");
 					if (transformU != -1)
 					{
 						// send the transform matrix to the shader
@@ -165,6 +183,11 @@ void dn::Scene::render()
 							&(*mesh_it)->transform()->transformMat()[0][0]);
 					}
 
+					meshColorU = shader_it->first->getUniform("meshColor");
+					if (((*mesh_it)->renderMode() & DN_MESH_COLOR) && meshColorU != -1)
+						glUniform4fv(meshColorU, 1, &(*mesh_it)->color()[0]);
+
+					// Later i will implement glDrawElementsInstanced
 					glDrawElements(model_it->first->method(), model_it->first->indices().size(),
 						GL_UNSIGNED_INT, nullptr);
 				}

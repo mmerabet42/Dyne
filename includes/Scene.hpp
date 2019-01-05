@@ -15,11 +15,28 @@ namespace dn
 	class MeshRenderer;
 	class Camera;
 
+	// Maybe the strangest thing you have seen today
+	// Basically a Shader plus a Model generates a ModelInstance.
+	// And each MeshRenderer (of each object) added to the scene is assigned
+	// to a ModelInstance, but one ModelInstance can have multiple MeshRenderer.
+	// The reason for this is that, in general, when you create let's say 100 cubes
+	// they all uses the same model, so it is useless to create 100 ModelInstance.
+	// It is better to create one ModelInstance for the 100 cubes, so the Model (vao, vbo etc.)
+	// is bound only once per frame. I am aware that this is definetely not the
+	// best optimization, but it is a first step, and definetely better than
+	// my previous version which was binding the shader, the model vao and textures
+	// for each cubes.
 	typedef std::vector<dn::MeshRenderer *> vector_MeshRenderer;
 	typedef std::map<dn::Texture *, dn::vector_MeshRenderer> map_Texture;
 	typedef std::pair<dn::ModelInstance *, dn::map_Texture> pair_ModelInstance;
 	typedef std::map<dn::Model *, dn::pair_ModelInstance> map_Model;
 	typedef std::map<dn::Shader *, dn::map_Model> map_Shader;
+	// Without the typedefs it would look like this
+//	std::map<dn::Shader *,
+//		std::map<dn::Model *,
+//			std::pair<dn::ModelInstance,
+//				std::map<dn::Texture *,
+//					std::vector<dn::MeshRenderer *>>>>>
 
 	class Scene
 	{
@@ -37,25 +54,6 @@ namespace dn
 		dn::map_Shader instances() const;
 
 	private:
-		// Maybe the strangest thing you have seen today
-		// Basically a Shader plus a Model generates a ModelInstance.
-		// And each MeshRenderer (of each object) added to the scene is assigned
-		// to a ModelInstance, but one ModelInstance can have multiple MeshRenderer.
-		// The reason for this is that, in general, when you create let's say 100 cubes
-		// they all uses the same model, so it is useless to create 100 ModelInstance
-		// it is better to create one ModelInstance for the 100 cubes, so the Model (vao, vbo etc.)
-		// is bound only once per frame. I am aware that this is definetely not the
-		// best optimization, but it is a first step.
-/*		std::map<dn:Shader *,
-			std::map<dn::Model *,
-				std::pair<dn::ModelInstance *,
-					std::map<dn::Texture *,
-						std::vector<dn::MeshRenderer *>
-					>
-				>
-			>
-		> _instances;
-*/
 		dn::map_Shader _instances;
 
 		// _instances[mesh->shader()][mesh->model()].first->bind()

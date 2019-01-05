@@ -3,11 +3,18 @@
 
 # include "allgl.hpp"
 # include "Component.hpp"
+# include "Codes.hpp"
 
 namespace dn
 {
 	class Transform;
 	class Audio;
+
+	enum State {
+		playing = DN_PLAYING,
+		paused = DN_PAUSED,
+		stopped = DN_STOPPED
+	};
 
 	class AudioSource: public dn::Component
 	{
@@ -27,10 +34,14 @@ namespace dn
 		float pitch() const;
 		void setPitch(const float &p_pitch, const bool &p_relative = false);
 
-		void play();
-
 		void start();
 		void update();
+
+		void play();
+		void pause();
+		void stop();
+
+		dn::State state() const;
 
 	private:
 		dn::Transform *_transform;
@@ -41,6 +52,7 @@ namespace dn
 		bool _looping;
 		float _volume;
 		float _pitch;
+		bool _played;
 	};
 }
 

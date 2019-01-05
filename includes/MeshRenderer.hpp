@@ -15,13 +15,11 @@ namespace dn
 	class MeshRenderer: public dn::Component
 	{
 	public:
-		MeshRenderer(dn::Model *p_model = nullptr, dn::Shader *p_shader = &dn::Shader::defaultShader);
-		MeshRenderer(const dn::Model &p_model, dn::Shader *p_shader = &dn::Shader::defaultShader);
+		MeshRenderer(dn::Model *p_model, dn::Shader *p_shader = &dn::Shader::defaultShader);
 		~MeshRenderer();
 
 		dn::Model *model() const;
 		void setModel(dn::Model *p_model);
-		void setModel(const dn::Model &p_model);
 
 		dn::Shader *shader() const;
 		void setShader(dn::Shader *p_shader);
@@ -40,14 +38,13 @@ namespace dn
 		void start();
 		void update();
 
-		dn::Transform *transform();
+		dn::Transform *transform() const;
 
 		static glm::vec3 lightPosition;
 		static glm::vec3 lightColor;
 	private:
 		dn::Model *_model;
 		dn::Shader *_shader;
-		bool _modelAllocated;
 
 		dn::Transform *_transform;
 

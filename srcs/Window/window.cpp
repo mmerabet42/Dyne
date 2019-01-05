@@ -145,6 +145,10 @@ bool dn::Window::getKey(const int &p_keycode)
 		return (true);
 	return (false);
 }
+bool dn::Window::getKey(const dn::KeyCode &p_keycode)
+{
+	return (this->getKey((int)p_keycode));
+}
 
 bool dn::Window::getKeyDown(const int &p_keycode)
 {
@@ -155,6 +159,10 @@ bool dn::Window::getKeyDown(const int &p_keycode)
 	}
 	return (false);
 }
+bool dn::Window::getKeyDown(const dn::KeyCode &p_keycode)
+{
+	return (this->getKeyDown((int)p_keycode));
+}
 
 bool dn::Window::getKeyUp(const int &p_keycode)
 {
@@ -164,6 +172,10 @@ bool dn::Window::getKeyUp(const int &p_keycode)
 		return (true);
 	}
 	return (false);
+}
+bool dn::Window::getKeyUp(const dn::KeyCode &p_keycode)
+{
+	return (this->getKeyUp((int)p_keycode));
 }
 
 bool dn::Window::getButton(const int &p_button)
@@ -177,6 +189,10 @@ bool dn::Window::getButton(const int &p_button)
 		return (true);
 	return (false);
 }
+bool dn::Window::getButton(const dn::MouseButton &p_button)
+{
+	return (this->getButton((int)p_button));
+}
 
 bool dn::Window::getButtonDown(const int &p_button)
 {
@@ -187,6 +203,10 @@ bool dn::Window::getButtonDown(const int &p_button)
 	}
 	return (false);
 }
+bool dn::Window::getButtonDown(const dn::MouseButton &p_button)
+{
+	return (this->getButtonDown((int)p_button));
+}
 
 bool dn::Window::getButtonUp(const int &p_button)
 {
@@ -196,6 +216,10 @@ bool dn::Window::getButtonUp(const int &p_button)
 		return (true);
 	}
 	return (false);
+}
+bool dn::Window::getButtonUp(const dn::MouseButton &p_button)
+{
+	return (this->getButtonUp((int)p_button));
 }
 
 int			dn::Window::flags() const { return (this->_flags); }
