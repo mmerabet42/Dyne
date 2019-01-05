@@ -33,9 +33,10 @@ static const char *g_fragmentSource = GLSL(
 	in vec3 onormal;
 	in vec3 lightDir;
 
-	const int DN_VERTEX_COLOR = (1 << 0);
-	const int DN_TEXTURE_COLOR = (1 << 1);
-	const int DN_MESH_COLOR = (1 << 2);
+	const int DN_VERTEX_COLOR	= (1 << 0);
+	const int DN_TEXTURE_COLOR	= (1 << 1);
+	const int DN_MESH_COLOR		= (1 << 2);
+	const int DN_LIGHT_COLOR	= (1 << 3);
 
 	uniform sampler2D unit;
 	uniform int renderMode;
@@ -63,9 +64,12 @@ static const char *g_fragmentSource = GLSL(
 			else
 				usedColor = meshColor;
 		}
-
-		vec3 diffuse = max(dot(onormal, lightDir), 0.0) * lightColor;
-		color = vec4(diffuse, 1.0) * usedColor;
+		if (bool(renderMode & DN_LIGHT_COLOR))
+		{
+			vec3 diffuse = max(dot(onormal, lightDir), 0.0) * lightColor;
+			usedColor = vec4(diffuse, 1.0) * usedColor;
+		}
+		color = usedColor;
 	}
 );
 

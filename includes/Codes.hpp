@@ -192,6 +192,7 @@
 # define DN_VERTEX_COLOR		(1 << 0)
 # define DN_TEXTURE_COLOR		(1 << 1)
 # define DN_MESH_COLOR			(1 << 2)
+# define DN_LIGHT_COLOR			(1 << 3)
 
 enum {
 	DN_OK,
