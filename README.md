@@ -1,11 +1,11 @@
 
 # Dyne ?
 
-**Dyne** is a general engine in which you can create windows, catch keybords events, mouse events and all sort of event easily. But also create 3D and 2D environments.
+**Dyne** is a general purpose engine in which you can create window applications, 2D and 3D applications.
 
 # Why ?
 
-**Dyne** is a project that meant to be an exercise, for improving my C++ knowledge and learning the OpenGL and GLFW libraries, and turned out to become the project in which i have been investing the most time.
+My first goal 
 
 As i said the main goal was just to improve my C++ knownledge by creating a productive and decent user interface in which it would be simple to create an object and place it in a 3D environement and move it around, and create other objects, assign textures etc.
 
