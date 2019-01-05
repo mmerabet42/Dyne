@@ -38,12 +38,15 @@ int main()
 	dn::Object surroundCube;
 	dn::Object gridPlane;
 	dn::Object preCube;
-	dn::Object dragon;
+	dn::Object planet;
 	std::vector<dn::Object *> minecraftObjects;
 
 	dn::Audio rainClip("res/rain3.wav", true);
 	dn::Texture minecraftTexture("res/minecraft_grass.png");
 	dn::Texture bricksTexture("res/bricks.jpg");
+	dn::Texture planetTexture("res/planet_texture.png");
+	dn::Model planetModel = dn::Model::parse("res/planet.obj");
+//	dn::Model drangonModel = dn::Model::parse("res/dragon.obj");
 
 	cube.setName("prout");
 	cube.addComponent<dn::Transform>();
@@ -67,9 +70,11 @@ int main()
 	gridPlane.addComponent<dn::MeshRenderer>(&gridPlaneModel);
 	gridPlane.getComponent<dn::MeshRenderer>()->setColor(1.f, 1.f, 1.f, 0.1f);
 
-	dn::Model dragonModel = dn::Model::parse("res/dragon.obj");
-	dragon.addComponent<dn::Transform>()->scale() = glm::vec3(50.f, 50.f, 50.f);
-	dragon.addComponent<dn::MeshRenderer>(&dragonModel)->setRenderMode(DN_MESH_COLOR);
+	planet.addComponent<dn::Transform>()->position() = glm::vec3(1000.f, 500.f, 1000.f);
+	planet.getComponent<dn::Transform>()->scale() = glm::vec3(100.f, 100.f, 100.f);
+	planet.getComponent<dn::Transform>()->rotation() = glm::vec3(2.f, 1.f, 1.f);
+	
+	planet.addComponent<dn::MeshRenderer>(&planetModel)->setTexture(&planetTexture);
 
 	dn::Scene scene;
 
@@ -78,7 +83,7 @@ int main()
 	scene.addObject(&cube);
 	scene.addObject(&surroundCube);
 	scene.addObject(&preCube);
-	scene.addObject(&dragon);
+	scene.addObject(&planet);
 
 	win.startEvent([&](dn::Window &win) {
 		win.focus();
