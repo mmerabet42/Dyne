@@ -113,6 +113,9 @@ namespace dn
 		void	setCloseCb(const dn::closeFunc &p_callback);
 
 		void	setKeyCb(const dn::keyFunc &p_callback);
+		void	setKeyPressCb(const dn::keyPressFunc &p_callback);
+		void	setKeyRepeatCb(const dn::keyRepeatFunc &p_callback);
+		void	setKeyReleaseCb(const dn::keyReleaseFunc &p_callback);
 		void	setSizeCb(const dn::sizeFunc &p_callback);
 		void	setPosCb(const dn::posFunc &p_callback);
 		void	setFocusCb(const dn::focusFunc &p_callback);
@@ -120,27 +123,36 @@ namespace dn
 		void	setFramebufferSizeCb(const dn::framebufferSizeFunc &p_callback);
 		void	setRefreshCb(const dn::refreshFunc &p_callback);
 		void	setMouseButtonCb(const dn::mouseButtonFunc &p_callback);
+		void	setMousePressCb(const dn::mousePressFunc &p_callback);
+		void	setMouseRepeatCb(const dn::mouseRepeatFunc &p_callback);
+		void	setMouseReleaseCb(const dn::mouseReleaseFunc &p_callback);
 		void	setMouseMoveCb(const dn::mouseMoveFunc &p_callback);
 		void	setMouseEnterCb(const dn::mouseEnterFunc &p_callback);
 		void	setScrollCb(const dn::scrollFunc &p_callback);
 		void	setDropCb(const dn::dropFunc &p_callback);
 
-		dn::PriorityEvent<dn::Window &>						startEvent;
-		dn::PriorityEvent<dn::Window &>						updateEvent;
-		dn::PriorityEvent<dn::Window &>						closeEvent;
+		dn::Event<dn::Window &>						startEvent;
+		dn::Event<dn::Window &>						updateEvent;
+		dn::Event<dn::Window &>						closeEvent;
 
-		dn::PriorityEvent<dn::Window &, dn::KeyCode, dn::Action, dn::Mod>	keyEvent;
-		dn::PriorityEvent<dn::Window &, int, int>			sizeEvent;
-		dn::PriorityEvent<dn::Window &, int, int>			posEvent;
-		dn::PriorityEvent<dn::Window &, bool>				focusEvent;
-		dn::PriorityEvent<dn::Window &, bool>				maximizeEvent;
-		dn::PriorityEvent<dn::Window &, int, int>			framebufferSizeEvent;
-		dn::PriorityEvent<dn::Window &>						refreshEvent;
-		dn::PriorityEvent<dn::Window &, dn::MouseButton, dn::Action, dn::Mod>	mouseButtonEvent;
-		dn::PriorityEvent<dn::Window &, double, double>		mouseMoveEvent;
-		dn::PriorityEvent<dn::Window &, bool>				mouseEnterEvent;
-		dn::PriorityEvent<dn::Window &, double, double>		scrollEvent;
-		dn::PriorityEvent<dn::Window &, const std::vector<std::string> &>	dropEvent;
+		dn::Event<dn::Window &, dn::KeyCode, dn::Action, dn::Mod>	keyEvent;
+		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>				keyPressEvent;
+		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>				keyReleaseEvent;
+		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>				keyRepeatEvent;
+		dn::Event<dn::Window &, int, int>			sizeEvent;
+		dn::Event<dn::Window &, int, int>			posEvent;
+		dn::Event<dn::Window &, bool>				focusEvent;
+		dn::Event<dn::Window &, bool>				maximizeEvent;
+		dn::Event<dn::Window &, int, int>			framebufferSizeEvent;
+		dn::Event<dn::Window &>						refreshEvent;
+		dn::Event<dn::Window &, dn::MouseButton, dn::Action, dn::Mod>	mouseButtonEvent;
+		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mousePressEvent;
+		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseRepeatEvent;
+		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseReleaseEvent;
+		dn::Event<dn::Window &, double, double>		mouseMoveEvent;
+		dn::Event<dn::Window &, bool>				mouseEnterEvent;
+		dn::Event<dn::Window &, double, double>		scrollEvent;
+		dn::Event<dn::Window &, const std::vector<std::string> &>	dropEvent;
 
 	private:
 		int			_x;
@@ -181,6 +193,9 @@ namespace dn
 		dn::updateFunc			_updateCb;
 		dn::closeFunc			_closeCb;
 		dn::keyFunc				_keyCb;
+		dn::keyPressFunc		_keyPressCb;
+		dn::keyReleaseFunc		_keyReleaseCb;
+		dn::keyRepeatFunc		_keyRepeatCb;
 		dn::sizeFunc			_sizeCb;
 		dn::posFunc				_posCb;
 		dn::focusFunc			_focusCb;
@@ -188,6 +203,9 @@ namespace dn
 		dn::framebufferSizeFunc	_framebufferSizeCb;
 		dn::refreshFunc			_refreshCb;
 		dn::mouseButtonFunc		_mouseButtonCb;
+		dn::mousePressFunc		_mousePressCb;
+		dn::mouseRepeatFunc		_mouseRepeatCb;
+		dn::mouseReleaseFunc	_mouseReleaseCb;
 		dn::mouseMoveFunc		_mouseMoveCb;
 		dn::mouseEnterFunc		_mouseEnterCb;
 		dn::scrollFunc			_scrollCb;

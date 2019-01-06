@@ -33,16 +33,32 @@ namespace dn
 			if (this->_triggered)
 				return ;
 			this->_triggered = true;
-			for (typename std::vector<func>::iterator it = this->_listeners.begin(); it != this->_listeners.end() && this->_triggered; ++it)
+			typename std::vector<func>::iterator it = this->_listeners.begin();
+			for (; it != this->_listeners.end() && this->_triggered; ++it)
 				(*it)(p_args ...);
 			this->_triggered = false;
 		}
+
 		// Release the event
 		virtual void release() { this->_triggered = false; }
 	protected:
 		bool _triggered;
 		std::vector<func> _listeners;
 	};
+
+	template <typename ... _Args>
+	dn::Event<_Args ...> &operator<<(
+		dn::Event<_Args ...> &p_event,
+		const typename dn::Event<_Args ...>::func &p_listener)
+	{
+		p_event.addListener(p_listener);
+	}
+	
+	template <typename ... _Args>
+	void connect(dn::Event<_Args ...> &p_event, const typename dn::Event<_Args ...>::func &p_listener)
+	{
+		p_event.addListener(p_listener);
+	}
 
 	template <typename ... _Args>
 	class PriorityEvent : public Event<_Args ...>
@@ -55,16 +71,6 @@ namespace dn
 			: Event<_Args ...>() {}
 		~PriorityEvent() { this->clearListeners(); }
 
-		virtual void operator()(const func &p_listener)
-		{
-			this->addListener(0, p_listener);
-		}
-
-		virtual void operator()(const int &p_channel, const func &p_listener)
-		{
-			this->addListener(p_channel, p_listener);
-		}
-		
 		virtual void addListener(const func &p_listener)
 		{
 			this->addListener(0, p_listener);
@@ -80,9 +86,13 @@ namespace dn
 			if (this->_triggered)
 				return ;
 			this->_triggered = true;
-			for (typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin(); this->_triggered && it != this->_chanListeners.end(); ++it)
-				for (typename std::vector<func>::iterator it2 = it->second.begin(); this->_triggered && it2 != it->second.end(); ++it2)
+			typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin();
+			for (; this->_triggered && it != this->_chanListeners.end(); ++it)
+			{
+				typename std::vector<func>::iterator it2 = it->second.begin();
+				for (; this->_triggered && it2 != it->second.end(); ++it2)
 					(*it2)(p_args ...);
+			}
 			this->_triggered = false;
 		}
 
@@ -90,7 +100,8 @@ namespace dn
 
 		virtual void clearListeners()
 		{
-			for (typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin(); this->_triggered && it != this->_chanListeners.end(); ++it)
+			typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin();
+			for (; this->_triggered && it != this->_chanListeners.end(); ++it)
 				it->second.clear();
 			this->_chanListeners.clear();
 		}
@@ -99,11 +110,6 @@ namespace dn
 		std::map<int, std::vector<func>> _chanListeners;
 	};
 
-	template <typename ... _Args>
-	void connect(dn::Event<_Args ...> &p_event, const typename dn::Event<_Args ...>::func &p_listener)
-	{
-		p_event.addListener(p_listener);
-	}
 }
 
 #endif

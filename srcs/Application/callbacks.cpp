@@ -32,11 +32,31 @@ void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int
 	else if (p_action == GLFW_RELEASE)
 		p_action = DN_RELEASE;
 	win->_keyLogger[p_keycode] = p_action;
+
 	/* Calling the appropriate callback */
 	if (win->_keyCb)
 		win->_keyCb(*win, (dn::KeyCode)p_keycode, (dn::Action)p_action, (dn::Mod)p_mods);
 	if (!win->getFlag(DN_CLOSED))
 		win->keyEvent.trigger(*win, (dn::KeyCode)p_keycode, (dn::Action)p_action, (dn::Mod)p_mods);
+
+	if (!win->getFlag(DN_CLOSED))
+	{
+		if (p_action == DN_PRESS && win->_keyPressCb)
+			win->_keyPressCb(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+		else if (p_action == DN_REPEAT && win->_keyRepeatCb)
+			win->_keyRepeatCb(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+		else if (p_action == DN_RELEASE && win->_keyReleaseCb)
+			win->_keyReleaseCb(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+	}
+	if (!win->getFlag(DN_CLOSED))
+	{
+		if (p_action == DN_PRESS)
+			win->keyPressEvent.trigger(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+		else if (p_action == DN_REPEAT)
+			win->keyRepeatEvent.trigger(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+		else if (p_action == DN_RELEASE)
+			win->keyReleaseEvent.trigger(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+	}
 }
 
 void	dn::Application::windowSizeCallback(GLFWwindow *p_window, int p_width, int p_height)
@@ -164,6 +184,25 @@ void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_butt
 		win->_mouseButtonCb(*win, (dn::MouseButton)p_button, (dn::Action)p_action, (dn::Mod)p_mods);
 	if (!win->getFlag(DN_CLOSED))
 		win->mouseButtonEvent.trigger(*win, (dn::MouseButton)p_button, (dn::Action)p_action, (dn::Mod)p_mods);
+
+	if (!win->getFlag(DN_CLOSED))
+	{
+		if (p_action == DN_PRESS && win->_mousePressCb)
+			win->_mousePressCb(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+		else if (p_action == DN_REPEAT && win->_mouseRepeatCb)
+			win->_mouseRepeatCb(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+		else if (p_action == DN_RELEASE && win->_mouseReleaseCb)
+			win->_mouseReleaseCb(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+	}
+	if (!win->getFlag(DN_CLOSED))
+	{
+		if (p_action == DN_PRESS)
+			win->mousePressEvent.trigger(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+		else if (p_action == DN_REPEAT)
+			win->mouseRepeatEvent.trigger(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+		else if (p_action == DN_RELEASE)
+			win->mouseReleaseEvent.trigger(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+	}
 }
 
 void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, double p_y)

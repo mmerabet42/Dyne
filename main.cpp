@@ -20,7 +20,7 @@
 #include "AudioSource.hpp"
 #include "Scene.hpp"
 
-void closeWinEscape(dn::Window &w, dn::KeyCode k, dn::Action, dn::Mod)
+void closeWinEscape(dn::Window &w, dn::KeyCode k, dn::Mod)
 {
 	if (k == dn::KeyCode::escape)
 		w.close();
@@ -30,51 +30,59 @@ int main()
 {
 	dn::Window win(600, 400, "Window 1");
 
-	win.keyEvent.addListener(closeWinEscape);
+	win.keyPressEvent.addListener(closeWinEscape);
 	win.setClearColor(37, 44, 56);
 
-	dn::Object camera;
-	dn::Object cube;
-	dn::Object surroundCube;
-	dn::Object gridPlane;
-	dn::Object preCube;
-	dn::Object planet;
 	std::vector<dn::Object *> minecraftObjects;
 
 	dn::Audio rainClip("res/rain3.wav", true);
 	dn::Texture minecraftTexture("res/minecraft_grass.png");
 	dn::Texture bricksTexture("res/bricks.jpg");
 	dn::Texture planetTexture("res/planet_texture.png");
+	dn::Texture earthTexture("res/Earth_Diffuse.jpg");
 	dn::Model planetModel = dn::Model::parse("res/planet.obj");
+	dn::Model gridPlaneModel = dn::Model::generateGridPlane(101, 2.f);
 //	dn::Model drangonModel = dn::Model::parse("res/dragon.obj");
 
-	cube.setName("prout");
-	cube.addComponent<dn::Transform>();
-	cube.addComponent<dn::MeshRenderer>(&dn::Model::cube);
-	cube.getComponent<dn::MeshRenderer>()->setTexture(&minecraftTexture);
-	cube.addComponent<dn::AudioSource>(&rainClip);
-	cube.getComponent<dn::AudioSource>()->setLooping(true);
+	dn::Object cube;
+		cube.setName("prout");
+		cube.addComponent<dn::Transform>();
+		cube.addComponent<dn::MeshRenderer>(&dn::Model::cube);
+		cube.getComponent<dn::MeshRenderer>()->setTexture(&minecraftTexture);
+		cube.addComponent<dn::AudioSource>(&rainClip);
+		cube.getComponent<dn::AudioSource>()->setLooping(true);
+		cube.getComponent<dn::MeshRenderer>()->setRenderMode(DN_TEXTURE_COLOR | DN_LIGHT_COLOR);
 
-	surroundCube.addComponent<dn::Transform>(cube.getComponent<dn::Transform>());
-	surroundCube.addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
+	dn::Object surroundCube;
+		surroundCube.addComponent<dn::Transform>(cube.getComponent<dn::Transform>());
+		surroundCube.addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
+		surroundCube.getComponent<dn::MeshRenderer>()->setColor(0.f, 0.f, 0.f);
 
-	preCube.addComponent<dn::Transform>();
-	preCube.addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
+	dn::Object preCube;
+		preCube.addComponent<dn::Transform>();
+		preCube.addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
 
-	dn::Transform *cameraTransform = camera.addComponent<dn::Transform>(0.f, 0.f, 5.f);
-	camera.addComponent<dn::Camera>(70.f, 0.02f, 100000000.f);
-	camera.addComponent<dn::AudioListener>();
+	dn::Object camera;
+		dn::Transform *cameraTransform = camera.addComponent<dn::Transform>(0.f, 0.f, 5.f);
+		camera.addComponent<dn::Camera>(70.f, 0.02f, 100000000.f);
+		camera.addComponent<dn::AudioListener>();
 
-	gridPlane.addComponent<dn::Transform>();
-	dn::Model gridPlaneModel = dn::Model::generateGridPlane(101, 2.f);
-	gridPlane.addComponent<dn::MeshRenderer>(&gridPlaneModel);
-	gridPlane.getComponent<dn::MeshRenderer>()->setColor(1.f, 1.f, 1.f, 0.1f);
+	dn::Object gridPlane;
+		gridPlane.addComponent<dn::Transform>();
+		gridPlane.addComponent<dn::MeshRenderer>(&gridPlaneModel);
+		gridPlane.getComponent<dn::MeshRenderer>()->setColor(1.f, 1.f, 1.f, 0.1f);
 
-	planet.addComponent<dn::Transform>()->position() = glm::vec3(1000.f, 500.f, 1000.f);
-	planet.getComponent<dn::Transform>()->scale() = glm::vec3(100.f, 100.f, 100.f);
-	planet.getComponent<dn::Transform>()->rotation() = glm::vec3(2.f, 1.f, 1.f);
-	
-	planet.addComponent<dn::MeshRenderer>(&planetModel)->setTexture(&planetTexture);
+	dn::Object planet;
+		planet.addComponent<dn::Transform>()->position() = glm::vec3(1000.f, 500.f, 1000.f);
+		planet.getComponent<dn::Transform>()->scale() = glm::vec3(100.f, 100.f, 100.f);
+		planet.getComponent<dn::Transform>()->rotation() = glm::vec3(2.f, 1.f, 1.f);
+		planet.addComponent<dn::MeshRenderer>(&planetModel)->setTexture(&planetTexture);
+
+	dn::Object earth;
+		earth.addComponent<dn::Transform>()->position() = glm::vec3(-1000.f, 500.f, -1000.f);
+		earth.getComponent<dn::Transform>()->scale() = glm::vec3(100.f, 100.f, 100.f);
+		earth.getComponent<dn::Transform>()->rotation() = glm::vec3(0.f, 4.f, 0.f);
+		earth.addComponent<dn::MeshRenderer>(&planetModel)->setTexture(&earthTexture);
 
 	dn::Scene scene;
 
@@ -84,8 +92,9 @@ int main()
 	scene.addObject(&surroundCube);
 	scene.addObject(&preCube);
 	scene.addObject(&planet);
+	scene.addObject(&earth);
 
-	win.startEvent([&](dn::Window &win) {
+	win.startEvent.addListener([&](dn::Window &win) {
 		win.focus();
 		win.setMouseLock(true);
 
@@ -98,7 +107,7 @@ int main()
 	float speedMove = 0.1f;
 	dn::MeshRenderer::lightPosition = glm::vec3(0.f, 0.f, 100.f);
 
-	win.updateEvent([&](dn::Window &win) {
+	win.updateEvent.addListener([&](dn::Window &win) {
 
 		if (win.getKey(dn::KeyCode::W))
 			cameraTransform->position() += cameraTransform->forward() * speedMove;

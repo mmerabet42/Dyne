@@ -19,6 +19,21 @@ void	dn::Window::setKeyCb(const dn::keyFunc &p_callback)
 	this->_keyCb = p_callback;
 }
 
+void	dn::Window::setKeyPressCb(const dn::keyPressFunc &p_callback)
+{
+	this->_keyPressCb = p_callback;
+}
+
+void	dn::Window::setKeyRepeatCb(const dn::keyRepeatFunc &p_callback)
+{
+	this->_keyRepeatCb = p_callback;
+}
+
+void	dn::Window::setKeyReleaseCb(const dn::keyReleaseFunc &p_callback)
+{
+	this->_keyReleaseCb = p_callback;
+}
+
 void	dn::Window::setSizeCb(const dn::sizeFunc &p_callback)
 {
 	this->_sizeCb = p_callback;
@@ -57,6 +72,21 @@ void	dn::Window::setRefreshCb(const dn::refreshFunc &p_callback)
 void	dn::Window::setMouseButtonCb(const dn::mouseButtonFunc &p_callback)
 {
 	this->_mouseButtonCb = p_callback;
+}
+
+void	dn::Window::setMousePressCb(const dn::mousePressFunc &p_callback)
+{
+	this->_mousePressCb = p_callback;
+}
+
+void	dn::Window::setMouseRepeatCb(const dn::mouseRepeatFunc &p_callback)
+{
+	this->_mouseRepeatCb = p_callback;
+}
+
+void	dn::Window::setMouseReleaseCb(const dn::mouseReleaseFunc &p_callback)
+{
+	this->_mouseReleaseCb = p_callback;
 }
 
 void	dn::Window::setMouseMoveCb(const dn::mouseMoveFunc &p_callback)

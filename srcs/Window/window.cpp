@@ -15,12 +15,14 @@ dn::Window::Window(const int &p_width, const int &p_height, const std::string &p
 	_keyCb(nullptr), _startCb(nullptr), _updateCb(nullptr), _sizeCb(nullptr),
 	_posCb(nullptr), _closeCb(nullptr), _focusCb(nullptr), _maximizeCb(nullptr),
 	_refreshCb(nullptr), _mouseButtonCb(nullptr), _mouseMoveCb(nullptr), _mouseEnterCb(nullptr),
-	_scrollCb(nullptr), _dropCb(nullptr),
+	_scrollCb(nullptr), _dropCb(nullptr), _keyPressCb(nullptr), _keyReleaseCb(nullptr),
+	_keyRepeatCb(nullptr), _mousePressCb(nullptr), _mouseRepeatCb(nullptr), _mouseReleaseCb(nullptr),
 
 	// Calling the constructor of each event
 	startEvent(), updateEvent(), closeEvent(), keyEvent(), sizeEvent(), posEvent(), focusEvent(),
 	maximizeEvent(), refreshEvent(), mouseButtonEvent(), mouseMoveEvent(), mouseEnterEvent(),
-	scrollEvent(), dropEvent()
+	scrollEvent(), dropEvent(), keyPressEvent(), keyReleaseEvent(), keyRepeatEvent(),
+	mousePressEvent(), mouseReleaseEvent(), mouseRepeatEvent()
 {
 	// Adding the window to the application.
 	this->_windowid = dn::Application::addWindow(this);
@@ -54,12 +56,18 @@ void	dn::Window::close()
 	this->startEvent.release();
 	this->updateEvent.release();
 	this->keyEvent.release();
+	this->keyPressEvent.release();
+	this->keyReleaseEvent.release();
+	this->keyRepeatEvent.release();
 	this->sizeEvent.release();
 	this->posEvent.release();
 	this->focusEvent.release();
 	this->maximizeEvent.release();
 	this->refreshEvent.release();
 	this->mouseButtonEvent.release();
+	this->mousePressEvent.release();
+	this->mouseRepeatEvent.release();
+	this->mouseReleaseEvent.release();
 	this->mouseMoveEvent.release();
 	this->mouseEnterEvent.release();
 	this->scrollEvent.release();
