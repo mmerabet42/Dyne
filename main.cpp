@@ -1,7 +1,4 @@
 #include <iostream>
-#include <sndfile.h>
-#include <AL/al.h>
-#include <AL/alc.h>
 
 #include "Window.hpp"
 #include "Application.hpp"

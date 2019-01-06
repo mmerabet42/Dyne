@@ -26,7 +26,7 @@ void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int
 	if (!win)
 		return ;
 	if (p_action == GLFW_PRESS)
-		p_action == DN_PRESS;
+		p_action = DN_PRESS;
 	else if (p_action == GLFW_REPEAT)
 		p_action = DN_REPEAT;
 	else if (p_action == GLFW_RELEASE)
