@@ -226,8 +226,8 @@ void dn::Scene::render()
 						glUniform4fv(meshColorU, 1, &(*mesh_it)->color()[0]);
 
 					// Later i will implement glDrawElementsInstanced
-					glDrawElements(model_it->first->method(), model_it->first->indices().size(),
-						GL_UNSIGNED_INT, nullptr);
+					glDrawElementsInstanced(model_it->first->method(), model_it->first->indices().size(),
+						GL_UNSIGNED_INT, nullptr, 1);
 				}
 			}
 		}
