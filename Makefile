@@ -2,17 +2,19 @@ NAME		=	libdn.a
 CC			=	g++ -std=c++14
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
-GET_PACKAGE	=	`pkg-config --static --libs glew glfw3 openal`
+GET_PACKAGE	=	`pkg-config --static --libs glew glfw3 openal sndfile`
 
 MAIN_FILE	= main.cpp
 OUT			= a.out
 
+INCLUDE_FLG	= -I ~/.brew/include -I includes/
+
 OSNAME		= $(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -lsndfile -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
+	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) $(INCLUDE_FLG) -o $(OUT)# -g3 -fsanitize=address
 endif
 ifeq ($(OSNAME),Darwin)
-	COMPILE = $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -framework OpenGL -I includes/ -I libft/includes/ -o $(OUT)# -g3 -fsanitize=address
+	COMPILE = $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -framework OpenGL -framework OpenAL $(INCLUDE_FLG) -o $(OUT)# -g3 -fsanitize=address
 endif
 
 SRCD		= srcs/
@@ -80,60 +82,60 @@ $(NAME): $(OBJB)
 	@ranlib $(NAME)
 	@echo  "$(NAME): $(CGREEN)done$(CEND)"
 
-$(OBJD)%.o: $(SRCD)main/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)main/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Application/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Application/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Window/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Window/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Shader/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Shader/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Model/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Model/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Math/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Math/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Object/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Object/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Texture/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Texture/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Audio/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Audio/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)utils/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)utils/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)Scene/%.cpp $(INCLUDES) Makefile
+$(OBJD)%.o: $(SRCD)Scene/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
-	@$(CC) $(CLFAGS) -o $@ -c $< -I$(INCLUDES_D) -I libft/includes
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
 clean:
 	@echo "$(CRED)Cleaning$(CEND): $(NAME)"

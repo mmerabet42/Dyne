@@ -45,7 +45,8 @@ int		dn::Application::run()
 	glCullFace(GL_BACK);
 
 	// Opening sound device and creating context
-	dn::Application::_alcDevice = alcOpenDevice(nullptr);
+	if (!(dn::Application::_alcDevice = alcOpenDevice(nullptr)))
+		std::cout << "owurbv\n";
 	dn::Application::_alcContext = alcCreateContext(dn::Application::_alcDevice, nullptr);
 
 	alcMakeContextCurrent(dn::Application::_alcContext);

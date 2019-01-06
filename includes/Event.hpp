@@ -52,6 +52,7 @@ namespace dn
 		const typename dn::Event<_Args ...>::func &p_listener)
 	{
 		p_event.addListener(p_listener);
+		return (p_event);
 	}
 	
 	template <typename ... _Args>
