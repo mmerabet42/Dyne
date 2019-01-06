@@ -23,12 +23,16 @@ namespace dn
 		const dn::Shader *shader() const;
 		const dn::Model *model() const;
 
+		GLuint instanceVb() const;
+
 	private:
 		dn::Shader *_shader;
 		dn::Model *_model;
 
 		GLuint _vao;
-		GLuint _vbos[2];
+
+		enum { VERTEX_VB, INDEX_VB, INSTANCE_VB, VB_SIZE };
+		GLuint _vbos[VB_SIZE];
 	};
 }
 

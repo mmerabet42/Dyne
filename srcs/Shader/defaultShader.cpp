@@ -5,8 +5,9 @@ static const char *g_vertexSource = GLSL(
 	in vec4 color;
 	in vec2 tex;
 	in vec3 normal;
+	in mat4 transform;
 
-	uniform mat4 transform;
+//	uniform mat4 transform;
 	uniform mat4 viewprojection;
 	uniform vec3 lightPosition;
 

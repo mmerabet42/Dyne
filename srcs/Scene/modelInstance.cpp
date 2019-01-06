@@ -3,6 +3,7 @@
 #include "Shader.hpp"
 #include "Model.hpp"
 #include "Vertex.hpp"
+#include "glm/matrix.hpp"
 
 dn::ModelInstance::ModelInstance(dn::Shader *p_shader, dn::Model *p_model)
 	: _shader(p_shader), _model(p_model)
@@ -28,9 +29,9 @@ void dn::ModelInstance::create()
 	glGenVertexArrays(1, &this->_vao);
 	glBindVertexArray(this->_vao);
 
-	glGenBuffers(2, this->_vbos);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[0]);
+	glGenBuffers(VB_SIZE, this->_vbos);
+
+	glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[VERTEX_VB]);
 	glBufferData(GL_ARRAY_BUFFER,this->_model->verticesSize(), this->_model->verticesData(),
 		GL_STATIC_DRAW);
 
@@ -52,9 +53,30 @@ void dn::ModelInstance::create()
 	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, false,
 		sizeof(dn::Vertex), (void *)offsetof(dn::Vertex, normal));
 	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbos[1]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_vbos[INDEX_VB]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->_model->indicesSize(), this->_model->indicesData(),
 		GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[INSTANCE_VB]);
+
+	GLint transformAttrib = this->_shader->getAttrib("transform");
+
+	glEnableVertexAttribArray(transformAttrib + 0);
+	glVertexAttribPointer(transformAttrib + 0, 4, GL_FLOAT, false,
+		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 0));
+	glVertexAttribDivisor(transformAttrib + 0, 1);
+	glEnableVertexAttribArray(transformAttrib + 1);
+	glVertexAttribPointer(transformAttrib + 1, 4, GL_FLOAT, false,
+		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 1));
+	glVertexAttribDivisor(transformAttrib + 1, 1);
+	glEnableVertexAttribArray(transformAttrib + 2);
+	glVertexAttribPointer(transformAttrib + 2, 4, GL_FLOAT, false,
+		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 2));
+	glVertexAttribDivisor(transformAttrib + 2, 1);
+	glEnableVertexAttribArray(transformAttrib + 3);
+	glVertexAttribPointer(transformAttrib + 3, 4, GL_FLOAT, false,
+		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 3));
+	glVertexAttribDivisor(transformAttrib + 3, 1);
 
 	glBindVertexArray(0);
 }
@@ -63,4 +85,9 @@ void dn::ModelInstance::destroy()
 {
 	glDeleteVertexArrays(1, &this->_vao);
 	glDeleteBuffers(2, this->_vbos);
+}
+
+GLuint dn::ModelInstance::instanceVb() const
+{
+	return (this->_vbos[INSTANCE_VB]);
 }
