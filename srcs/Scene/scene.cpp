@@ -52,9 +52,12 @@ void dn::Scene::addObject(dn::Object *p_object)
 			// a model entry has been found, we then check for a texture entry
 			dn::map_Texture::iterator texture_it = model_it->second.second.find(mesh->texture());
 			if (texture_it != model_it->second.second.end())
+			{
 				// there is a texture entry, so we insert the MeshRenderer
 				// to this path: (shader -> model -> modelInstance -> texture ...)
-				texture_it->second.push_back(mesh);
+				texture_it->second.first.push_back(mesh);
+				texture_it->second.second.push_back(dn::InstanceData());
+			}
 			else
 			{
 				// no texture entry, so we create a new texture entry with 
@@ -64,8 +67,15 @@ void dn::Scene::addObject(dn::Object *p_object)
 				dn::vector_MeshRenderer meshRenderer_vector;
 				// and add the object mesh as a first element in this list
 				meshRenderer_vector.push_back(mesh);
+
+				dn::vector_InstanceData instanceData_vector;
+				instanceData_vector.push_back(dn::InstanceData());
+
+				dn::pair_MeshRenderer meshRenderer_pair;
+				meshRenderer_pair = std::make_pair(meshRenderer_vector, instanceData_vector);
+
 				// then the texture entry is created in the model entry
-				model_it->second.second.insert(std::make_pair(mesh->texture(), meshRenderer_vector));
+				model_it->second.second.insert(std::make_pair(mesh->texture(), meshRenderer_pair));
 			}
 		}
 		else
@@ -80,11 +90,17 @@ void dn::Scene::addObject(dn::Object *p_object)
 			// with the object mesh as a first element
 			meshRenderer_vector.push_back(mesh);
 
+			dn::vector_InstanceData instanceData_vector;
+			instanceData_vector.push_back(dn::InstanceData());
+
+			dn::pair_MeshRenderer meshRenderer_pair;
+			meshRenderer_pair = std::make_pair(meshRenderer_vector, instanceData_vector);
+
 			// then the texture entry is created
 			dn::map_Texture texture_map;
 			// by inserting the texture of the mesh as a first element, and the mesh
 			// list created above as the mesh list of the texture entry
-			texture_map.insert(std::make_pair(mesh->texture(), meshRenderer_vector));
+			texture_map.insert(std::make_pair(mesh->texture(), meshRenderer_pair));
 
 			// then the model instance is created, which just links the shader and the model
 			dn::ModelInstance *mdl = new dn::ModelInstance(mesh->shader(), mesh->model());
@@ -103,10 +119,16 @@ void dn::Scene::addObject(dn::Object *p_object)
 		// and the mesh object as a first element to the list
 		meshRenderer_vector.push_back(mesh);
 
+		dn::vector_InstanceData instanceData_vector;
+		instanceData_vector.push_back(dn::InstanceData());
+
+		dn::pair_MeshRenderer meshRenderer_pair;
+		meshRenderer_pair = std::make_pair(meshRenderer_vector, instanceData_vector);
+
 		// then the texture entry is created
 		dn::map_Texture texture_map;
 		// we 'link' the mesh texture and list of meshes created above
-		texture_map.insert(std::make_pair(mesh->texture(), meshRenderer_vector));
+		texture_map.insert(std::make_pair(mesh->texture(), meshRenderer_pair));
 
 		// the ModelInstance is also created, which links the shader and the model
 		dn::ModelInstance *mdl = new dn::ModelInstance(mesh->shader(), mesh->model());
@@ -186,49 +208,29 @@ void dn::Scene::render()
 		{
 			// binding the ModelInstance
 			model_it->second.first->bind();
+			model_it->second.first->bindInstanceVb();
 			// Iterating through each texture entry of this model
 			dn::map_Texture::iterator texture_it = model_it->second.second.begin();
 			for (; texture_it != model_it->second.second.end(); ++texture_it)
 			{
 				// if the texture is not null (possible)
 				if (texture_it->first)
-				{
 					// bind the texture
 					texture_it->first->bind(0);
-				}
 
-				// iterating through each mesh of this texture entry
-				dn::vector_MeshRenderer::iterator mesh_it = texture_it->second.begin();
-				for (; mesh_it != texture_it->second.end(); ++mesh_it)
+				for (size_t i = 0; i != texture_it->second.first.size(); ++i)
 				{
-					// send the render mode of the mesh to the shader
-					// checking first is better
-					renderModeU = shader_it->first->getUniform("renderMode");
-					if (renderModeU != -1)
-						glUniform1i(renderModeU, (*mesh_it)->renderMode());
-
-					glBindBuffer(GL_ARRAY_BUFFER, model_it->second.first->instanceVb());
-					glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4),
-						&(*mesh_it)->transform()->transformMat()[0][0], GL_DYNAMIC_DRAW);
-
-				/*	transformU = shader_it->first->getUniform("transform");
-					if (transformU != -1)
-					{
-						// send the transform matrix to the shader
-						glUniformMatrix4fv(
-							transformU,
-							1, GL_FALSE,
-							&(*mesh_it)->transform()->transformMat()[0][0]);
-					}
-*/
-					meshColorU = shader_it->first->getUniform("meshColor");
-					if (((*mesh_it)->renderMode() & DN_MESH_COLOR) && meshColorU != -1)
-						glUniform4fv(meshColorU, 1, &(*mesh_it)->color()[0]);
-
-					// Later i will implement glDrawElementsInstanced
-					glDrawElementsInstanced(model_it->first->method(), model_it->first->indices().size(),
-						GL_UNSIGNED_INT, nullptr, 1);
+					dn::InstanceData *bufferInstance = &texture_it->second.second[i];
+					bufferInstance->transform = texture_it->second.first[i]->transform()->transformMat();
+					bufferInstance->renderMode = texture_it->second.first[i]->renderMode();
+					bufferInstance->meshColor = texture_it->second.first[i]->color();
 				}
+				glBufferData(GL_ARRAY_BUFFER,
+					sizeof(dn::InstanceData) * texture_it->second.second.size(),
+					texture_it->second.second.data(), GL_DYNAMIC_DRAW);
+
+				glDrawElementsInstanced(model_it->first->method(), model_it->first->indices().size(),
+					GL_UNSIGNED_INT, nullptr, texture_it->second.second.size());
 			}
 		}
 	}

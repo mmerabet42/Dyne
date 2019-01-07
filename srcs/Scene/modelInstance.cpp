@@ -63,20 +63,34 @@ void dn::ModelInstance::create()
 
 	glEnableVertexAttribArray(transformAttrib + 0);
 	glVertexAttribPointer(transformAttrib + 0, 4, GL_FLOAT, false,
-		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 0));
+		sizeof(dn::InstanceData), (void *)(sizeof(GLfloat) * 4 * 0));
 	glVertexAttribDivisor(transformAttrib + 0, 1);
 	glEnableVertexAttribArray(transformAttrib + 1);
 	glVertexAttribPointer(transformAttrib + 1, 4, GL_FLOAT, false,
-		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 1));
+		sizeof(dn::InstanceData), (void *)(sizeof(GLfloat) * 4 * 1));
 	glVertexAttribDivisor(transformAttrib + 1, 1);
 	glEnableVertexAttribArray(transformAttrib + 2);
 	glVertexAttribPointer(transformAttrib + 2, 4, GL_FLOAT, false,
-		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 2));
+		sizeof(dn::InstanceData), (void *)(sizeof(GLfloat) * 4 * 2));
 	glVertexAttribDivisor(transformAttrib + 2, 1);
 	glEnableVertexAttribArray(transformAttrib + 3);
 	glVertexAttribPointer(transformAttrib + 3, 4, GL_FLOAT, false,
-		sizeof(glm::mat4), (void *)(sizeof(GLfloat) * 4 * 3));
+		sizeof(dn::InstanceData), (void *)(sizeof(GLfloat) * 4 * 3));
 	glVertexAttribDivisor(transformAttrib + 3, 1);
+
+	GLint renderModeAttrib = this->_shader->getAttrib("renderMode");
+
+	glEnableVertexAttribArray(renderModeAttrib);
+	glVertexAttribIPointer(renderModeAttrib, 1, GL_INT,
+		sizeof(dn::InstanceData), (void *)offsetof(dn::InstanceData, renderMode));
+	glVertexAttribDivisor(renderModeAttrib, 1);
+
+	GLint meshColorAttrib = this->_shader->getAttrib("lmeshColor");
+
+	glEnableVertexAttribArray(meshColorAttrib);
+	glVertexAttribPointer(meshColorAttrib, 4, GL_FLOAT, false,
+		sizeof(dn::InstanceData), (void *)offsetof(dn::InstanceData, meshColor));
+	glVertexAttribDivisor(meshColorAttrib, 1);
 
 	glBindVertexArray(0);
 }
@@ -87,7 +101,7 @@ void dn::ModelInstance::destroy()
 	glDeleteBuffers(2, this->_vbos);
 }
 
-GLuint dn::ModelInstance::instanceVb() const
+void dn::ModelInstance::bindInstanceVb()
 {
-	return (this->_vbos[INSTANCE_VB]);
+	glBindBuffer(GL_ARRAY_BUFFER, this->_vbos[INSTANCE_VB]);
 }

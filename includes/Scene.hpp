@@ -3,13 +3,13 @@
 
 # include <map>
 # include <vector>
+# include "ModelInstance.hpp"
 
 namespace dn
 {
 	// i really like forward declaration
 	class Shader;
 	class Model;
-	class ModelInstance;
 	class Texture;
 	class Object;
 	class MeshRenderer;
@@ -27,16 +27,19 @@ namespace dn
 	// my previous version which was binding the shader, the model vao and textures
 	// for each cubes.
 	typedef std::vector<dn::MeshRenderer *> vector_MeshRenderer;
-	typedef std::map<dn::Texture *, dn::vector_MeshRenderer> map_Texture;
+	typedef std::vector<dn::InstanceData> vector_InstanceData;
+	typedef std::pair<vector_MeshRenderer, vector_InstanceData> pair_MeshRenderer;
+	typedef std::map<dn::Texture *, dn::pair_MeshRenderer> map_Texture;
 	typedef std::pair<dn::ModelInstance *, dn::map_Texture> pair_ModelInstance;
 	typedef std::map<dn::Model *, dn::pair_ModelInstance> map_Model;
 	typedef std::map<dn::Shader *, dn::map_Model> map_Shader;
 	// Without the typedefs it would look like this
 //	std::map<dn::Shader *,
 //		std::map<dn::Model *,
-//			std::pair<dn::ModelInstance,
+//			std::pair<dn::ModelInstance *,
 //				std::map<dn::Texture *,
-//					std::vector<dn::MeshRenderer *>>>>>
+//					std::pair<std::vector<dn::MeshRenderer *>,
+//							std::vector<dn::IntanceData>>>>>
 
 	class Scene
 	{

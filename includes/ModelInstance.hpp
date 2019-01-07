@@ -3,11 +3,20 @@
 
 # include "ApplicationDependent.hpp"
 # include "allgl.hpp"
+# include "glm/matrix.hpp"
+# include "glm/vec4.hpp"
 
 namespace dn
 {
 	class Shader;
 	class Model;
+
+	struct InstanceData
+	{
+		glm::mat4 transform;
+		int renderMode;
+		glm::vec4 meshColor;
+	};
 
 	class ModelInstance: public dn::ApplicationDependent
 	{
@@ -16,14 +25,13 @@ namespace dn
 		~ModelInstance();
 
 		void bind();
+		void bindInstanceVb();
 
 		void create();
 		void destroy();
 
 		const dn::Shader *shader() const;
 		const dn::Model *model() const;
-
-		GLuint instanceVb() const;
 
 	private:
 		dn::Shader *_shader;

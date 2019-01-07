@@ -6,8 +6,9 @@ static const char *g_vertexSource = GLSL(
 	in vec2 tex;
 	in vec3 normal;
 	in mat4 transform;
+	in int renderMode;
+	in vec4 lmeshColor;
 
-//	uniform mat4 transform;
 	uniform mat4 viewprojection;
 	uniform vec3 lightPosition;
 
@@ -15,6 +16,8 @@ static const char *g_vertexSource = GLSL(
 	out vec4 ocolor;
 	out vec3 onormal;
 	out vec3 lightDir;
+	flat out int orenderMode;
+	out vec4 omeshColor;
 
 	void main()
 	{
@@ -25,6 +28,8 @@ static const char *g_vertexSource = GLSL(
 		otex = tex;
 		onormal = normalize((transform * vec4(normal, 0.0)).xyz);
 		lightDir = normalize(lightPosition - worldPosition.xyz);
+		orenderMode = renderMode;
+		omeshColor = lmeshColor;
 	}
 );
 
@@ -33,6 +38,8 @@ static const char *g_fragmentSource = GLSL(
 	in vec2 otex;
 	in vec3 onormal;
 	in vec3 lightDir;
+	flat in int orenderMode;
+	in vec4 omeshColor;
 
 	const int DN_VERTEX_COLOR	= (1 << 0);
 	const int DN_TEXTURE_COLOR	= (1 << 1);
@@ -40,8 +47,7 @@ static const char *g_fragmentSource = GLSL(
 	const int DN_LIGHT_COLOR	= (1 << 3);
 
 	uniform sampler2D unit;
-	uniform int renderMode;
-	uniform vec4 meshColor;
+//	uniform vec4 meshColor;
 	uniform vec3 lightColor;
 
 	out vec4 color;
@@ -49,23 +55,23 @@ static const char *g_fragmentSource = GLSL(
 	{
 		vec4 usedColor;
 
-		if (bool(renderMode & DN_VERTEX_COLOR))
+		if (bool(orenderMode & DN_VERTEX_COLOR))
 			usedColor = ocolor;
-		if (bool(renderMode & DN_TEXTURE_COLOR))
+		if (bool(orenderMode & DN_TEXTURE_COLOR))
 		{
-			if (bool(renderMode & DN_VERTEX_COLOR))
+			if (bool(orenderMode & DN_VERTEX_COLOR))
 				usedColor = usedColor * texture(unit, otex);
 			else
 				usedColor = texture(unit, otex);
 		}
-		if (bool(renderMode & DN_MESH_COLOR))
+		if (bool(orenderMode & DN_MESH_COLOR))
 		{
-			if (bool(renderMode & (DN_VERTEX_COLOR | DN_TEXTURE_COLOR)))
-				usedColor = usedColor * meshColor;
+			if (bool(orenderMode & (DN_VERTEX_COLOR | DN_TEXTURE_COLOR)))
+				usedColor = usedColor * omeshColor;
 			else
-				usedColor = meshColor;
+				usedColor = omeshColor;
 		}
-		if (bool(renderMode & DN_LIGHT_COLOR))
+		if (bool(orenderMode & DN_LIGHT_COLOR))
 		{
 			vec3 diffuse = max(dot(onormal, lightDir), 0.0) * lightColor;
 			usedColor = vec4(diffuse, 1.0) * usedColor;

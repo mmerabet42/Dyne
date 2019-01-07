@@ -86,9 +86,17 @@ void dn::Shader::create()
 	int status;
 
 	if (!(vertexId = compileShader(this->_vertexSource.c_str(), GL_VERTEX_SHADER, status, this->_infoLog)))
+	{
+		// for debug only, they'll be removed
+		std::cout << this->_infoLog;
 		return ;
+	}
 	if (!(fragmentId = compileShader(this->_fragmentSource.c_str(), GL_FRAGMENT_SHADER, status, this->_infoLog)))
+	{
+		// for debug only, they'll be removed
+		std::cout << this->_infoLog;
 		return ;
+	}
 	this->_programId = glCreateProgram();
 	glAttachShader(this->_programId, vertexId);
 	glAttachShader(this->_programId, fragmentId);
@@ -103,6 +111,7 @@ void dn::Shader::create()
 	if (!status)
 	{
 		glGetProgramInfoLog(this->_programId, 512, nullptr, this->_infoLog);
+		std::cout << this->_infoLog;
 		glDeleteProgram(this->_programId);
 	}
 }

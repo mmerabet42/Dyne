@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include "Window.hpp"
 #include "Application.hpp"
@@ -39,7 +40,7 @@ int main()
 	dn::Texture earthTexture("res/Earth_Diffuse.jpg");
 	dn::Model planetModel = dn::Model::parse("res/planet.obj");
 	dn::Model gridPlaneModel = dn::Model::generateGridPlane(101, 2.f);
-//	dn::Model drangonModel = dn::Model::parse("res/dragon.obj");
+//	dn::Model dragonModel = dn::Model::parse("res/dragon.obj");
 
 	dn::Object cube;
 		cube.setName("prout");
@@ -147,13 +148,13 @@ int main()
 				m->setTexture(&minecraftTexture);
 			else
 				m->setTexture(&bricksTexture);
-			obj->addComponent<dn::AudioSource>(&rainClip)->setLooping(true);
+		//	obj->addComponent<dn::AudioSource>(&rainClip)->setLooping(true);
 
 			obj2->addComponent<dn::Transform>()->position() = frwrd;
-			obj2->addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
+			obj2->addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges)->setColor(0.f, 0.f, 0.f);
 
 			scene.addObject(obj);
-			obj->getComponent<dn::AudioSource>()->play();
+		//	obj->getComponent<dn::AudioSource>()->play();
 			scene.addObject(obj2);
 			minecraftObjects.push_back(obj);
 			minecraftObjects.push_back(obj2);
@@ -161,6 +162,9 @@ int main()
 
 		if (win.getKeyDown(dn::KeyCode::C))
 			win.setMouseLock(!win.getFlag(DN_MOUSELOCKED));
+
+		if (win.getKeyDown(dn::KeyCode::N))
+			std::cout << "Cubes: " << minecraftObjects.size() << std::endl;
 
 		cameraTransform->rotation().x += win.mouseDeltaY() * dn::Application::deltaTime();
 		cameraTransform->rotation().y += win.mouseDeltaX() * dn::Application::deltaTime();
