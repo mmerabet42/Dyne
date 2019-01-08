@@ -11,7 +11,7 @@ INCLUDE_FLG	= -I ~/.brew/include -I includes/
 
 OSNAME		= $(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) $(INCLUDE_FLG) -o $(OUT)# -g3 -fsanitize=address
+	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) $(INCLUDE_FLG) -o $(OUT) -g3 -fsanitize=address
 endif
 ifeq ($(OSNAME),Darwin)
 	COMPILE = $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -framework OpenGL -framework OpenAL $(INCLUDE_FLG) -o $(OUT)# -g3 -fsanitize=address

@@ -92,15 +92,6 @@ int main()
 	scene.addObject(&planet);
 	scene.addObject(&earth);
 
-	for (int i = 0; i < 10000; ++i)
-	{
-		dn::Object *obj = new dn::Object;
-		obj->addComponent<dn::Transform>(
-			dn::math::randomVector(-1000.f, 1000.f));
-		obj->addComponent<dn::MeshRenderer>(&dn::Model::cube)->setTexture(&minecraftTexture);
-		scene.addObject(obj);
-	}
-
 	win.startEvent.addListener([&](dn::Window &win) {
 		win.focus();
 		win.setMouseLock(true);
@@ -197,8 +188,10 @@ int main()
 		scene.update();
 	});
 
+	dn::Application::run();
+
 	for (size_t i = 0; i < minecraftObjects.size(); ++i)
 		delete minecraftObjects[i];
 
-	return (dn::Application::run());
+	return (0);
 }

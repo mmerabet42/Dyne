@@ -9,7 +9,8 @@ dn::Object::Object(const std::string &p_name)
 
 dn::Object::~Object()
 {
-	for (std::map<size_t, dn::Component *>::iterator it = this->_components.begin(); it != this->_components.end(); ++it)
+	std::map<size_t, dn::Component *>::iterator it = this->_components.begin();
+	for (; it != this->_components.end(); ++it)
 		if (it->second)
 			delete it->second;
 	this->_components.clear();

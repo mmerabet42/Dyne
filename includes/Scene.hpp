@@ -3,6 +3,7 @@
 
 # include <map>
 # include <vector>
+# include <memory>
 # include "ModelInstance.hpp"
 
 namespace dn
@@ -30,7 +31,7 @@ namespace dn
 	typedef std::vector<dn::InstanceData> vector_InstanceData;
 	typedef std::pair<vector_MeshRenderer, vector_InstanceData> pair_MeshRenderer;
 	typedef std::map<dn::Texture *, dn::pair_MeshRenderer> map_Texture;
-	typedef std::pair<dn::ModelInstance *, dn::map_Texture> pair_ModelInstance;
+	typedef std::pair<std::shared_ptr<dn::ModelInstance>, dn::map_Texture> pair_ModelInstance;
 	typedef std::map<dn::Model *, dn::pair_ModelInstance> map_Model;
 	typedef std::map<dn::Shader *, dn::map_Model> map_Shader;
 	// Without the typedefs it would look like this

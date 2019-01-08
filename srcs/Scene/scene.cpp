@@ -91,6 +91,8 @@ void dn::Scene::addObject(dn::Object *p_object)
 			}
 			else
 			{
+				// the texture is unknown to the scene, so the texture entry
+				// needs to be created, also the mesh list and instance data list
 				// then the texture entry is created in the model entry
 				model_it->second.second.insert(
 					std::make_pair(mesh->texture(), __make_pair_MeshRenderer(mesh)));
@@ -98,16 +100,17 @@ void dn::Scene::addObject(dn::Object *p_object)
 		}
 		else
 		{
-			// the model of the mesh is not known to the scene, so a model entry
+			// the model of the mesh is unknown to the scene, so a model entry
 			// must be created, by first generating the model instance.
-			dn::ModelInstance *modelInstance = new dn::ModelInstance(mesh->shader(), mesh->model());
+		//	dn::ModelInstance *modelInstance = new dn::ModelInstance(mesh->shader(), mesh->model());
 
 			// then we insert the model entry to this shader entry
 			shader_it->second.insert(
 				std::make_pair(mesh->model(),
 					// we also need to create the texture entry, as the model entry
 					// is a fresh new entry so it has no texture entry allocated to it
-					std::make_pair(modelInstance, __make_map_Texture(mesh))));
+					std::make_pair(new dn::ModelInstance(mesh->shader(), mesh->model()),
+						__make_map_Texture(mesh))));
 		}
 	}
 	else
