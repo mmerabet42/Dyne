@@ -68,6 +68,10 @@ namespace dn
 		dn::Camera *_camera;
 
 		bool _started;
+
+		dn::map_Shader::iterator _shader_it;
+		dn::map_Model::iterator _model_it;
+		dn::map_Texture::iterator _texture_it;
 	};
 }
 
