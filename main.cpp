@@ -24,8 +24,15 @@ void closeWinEscape(dn::Window &w, dn::KeyCode k, dn::Mod)
 		w.close();
 }
 
+#include "Matrix.hpp"
+#include "./includes/glm/mat3x3.hpp"
+
 int main()
 {
+	dn::Matrix<3, 3, float> a(1);
+	a += 2 * (a + 1);
+	std::cout << a;
+	return (0);
 	dn::Window win(600, 400, "Window 1");
 
 	win.keyPressEvent.addListener(closeWinEscape);
