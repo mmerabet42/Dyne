@@ -1,33 +1,40 @@
 
 # Dyne ?
 
-**Dyne** is a general purpose engine in which you can create window applications, 2D and 3D applications.
+**Dyne** is the biggest project i have made until now. It is supposed to be a general purpose engine, in which you can create window applications of any kind, and also 2D and 3D games most importantly.
+
+In the current version you can create any kind of applications with a minimum of abstraction, meaning that you dont have to do some low-level thing in order to work with the engine.
 
 # Why ?
 
-My first goal 
+Well, there was no specific goal except that it was just for learning and improving my current knowledge, until i reached a point that i wanted to make a real game engine that can be used to create any kind of game.
 
-As i said the main goal was just to improve my C++ knownledge by creating a productive and decent user interface in which it would be simple to create an object and place it in a 3D environement and move it around, and create other objects, assign textures etc.
+I've used the Unity3D engine for a year and i really liked the way it abstracted things using GameObjects and Components, so once i learned OpenGL and GLFW i wanted to reimplement that system.
 
-But it got so interesting over time that i wanted to create a **real working game engine** that can be used to create any kind of game.
-
-Well, i am not planning to compete with Unity and Unreal Engine or other existing engines, of course it stays a 'personnal' and 'educative' project.
-
-But ... you know, i wanted to see how far **i could go**.
+I also heard about the ECS of Unity that uses data-oriented programming, which is really great and interesting for performance. So obviously, will come a point, were i will try to implement it.
 
 # Installation
 
-Dyne uses the GLFW, GLEW and OpenAL libraries, so you have to install them.
+Dyne currently compiles on Linux, will soon in Windows. It does on MacOs but nothing renders, i dont know why, so i will focus on Linux and Windows for now.
+
+Dyne requires some libraries in order to work:
+
+- GLEW (OpenGL loader)
+- GLFW (to create and manage windows)
+- OpenAL (to manage 3D sound)
+- sndfile (to open and read WAV files)
+
+So once you have the required libraries you can compile the Dyne library:
 
 ```bash
 $> make
 ```
 
-And that is all, it generated a 'libdn.a' file, which is the library.
+This command will generate the library we are looking for 'libdn.a', we will use it to compile our projects.
 
 ## Example
 
-Let's first start with an example code to see how simple it is to create a window and catch some events
+Let's first start with a simple example, that shows a window.
 
 ```C++
 
@@ -38,18 +45,18 @@ int main()
 {
   dn::Window window(600, 500, "Window Title");
   
-  window->keyEvent.addListener([](dn::Window *w, dn::KeyCode keyCode, dn::Action action) {
-   
-   if (action == dn::Action::press)
-    std::cout << "Key pressed : " << dn::KeyCode::getName(keyCode) << std::endl;
-   else if (action == dn::Action::repeat)
-    std::cout << "Key repeat : " << dn::KeyCode::getName(keyCode) << std::endl;
-   else if (action == dn::Action::release)
-    std::cout << "Key released : " << dn::KeyCode::getName(keyCode) << std::endl;
-    
-  });
-  
   return dn::Application::run();
 }
 
+```
+
+And voila, these two lines of codes creates a window, and shows it.
+
+In the really first two line we've included the *Application.hpp* and *Window.hpp* files, we  need them in order to create a window
+```C++
+dn::Window window(600, 500, "Window Title");
+```
+and run the application
+```C++
+return dn::Application::run();
 ```
