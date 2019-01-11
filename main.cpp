@@ -24,15 +24,8 @@ void closeWinEscape(dn::Window &w, dn::KeyCode k, dn::Mod)
 		w.close();
 }
 
-#include "Matrix.hpp"
-#include "./includes/glm/mat3x3.hpp"
-
 int main()
 {
-	dn::Matrix<3, 3, float> a(1);
-	a += 2 * (a + 1);
-	std::cout << a;
-	return (0);
 	dn::Window win(600, 400, "Window 1");
 
 	win.keyPressEvent.addListener(closeWinEscape);
@@ -45,9 +38,18 @@ int main()
 	dn::Texture bricksTexture("res/bricks.jpg");
 	dn::Texture planetTexture("res/planet_texture.png");
 	dn::Texture earthTexture("res/Earth_Diffuse.jpg");
-	dn::Model planetModel = dn::Model::parse("res/planet.obj");
+	dn::Texture chaletTexture("res/chalet.jpg");
+	dn::Model planetModel = dn::Model::loadObj("res/planet.obj");
+	dn::Model chaletModel = dn::Model::loadObj("res/chalet.obj");
 	dn::Model gridPlaneModel = dn::Model::generateGridPlane(101, 2.f);
 //	dn::Model dragonModel = dn::Model::parse("res/dragon.obj");
+
+	dn::Object chalet;
+		chalet.addComponent<dn::Transform>(0.f, 0.f, 20.f);
+		chalet.getComponent<dn::Transform>()->scale() *= 10.f;
+		chalet.getComponent<dn::Transform>()->rotation().x = glm::radians(-90.f);
+		chalet.addComponent<dn::MeshRenderer>(&chaletModel);
+		chalet.getComponent<dn::MeshRenderer>()->setTexture(&chaletTexture);
 
 	dn::Object cube;
 		cube.setName("prout");
@@ -98,6 +100,7 @@ int main()
 	scene.addObject(&preCube);
 	scene.addObject(&planet);
 	scene.addObject(&earth);
+	scene.addObject(&chalet);
 
 	win.startEvent.addListener([&](dn::Window &win) {
 		win.focus();
@@ -175,15 +178,6 @@ int main()
 
 		cameraTransform->rotation().x += win.mouseDeltaY() * dn::Application::deltaTime();
 		cameraTransform->rotation().y += win.mouseDeltaX() * dn::Application::deltaTime();
-
-		if (win.getKey(dn::KeyCode::leftArrow))
-			dn::MeshRenderer::lightPosition.x -= 5.f;
-		else if (win.getKey(dn::KeyCode::rightArrow))
-			dn::MeshRenderer::lightPosition.x += 5.f;
-		else if (win.getKey(dn::KeyCode::downArrow))
-			dn::MeshRenderer::lightPosition.y -= 5.f;
-		else if (win.getKey(dn::KeyCode::upArrow))
-			dn::MeshRenderer::lightPosition.y += 5.f;
 
 		preCube.getComponent<dn::Transform>()->position() = cameraTransform->position() + cameraTransform->forward() * 5.f;
 

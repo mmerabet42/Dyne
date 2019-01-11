@@ -36,7 +36,7 @@ namespace dn
 
 		static dn::Model generateGridPlane(const int &p_n, const float &p_distance);
 
-		static dn::Model loadOBJ(const std::string &p_path);
+		static dn::Model loadObj(const std::string &p_path);
 		static dn::Model parse(const std::string &p_path);
 
 	private:

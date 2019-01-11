@@ -106,11 +106,42 @@ dn::Model dn::Model::cubeEdges({
 	0, 1, 3, 2, 0, 4, 6, 2, 3, 7, 6, 4, 5, 1, 5, 7
 });
 
-dn::Model dn::Model::loadOBJ(const std::string &p_path)
+dn::Model dn::Model::loadObj(const std::string &p_path)
 {
-	
-}
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string warn, err;
 
+	dn::VertexArray vertices;
+	dn::IndiceArray indices;
+
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, p_path.c_str()))
+		std::cout << warn + err << std::endl;
+
+	for (const auto &shape : shapes)
+	{
+		for (const auto &index : shape.mesh.indices)
+		{
+			dn::Vertex vertex;
+
+			vertex.position[0] = attrib.vertices[3 * index.vertex_index + 0];
+			vertex.position[1] = attrib.vertices[3 * index.vertex_index + 1];
+			vertex.position[2] = attrib.vertices[3 * index.vertex_index + 2];
+
+			vertex.tex[0] = attrib.texcoords[2 * index.texcoord_index + 0];
+			vertex.tex[1] = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1];
+
+			vertex.color[0] = 1.f;
+			vertex.color[1] = 1.f;
+			vertex.color[2] = 1.f;
+
+			vertices.push_back(vertex);
+			indices.push_back(indices.size());
+		}
+	}
+	return (dn::Model(vertices, DN_TRIANGLES, indices));
+}
 
 static dn::Vertex createVertex(const std::vector<std::string> &p_attrs,
 							const std::vector<glm::vec3> &p_v_h,

@@ -13,12 +13,9 @@ namespace dn
 	{
 	public:
 		Vector(const T &p_scalar = T());
-
 		Vector(const std::initializer_list<T> &p_list);
-
 		template <typename ... Args>
 		Vector(Args ... p_args);
-
 		template <dn::t_length Size2>
 		Vector(const dn::Vector<Size2, T> &p_vec);
 
