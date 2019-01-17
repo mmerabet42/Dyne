@@ -22,6 +22,9 @@ namespace dn
 		T get(dn::t_length p_i) const;
 		T &get(dn::t_length p_i);
 
+		T length() const;
+		T lengthSqrt() const;
+
 		T operator[](dn::t_length p_i) const;
 		T &operator[](dn::t_length p_i);
 
@@ -35,7 +38,7 @@ namespace dn
 		dn::Vector<Size, T> &operator*=(const T &p_scalar);
 		dn::Vector<Size, T> &operator/=(const T &p_scalar);
 	private:
-		T _rows[Size];
+		T _data[Size];
 	};
 
 	template <dn::t_length Size, typename T>
@@ -70,6 +73,12 @@ namespace dn
 
 	template <dn::t_length Size, typename T>
 	T dot(const dn::Vector<Size, T> &p_a, const dn::Vector<Size, T> &p_b);
+	template <dn::t_length Size, typename T>
+	dn::Vector<Size, T> normalize(dn::Vector<Size, T> p_vec);
+	template <dn::t_length Size, typename T>
+	T length(const dn::Vector<Size, T> &p_vec);
+	template <dn::t_length Size, typename T>
+	T lengthSqrt(const dn::Vector<Size, T> &p_vec);
 
 	typedef dn::Vector<2, float> Vector2f;
 	typedef dn::Vector<3, float> Vector3f;

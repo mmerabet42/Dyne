@@ -35,7 +35,7 @@ namespace dn
 		T *getComponent()
 		{
 			// Get the hash value of the given type
-			size_t comp_hash = typeid(T).hash_code();
+			static const size_t comp_hash = typeid(T).hash_code();
 			// Checks if the hash value is in the map
 			std::map<size_t, dn::Component *>::iterator it = this->_components.find(comp_hash);
 			if (it != this->_components.end())
@@ -45,15 +45,31 @@ namespace dn
 			return (nullptr);
 		}
 
+		dn::Component *getHashComponent(const size_t &p_hash_code)
+		{
+			std::map<size_t, dn::Component *>::iterator it = this->_components.find(p_hash_code);
+			if (it != this->_components.end())
+				return (it->second);
+			return (nullptr);
+		}
+
+		dn::Component *getHashComponent(const size_t &p_hash_code) const
+		{
+			std::map<size_t, dn::Component *>::const_iterator it = this->_components.find(p_hash_code);
+			if (it != this->_components.end())
+				return (it->second);
+			return (nullptr);
+		}
+
 		// Attach a component
 		template <typename T, typename ... _Args>
 		T *addComponent(_Args ... p_args)
 		{
+			// Get the hash value of `T'
+			static const size_t comp_hash = typeid(T).hash_code();
 			// Checks if the type is deriving the Component class
 			static_assert(std::is_base_of<dn::Component, T>::value,
 				"Only classes that inherits dn::Component can be attached to objects");
-			// Get the hash value of `T'
-			size_t comp_hash = typeid(T).hash_code();
 			// If a component of the same type is already attached to the object, it is returned
 			std::map<size_t, dn::Component *>::iterator it = this->_components.find(comp_hash);
 			if (it != this->_components.end())
@@ -74,7 +90,7 @@ namespace dn
 		template <typename T>
 		void removeComponent()
 		{
-			size_t comp_hash = typeid(T).hash_code();
+			static const size_t comp_hash = typeid(T).hash_code();
 			std::map<size_t, dn::Component *>::iterator it = this->_components.find(comp_hash);
 			if (it != this->_components.end())
 			{

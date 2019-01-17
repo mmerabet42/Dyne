@@ -62,7 +62,6 @@ namespace dn
 
 		// _instances[mesh->shader()][mesh->model()].first->bind()
 		// _instances[mesh->shader()][mesh->model()].second[mesh->texture()] ...
-		// a map of maps of pairs of maps of vectors basically lol
 
 		// The list of object
 		std::vector<dn::Object *> _objects;

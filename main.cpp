@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <cstring>
 
 #include "Window.hpp"
 #include "Application.hpp"
@@ -18,17 +19,16 @@
 #include "AudioSource.hpp"
 #include "Scene.hpp"
 
-void closeWinEscape(dn::Window &w, dn::KeyCode k, dn::Mod)
-{
-	if (k == dn::KeyCode::escape)
-		w.close();
-}
+#include "Matrix.hpp"
 
 int main()
 {
 	dn::Window win(600, 400, "Window 1");
 
-	win.keyPressEvent.addListener(closeWinEscape);
+	win.keyPressEvent.addListener([](dn::Window &w, dn::KeyCode k, dn::Mod) {
+		if (k == dn::KeyCode::escape)
+			w.close();
+	});
 	win.setClearColor(37, 44, 56);
 
 	std::vector<dn::Object *> minecraftObjects;
