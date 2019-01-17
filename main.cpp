@@ -21,8 +21,40 @@
 
 #include "Matrix.hpp"
 
+#include "System.hpp"
+
+struct FloatFilter: public dn::SystemFilter<FloatFilter,
+		dn::Transform,
+		dn::MeshRenderer,
+		dn::AudioSource>
+{
+	dn::Transform *transform;
+	dn::MeshRenderer *mesh;
+	dn::AudioSource *audioSource;
+};
+
 int main()
 {
+	FloatFilter a;
+	dn::Object obj;
+
+	obj.addComponent<dn::Transform>();
+	obj.addComponent<dn::MeshRenderer>(&dn::Model::cube);
+	obj.addComponent<dn::AudioSource>();
+
+	std::cout << dn::loadFilter(a, obj) << std::endl;
+
+	if (obj.getComponent<dn::Transform>())
+		if (a.transform == obj.getComponent<dn::Transform>())
+			std::cout << "TRANSFORM IS OK" << std::endl;
+	if (obj.getComponent<dn::MeshRenderer>())
+		if (a.mesh == obj.getComponent<dn::MeshRenderer>())
+			std::cout << "MESH IS OK" << std::endl;
+	if (obj.getComponent<dn::AudioSource>())
+		if (a.audioSource == obj.getComponent<dn::AudioSource>())
+			std::cout << "AUDIO IS OK" << std::endl;
+
+	return (0);
 	dn::Window win(600, 400, "Window 1");
 
 	win.keyPressEvent.addListener([](dn::Window &w, dn::KeyCode k, dn::Mod) {
