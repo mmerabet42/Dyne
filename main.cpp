@@ -23,7 +23,7 @@
 
 #include "System.hpp"
 
-struct FloatFilter: public dn::SystemFilter<FloatFilter,
+struct FloatFilter: dn::SystemFilter<FloatFilter,
 		dn::Transform,
 		dn::MeshRenderer,
 		dn::AudioSource>
