@@ -42,6 +42,9 @@ int main()
 	obj.addComponent<dn::MeshRenderer>(&dn::Model::cube);
 	obj.addComponent<dn::AudioSource>();
 
+	if (dn::passFilter<FloatFilter>(obj))
+		std::cout << "Filter passes!\n";
+
 	std::cout << dn::loadFilter(a, obj) << std::endl;
 
 	if (obj.getComponent<dn::Transform>())
