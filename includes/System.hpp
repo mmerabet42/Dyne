@@ -20,33 +20,49 @@ namespace dn
 		bool _active;
 	};*/
 
-	struct SystemFilterBase {};
+	struct SystemFilterBase
+	{
+		virtual ~SystemFilterBase() {}
+
+		dn::Object *object() const;
+
+	protected:
+		dn::Object *_object;
+	};
 
 	template <typename Filter, typename ... Args>
 	struct SystemFilter: public dn::SystemFilterBase
 	{
-		dn::Object *object() const;
+		virtual ~SystemFilter() {}
 
-	private:
-		dn::Object *_object;
-	
-		template <typename Filter_fr, typename ... Args_fr>
-		friend bool loadFilter(dn::SystemFilter<Filter_fr, Args_fr ...> &p_filter, dn::Object &p_object);
+		static bool passFilter(dn::Object &p_object);
+		static Filter *loadFilter(dn::Object &p_object);
 	};
 
-	template <typename Filter, typename ... Args>
-	bool loadFilter(dn::SystemFilter<Filter, Args ...> &p_filter, dn::Object &p_object);
+	template <typename Entity_filter>
+	using Entities = std::vector<Entity_filter *>;
 
-	template <typename ... Filters>
+	template <typename Filter, typename ... Filters>
 	class System
 	{
 	public:
 		System();
 
-		
+		bool passFilters(dn::Object &p_object);
+		void loadFilters(dn::Object &p_object);
+
+		template <typename Entity_filter>
+		dn::Entities<Entity_filter> &getEntities();
+
+		template <typename Entity_filter>
+		dn::Entities<Entity_filter> &nullEntities();
+
+		template <typename Entity_filter>
+		bool isNull(const dn::Entities<Entity_filter> &p_entities);
 
 	protected:
 		std::map<size_t, std::vector<dn::SystemFilterBase *>> _filters;
+		static std::vector<dn::SystemFilterBase *> _nullFilter;
 	};
 }
 

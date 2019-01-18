@@ -23,39 +23,60 @@
 
 #include "System.hpp"
 
-struct FloatFilter: dn::SystemFilter<FloatFilter,
+struct RenderFilter: dn::SystemFilter<RenderFilter,
 		dn::Transform,
-		dn::MeshRenderer,
-		dn::AudioSource>
+		dn::MeshRenderer>
 {
 	dn::Transform *transform;
 	dn::MeshRenderer *mesh;
-	dn::AudioSource *audioSource;
+};
+
+struct CameraFilter: dn::SystemFilter<CameraFilter, dn::Camera>
+{
+	dn::Camera *camera;
+};
+
+class RenderSystem: public dn::System<RenderFilter, CameraFilter>
+{
+public:
+
 };
 
 int main()
 {
-	FloatFilter a;
 	dn::Object obj;
 
+	obj.setName("Object 1");
 	obj.addComponent<dn::Transform>();
 	obj.addComponent<dn::MeshRenderer>(&dn::Model::cube);
 	obj.addComponent<dn::AudioSource>();
 
-	if (dn::passFilter<FloatFilter>(obj))
-		std::cout << "Filter passes!\n";
+	dn::Object obj2;
 
-	std::cout << dn::loadFilter(a, obj) << std::endl;
+	obj2.setName("Object 2");
+	obj2.addComponent<dn::Camera>();
 
-	if (obj.getComponent<dn::Transform>())
-		if (a.transform == obj.getComponent<dn::Transform>())
-			std::cout << "TRANSFORM IS OK" << std::endl;
-	if (obj.getComponent<dn::MeshRenderer>())
-		if (a.mesh == obj.getComponent<dn::MeshRenderer>())
-			std::cout << "MESH IS OK" << std::endl;
-	if (obj.getComponent<dn::AudioSource>())
-		if (a.audioSource == obj.getComponent<dn::AudioSource>())
-			std::cout << "AUDIO IS OK" << std::endl;
+	RenderSystem renderSystem;
+	renderSystem.loadFilters(obj);
+	renderSystem.loadFilters(obj2);
+	dn::Entities<RenderFilter> renderer = renderSystem.getEntities<RenderFilter>();
+	for (auto i : renderer)
+	{
+		std::cout << i->object()->name() << std::endl;
+		if (i->transform == obj.getComponent<dn::Transform>())
+			std::cout << "TRANSFORM OKKK!!\n";
+		if (i->mesh == obj.getComponent<dn::MeshRenderer>())
+			std::cout << "MESH OKK\n";
+	}
+	dn::Entities<CameraFilter> cameras = renderSystem.getEntities<CameraFilter>();
+	if (renderSystem.isNull(cameras))
+		std::cout << "no camera filter\n" << std::endl;
+	for (auto i : cameras)
+	{
+		std::cout << i->object()->name() << std::endl;
+		if (i->camera == obj2.getComponent<dn::Camera>())
+			std::cout << "CAMERA OOKKK!!!!\n";
+	}
 
 	return (0);
 	dn::Window win(600, 400, "Window 1");
