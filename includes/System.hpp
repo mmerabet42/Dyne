@@ -7,19 +7,6 @@
 
 namespace dn
 {
-	/*struct ComponentData
-	{
-		std::string name() const;
-		void setName(const std::string &p_name);
-
-		bool active() const;
-		void setActive(const bool &p_active);
-
-	private:
-		std::string _name;
-		bool _active;
-	};*/
-
 	struct SystemFilterBase
 	{
 		virtual ~SystemFilterBase() {}
@@ -30,11 +17,9 @@ namespace dn
 		dn::Object *_object;
 	};
 
-	template <typename Filter, typename ... Args>
+	template <typename Filter, typename ... Components>
 	struct SystemFilter: public dn::SystemFilterBase
 	{
-		virtual ~SystemFilter() {}
-
 		static bool passFilter(dn::Object &p_object);
 		static Filter *loadFilter(dn::Object &p_object);
 	};
@@ -42,14 +27,33 @@ namespace dn
 	template <typename Entity_filter>
 	using Entities = std::vector<Entity_filter *>;
 
+	template <typename ...>
+	class SystemOverloader;
+
+	template <>
+	class SystemOverloader<>
+	{
+	public:
+		virtual void loadFilters(dn::Object &p_object);
+	protected:
+		std::map<size_t, std::vector<dn::SystemFilterBase *>> _filters;
+	};
+
 	template <typename Filter, typename ... Filters>
-	class System
+	class SystemOverloader<Filter, Filters ...>: public dn::SystemOverloader<Filters ...>
+	{
+	public:
+		virtual void loadFilters(dn::Object &p_object);
+		virtual void onObjectAdded(Filter &p_filter) {}
+	};
+
+	template <typename Filter, typename ... Filters>
+	class System: public dn::SystemOverloader<Filter, Filters ...>
 	{
 	public:
 		System();
 
 		bool passFilters(dn::Object &p_object);
-		void loadFilters(dn::Object &p_object);
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &getEntities();
@@ -60,8 +64,10 @@ namespace dn
 		template <typename Entity_filter>
 		bool isNull(const dn::Entities<Entity_filter> &p_entities);
 
-	protected:
-		std::map<size_t, std::vector<dn::SystemFilterBase *>> _filters;
+		virtual void onStart() {}
+		virtual void onUpdate() {}
+
+	private:
 		static std::vector<dn::SystemFilterBase *> _nullFilter;
 	};
 }

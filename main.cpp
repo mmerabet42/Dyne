@@ -21,33 +21,14 @@
 
 #include "Matrix.hpp"
 
-#include "System.hpp"
-
-struct RenderFilter: dn::SystemFilter<RenderFilter,
-		dn::Transform,
-		dn::MeshRenderer>
-{
-	dn::Transform *transform;
-	dn::MeshRenderer *mesh;
-};
-
-struct CameraFilter: dn::SystemFilter<CameraFilter, dn::Camera>
-{
-	dn::Camera *camera;
-};
-
-class RenderSystem: public dn::System<RenderFilter, CameraFilter>
-{
-public:
-
-};
+#include "RenderSystem.hpp"
 
 int main()
 {
 	dn::Object obj;
 
 	obj.setName("Object 1");
-	obj.addComponent<dn::Transform>();
+	obj.addComponentData<dn::TransformData>();
 	obj.addComponent<dn::MeshRenderer>(&dn::Model::cube);
 	obj.addComponent<dn::AudioSource>();
 
@@ -56,26 +37,15 @@ int main()
 	obj2.setName("Object 2");
 	obj2.addComponent<dn::Camera>();
 
-	RenderSystem renderSystem;
+	dn::RenderSystem renderSystem;
 	renderSystem.loadFilters(obj);
 	renderSystem.loadFilters(obj2);
-	dn::Entities<RenderFilter> renderer = renderSystem.getEntities<RenderFilter>();
+	dn::Entities<dn::MeshFilter> renderer = renderSystem.getEntities<dn::MeshFilter>();
 	for (auto i : renderer)
 	{
 		std::cout << i->object()->name() << std::endl;
-		if (i->transform == obj.getComponent<dn::Transform>())
+		if (i->transform == obj.getComponentData<dn::TransformData>())
 			std::cout << "TRANSFORM OKKK!!\n";
-		if (i->mesh == obj.getComponent<dn::MeshRenderer>())
-			std::cout << "MESH OKK\n";
-	}
-	dn::Entities<CameraFilter> cameras = renderSystem.getEntities<CameraFilter>();
-	if (renderSystem.isNull(cameras))
-		std::cout << "no camera filter\n" << std::endl;
-	for (auto i : cameras)
-	{
-		std::cout << i->object()->name() << std::endl;
-		if (i->camera == obj2.getComponent<dn::Camera>())
-			std::cout << "CAMERA OOKKK!!!!\n";
 	}
 
 	return (0);

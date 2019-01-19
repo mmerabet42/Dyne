@@ -2,7 +2,7 @@
 #include "Component.hpp"
 
 dn::Object::Object(const std::string &p_name)
-	: _name(p_name), _running(false), _active(true)
+	: _name(p_name), _running(false), _active(true), _components(), _componentsData()
 {
 
 }
@@ -39,4 +39,20 @@ void dn::Object::update()
 	for (std::map<size_t, dn::Component *>::iterator it = this->_components.begin(); it != this->_components.end(); ++it)
 		if (it->second && it->second->active())
 			it->second->update();
+}
+
+dn::Component *dn::Object::getHashComponent(const size_t &p_hash_code)
+{
+	std::map<size_t, dn::Component *>::iterator it = this->_components.find(p_hash_code);
+	if (it != this->_components.end())
+		return (it->second);
+	return (nullptr);
+}
+
+dn::ComponentData *dn::Object::getHashComponentData(const size_t &p_hash_code)
+{
+	std::map<size_t, dn::ComponentData *>::iterator it = this->_componentsData.find(p_hash_code);
+	if (it != this->_componentsData.end())
+		return (it->second);
+	return (nullptr);
 }

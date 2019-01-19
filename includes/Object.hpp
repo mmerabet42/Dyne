@@ -28,76 +28,26 @@ namespace dn
 		bool active() const;
 		void setActive(const bool &p_active = true);
 
-		// Template functions must be declared in the header file
-
 		// Returns the component that is of the specified type `T'
 		template <typename T>
-		T *getComponent()
-		{
-			// Get the hash value of the given type
-			static const size_t comp_hash = typeid(T).hash_code();
-			// Checks if the hash value is in the map
-			std::map<size_t, dn::Component *>::iterator it = this->_components.find(comp_hash);
-			if (it != this->_components.end())
-				// If it is return the component by casting it to the specified type
-				return (dynamic_cast<T *>(it->second));
-			// Otherwise return a null pointer
-			return (nullptr);
-		}
+		T *getComponent();
+		template <typename T>
+		T *getComponentData();
 
-		dn::Component *getHashComponent(const size_t &p_hash_code)
-		{
-			std::map<size_t, dn::Component *>::iterator it = this->_components.find(p_hash_code);
-			if (it != this->_components.end())
-				return (it->second);
-			return (nullptr);
-		}
-
-		dn::Component *getHashComponent(const size_t &p_hash_code) const
-		{
-			std::map<size_t, dn::Component *>::const_iterator it = this->_components.find(p_hash_code);
-			if (it != this->_components.end())
-				return (it->second);
-			return (nullptr);
-		}
+		dn::Component *getHashComponent(const size_t &p_hash_code);
+		dn::ComponentData *getHashComponentData(const size_t &p_hash_code);
 
 		// Attach a component
 		template <typename T, typename ... _Args>
-		T *addComponent(_Args ... p_args)
-		{
-			// Get the hash value of `T'
-			static const size_t comp_hash = typeid(T).hash_code();
-			// Checks if the type is deriving the Component class
-			static_assert(std::is_base_of<dn::Component, T>::value,
-				"Only classes that inherits dn::Component can be attached to objects");
-			// If a component of the same type is already attached to the object, it is returned
-			std::map<size_t, dn::Component *>::iterator it = this->_components.find(comp_hash);
-			if (it != this->_components.end())
-				return (dynamic_cast<T *>(it->second));
-			// Create an instanciation of the component, with the given arguments
-			T *comp = new T(p_args ...);
-			// Attach the component to the object
-			this->_components.insert(std::make_pair(comp_hash, comp));
-			comp->setObject(this);
-			// If the object has already started, the start function of the component is called
-			if (this->_running)
-				comp->start();
-			// And finally, the component is returned
-			return (comp);
-		}
+		T *addComponent(_Args ... p_args);
+		template <typename T, typename ... _Args>
+		T *addComponentData(_Args ... p_args);
 
 		// Detach a component
 		template <typename T>
-		void removeComponent()
-		{
-			static const size_t comp_hash = typeid(T).hash_code();
-			std::map<size_t, dn::Component *>::iterator it = this->_components.find(comp_hash);
-			if (it != this->_components.end())
-			{
-				delete it->second;
-				this->_components.erase(it);
-			}
-		}
+		void removeComponent();
+		template <typename T>
+		void removeComponentData();
 
 	private:
 		// Is true if the object has started
@@ -108,7 +58,10 @@ namespace dn
 		std::string _name;
 		// The list of components attached to the object
 		std::map<size_t, dn::Component *> _components;
+		std::map<size_t, dn::ComponentData *> _componentsData;
 	};
 }
+
+# include "Object.inl"
 
 #endif // OBJECT_HPP

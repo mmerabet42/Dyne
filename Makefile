@@ -32,7 +32,8 @@ _WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
 _SHDR_FS	= shader.cpp defaultShader.cpp
 _MESH_FS	= prototype.cpp model.cpp models.cpp
 _MATH_FS	= smoothDamp.cpp random.cpp
-_OBJ_FS		= object.cpp component.cpp transform.cpp meshrenderer.cpp camera.cpp
+_OBJ_FS		= object.cpp component.cpp componentData.cpp \
+			  transform.cpp transformData.cpp meshrenderer.cpp camera.cpp
 _TXTR_FS	= texture.cpp
 _AUDIO_FS	= audio.cpp audioSource.cpp audioListener.cpp
 _UTILS_FS	= utils.cpp
