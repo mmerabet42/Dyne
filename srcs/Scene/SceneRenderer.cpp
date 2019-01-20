@@ -1,4 +1,4 @@
-#include "Scene.hpp"
+#include "SceneRenderer.hpp"
 #include "Object.hpp"
 #include "ModelInstance.hpp"
 #include "Model.hpp"
@@ -8,7 +8,7 @@
 #include "Transform.hpp"
 #include <algorithm>
 
-dn::Scene::Scene()
+dn::SceneRenderer::SceneRenderer()
 	: _objects(), _instances(), _started(false), _camera(nullptr)
 {
 
@@ -33,7 +33,7 @@ static dn::map_Texture __make_map_Texture(dn::MeshRenderer *p_mesh)
 	return (texture);
 }
 
-void dn::Scene::addObject(dn::Object *p_object)
+void dn::SceneRenderer::addObject(dn::Object *p_object)
 {
 	// checks if the object is already in the scene
 	std::vector<dn::Object *>::iterator it = std::find(
@@ -133,7 +133,7 @@ void dn::Scene::addObject(dn::Object *p_object)
 	}
 }
 
-void dn::Scene::start()
+void dn::SceneRenderer::start()
 {
 	if (this->_started)
 		return ;
@@ -144,7 +144,7 @@ void dn::Scene::start()
 		this->_objects[i]->start();
 }
 
-void dn::Scene::update()
+void dn::SceneRenderer::update()
 {
 	if (!this->_started)
 		return ;
@@ -155,7 +155,7 @@ void dn::Scene::update()
 	this->render();
 }
 
-void dn::Scene::render()
+void dn::SceneRenderer::render()
 {
 	// if there is no camera in the scene, nothing is rendered
 	if (!this->_camera)
@@ -228,7 +228,7 @@ void dn::Scene::render()
 	}
 }
 
-dn::map_Shader dn::Scene::instances() const
+dn::map_Shader dn::SceneRenderer::instances() const
 {
 	return (this->_instances);
 }

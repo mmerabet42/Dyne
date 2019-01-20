@@ -37,7 +37,8 @@ _OBJ_FS		= object.cpp component.cpp componentData.cpp \
 _TXTR_FS	= texture.cpp
 _AUDIO_FS	= audio.cpp audioSource.cpp audioListener.cpp
 _UTILS_FS	= utils.cpp
-_SCENE_FS	= scene.cpp modelInstance.cpp
+_SCENE_FS	= SceneRenderer.cpp Scene.cpp modelInstance.cpp
+_SYSTEM_FS	= System.cpp
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 
@@ -63,10 +64,12 @@ UTILS_FS	= $(addprefix $(SRCD)utils/,$(_UTILS_FS))
 UTILS_O		= $(_UTILS_FS:.cpp=.o)
 SCENE_FS	= $(addprefix $(SRCD)Scene/,$(_SCENE_FS))
 SCENE_O		= $(_SCENE_FS:.cpp=.o)
+SYSTEM_FS	= $(addprefix $(SRCD)System/,$(_SYSTEM_FS))
+SYSTEM_O	= $(_SYSTEM_FS:.cpp=.o)
 
 SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS) $(MATH_FS) \
-			  $(OBJ_FS) $(TXTR_FS) $(AUDIO_FS) $(UTILS_FS) $(SCENE_FS)
-OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) \
+			  $(OBJ_FS) $(TXTR_FS) $(AUDIO_FS) $(UTILS_FS) $(SCENE_FS) $(SYSTEM_FS)
+OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) $(SYSTEM_O) \
 			  $(OBJ_O) $(TXTR_O) $(AUDIO_O) $(UTILS_O) $(SCENE_O)
 OBJD		= .objs/
 OBJB		= $(addprefix $(OBJD),$(OBJS))
@@ -134,6 +137,11 @@ $(OBJD)%.o: $(SRCD)utils/%.cpp $(INCLUDES)# Makefile
 	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
 $(OBJD)%.o: $(SRCD)Scene/%.cpp $(INCLUDES)# Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
+
+$(OBJD)%.o: $(SRCD)System/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)

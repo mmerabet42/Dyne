@@ -17,10 +17,11 @@
 #include "Audio.hpp"
 #include "AudioListener.hpp"
 #include "AudioSource.hpp"
-#include "Scene.hpp"
+#include "SceneRenderer.hpp"
 
 #include "Matrix.hpp"
 
+#include "Scene.hpp"
 #include "RenderSystem.hpp"
 
 int main()
@@ -37,7 +38,14 @@ int main()
 	obj2.setName("Object 2");
 	obj2.addComponent<dn::Camera>();
 
-	dn::RenderSystem renderSystem;
+	dn::Scene scn;
+	scn.addSystem<dn::RenderSystem>();
+
+	scn.addObject(obj);
+	scn.addObject(obj2);
+
+/*	dn::RenderSystem renderSystem;
+	renderSystem.loadFilters(obj);
 	renderSystem.loadFilters(obj);
 	renderSystem.loadFilters(obj2);
 	dn::Entities<dn::MeshFilter> renderer = renderSystem.getEntities<dn::MeshFilter>();
@@ -47,7 +55,7 @@ int main()
 		if (i->transform == obj.getComponentData<dn::TransformData>())
 			std::cout << "TRANSFORM OKKK!!\n";
 	}
-
+*/
 	return (0);
 	dn::Window win(600, 400, "Window 1");
 
@@ -117,7 +125,7 @@ int main()
 		earth.getComponent<dn::Transform>()->rotation() = glm::vec3(0.f, 4.f, 0.f);
 		earth.addComponent<dn::MeshRenderer>(&planetModel)->setTexture(&earthTexture);
 
-	dn::Scene scene;
+	dn::SceneRenderer scene;
 
 	scene.addObject(&camera);
 	scene.addObject(&gridPlane);

@@ -5,8 +5,13 @@
 # include <vector>
 # include <string>
 
+# include "Logger.hpp"
+
 namespace dn
 {
+	class Scene;
+	class Object;
+
 	struct SystemFilterBase
 	{
 		virtual ~SystemFilterBase() {}
@@ -28,32 +33,44 @@ namespace dn
 	using Entities = std::vector<Entity_filter *>;
 
 	template <typename ...>
-	class SystemOverloader;
+	class SystemBase;
 
 	template <>
-	class SystemOverloader<>
+	class SystemBase<>
 	{
 	public:
+
 		virtual void loadFilters(dn::Object &p_object);
+
+		virtual void onStart() {}
+		virtual void onUpdate() {}
+
+		void setScene(dn::Scene *p_scene);
+		dn::Scene *scene() const;
+
 	protected:
+		dn::Scene *_scene;
 		std::map<size_t, std::vector<dn::SystemFilterBase *>> _filters;
 	};
 
 	template <typename Filter, typename ... Filters>
-	class SystemOverloader<Filter, Filters ...>: public dn::SystemOverloader<Filters ...>
+	class SystemBase<Filter, Filters ...>: public dn::SystemBase<Filters ...>
 	{
 	public:
 		virtual void loadFilters(dn::Object &p_object);
+
 		virtual void onObjectAdded(Filter &p_filter) {}
+		virtual void onObjectRemoved(Filter &p_filter) {}
 	};
 
 	template <typename Filter, typename ... Filters>
-	class System: public dn::SystemOverloader<Filter, Filters ...>
+	class System: public dn::SystemBase<Filter, Filters ...>
 	{
 	public:
 		System();
 
 		bool passFilters(dn::Object &p_object);
+		void loadFilters(dn::Object &p_object) final;
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &getEntities();
@@ -64,14 +81,12 @@ namespace dn
 		template <typename Entity_filter>
 		bool isNull(const dn::Entities<Entity_filter> &p_entities);
 
-		virtual void onStart() {}
-		virtual void onUpdate() {}
-
 	private:
 		static std::vector<dn::SystemFilterBase *> _nullFilter;
 	};
 }
 
+# include "SystemFilter.inl"
 # include "System.inl"
 
 #endif // SYSTEM_HPP
