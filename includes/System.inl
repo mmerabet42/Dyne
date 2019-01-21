@@ -10,17 +10,7 @@ dn::System<Filter, Filters ...>::System()
 	for (size_t i = 0; i < sizeof...(Filters) + 1; ++i)
 		this->_filters.insert(std::make_pair(hashes[i], std::vector<dn::SystemFilterBase *>()));
 }
-/*
-void dn::SystemBase<>::setScene(dn::Scene *p_scene)
-{
-	this->_scene = p_scene;
-}
 
-dn::Scene *dn::SystemBase<>::scene() const
-{
-	return (this->_scene);
-}
-*/
 template <typename Filter, typename ... Filters>
 bool dn::System<Filter, Filters ...>::passFilters(dn::Object &p_object)
 {
@@ -55,21 +45,19 @@ void dn::SystemBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 	{
 		// if the object is present in the filter list, then nothing happens
 		if (it != filters.end())
-		{
-			dn::log(p_object.name(), " passes the filter", dn::endl);
 			return ;
-		}
 		// otherwise a filter is created
 		Filter *filter = Filter::loadFilter(p_object);
 
 		// and added to the filter list
 		filters.push_back((dn::SystemFilterBase *)filter);
+		this->_allFilters.push_back((dn::SystemFilterBase *)filter);
+		this->_mapFilters.insert(std::make_pair((dn::SystemFilterBase *)filter, hash_code));
 		// and the onObjectAdded callback of the system is called
 		this->onObjectAdded(*filter);
 	}
 	else
 	{
-		dn::log(p_object.name(), " doesn't pass the filter !!", dn::endl);
 		// if it doesn't pass the filter but the object was previously on the system
 		// then it is removed
 		if (it != filters.end())
@@ -80,6 +68,9 @@ void dn::SystemBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 			delete (*it);
 			// and erasing it from the filter list
 			filters.erase(it);
+			this->_mapFilters.erase((dn::SystemFilterBase *)*it);
+			this->_allFilters.erase(std::find(this->_allFilters.begin(), this->_allFilters.end(),
+				(dn::SystemFilterBase *)*it));
 		}
 	}
 	// the object is tested on the other filters
@@ -101,8 +92,26 @@ dn::Entities<Entity_filter> &dn::System<Filter, Filters ...>::getEntities()
 	std::map<size_t, std::vector<dn::SystemFilterBase *>>::iterator it = this->_filters.find(hash_code);
 	if (it == this->_filters.end())
 		return (this->nullEntities<Entity_filter>());
-	std::vector<dn::SystemFilterBase *> *arr = &it->second;
-	return (*(dn::Entities<Entity_filter> *)arr);
+	//std::vector<dn::SystemFilterBase *> *arr = &it->second;
+	return (*(dn::Entities<Entity_filter> *)&it->second);
+}
+
+template <typename Filter, typename ... Filters>
+dn::Entities<dn::SystemFilterBase> &dn::System<Filter, Filters ...>::getEntities()
+{
+	return (this->_allFilters);
+}
+
+template <typename Filter, typename ... Filters>
+template <typename Entity_filter>
+Entity_filter *dn::System<Filter, Filters ...>::getEntity(dn::SystemFilterBase *p_e)
+{
+	static const size_t hash_code = typeid(Entity_filter).hash_code();
+
+	std::map<dn::SystemFilterBase *, size_t>::iterator it = this->_mapFilters.find(p_e);
+	if (it != this->_mapFilters.end())
+		return ((Entity_filter *)p_e);
+	return (nullptr);
 }
 
 template <typename Filter, typename ... Filters>

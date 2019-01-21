@@ -6,6 +6,7 @@
 #include "Camera.hpp"
 #include "Texture.hpp"
 #include "Transform.hpp"
+#include "Light.hpp"
 #include <algorithm>
 
 dn::SceneRenderer::SceneRenderer()
@@ -186,10 +187,10 @@ void dn::SceneRenderer::render()
 		// also sending the lightPosition and the lightColor
 		lightPositionU = this->_shader_it->first->getUniform("lightPosition");
 		if (lightPositionU != -1)
-			glUniform3fv(lightPositionU, 1, &dn::MeshRenderer::lightPosition[0]);
+			glUniform3fv(lightPositionU, 1, &dn::Light::lightPosition[0]);
 		lightColorU = this->_shader_it->first->getUniform("lightColor");
 		if (lightColorU != -1)
-			glUniform3fv(lightColorU, 1, &dn::MeshRenderer::lightColor[0]);
+			glUniform3fv(lightColorU, 1, &dn::Light::lightColor[0]);
 
 		// iterating through each model entry of this shader
 		this->_model_it = this->_shader_it->second.begin();

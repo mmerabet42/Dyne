@@ -16,7 +16,6 @@ namespace dn
 	{
 	public:
 		MeshRenderer(dn::Model *p_model, dn::Shader *p_shader = &dn::Shader::defaultShader);
-		~MeshRenderer();
 
 		dn::Model *model() const;
 		void setModel(dn::Model *p_model);
@@ -39,9 +38,6 @@ namespace dn
 		void update();
 
 		dn::Transform *transform() const;
-
-		static glm::vec3 lightPosition;
-		static glm::vec3 lightColor;
 	private:
 		dn::Model *_model;
 		dn::Shader *_shader;
@@ -52,18 +48,36 @@ namespace dn
 		dn::Texture *_texture;
 		glm::vec4 _color;
 		int _renderMode;
+	};
 
-		GLuint _vao;
-		GLuint _vbos[2];
+	class MeshData: public dn::ComponentData
+	{
+	public:
+		MeshData(dn::Model *p_model, dn::Shader *p_shader = &dn::Shader::defaultShader);
 
-		GLuint _renderModeU;
-		GLuint _transformU;
-		GLuint _viewprojectionU;
-		GLuint _unitU;
-		GLuint _meshColorU;
-		GLuint _lightPositionU;
-		GLuint _lightColorU;
-		void updateUniforms();
+		dn::Model *model() const;
+		void setModel(dn::Model *p_model);
+
+		dn::Shader *shader() const;
+		void setShader(dn::Shader *p_shader);
+
+		dn::Texture *texture() const;
+		void setTexture(dn::Texture *p_texture);
+
+		glm::vec4 color() const;
+		glm::vec4 &color();
+		void setColor(const glm::vec4 &p_color);
+		void setColor(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.f);
+
+		int renderMode() const;
+		void setRenderMode(const int &p_mode);
+	private:
+		dn::Model *_model;
+		dn::Shader *_shader;
+
+		dn::Texture *_texture;
+		glm::vec4 _color;
+		int _renderMode;
 	};
 }
 

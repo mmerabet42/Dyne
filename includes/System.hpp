@@ -50,6 +50,8 @@ namespace dn
 
 	protected:
 		dn::Scene *_scene;
+		std::vector<dn::SystemFilterBase *> _allFilters;
+		std::map<dn::SystemFilterBase *, size_t> _mapFilters;
 		std::map<size_t, std::vector<dn::SystemFilterBase *>> _filters;
 	};
 
@@ -74,6 +76,11 @@ namespace dn
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &getEntities();
+
+		dn::Entities<dn::SystemFilterBase> &getEntities();
+
+		template <typename Entity_filter>
+		Entity_filter *getEntity(dn::SystemFilterBase *p_e);
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &nullEntities();

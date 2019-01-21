@@ -33,12 +33,13 @@ _SHDR_FS	= shader.cpp defaultShader.cpp
 _MESH_FS	= prototype.cpp model.cpp models.cpp
 _MATH_FS	= smoothDamp.cpp random.cpp
 _OBJ_FS		= object.cpp component.cpp componentData.cpp \
-			  transform.cpp transformData.cpp meshrenderer.cpp camera.cpp
+			  transform.cpp meshrenderer.cpp camera.cpp \
+			  CameraData.cpp transformData.cpp MeshData.cpp
 _TXTR_FS	= texture.cpp
 _AUDIO_FS	= audio.cpp audioSource.cpp audioListener.cpp
 _UTILS_FS	= utils.cpp
 _SCENE_FS	= SceneRenderer.cpp Scene.cpp modelInstance.cpp
-_SYSTEM_FS	= System.cpp
+_SYSTEM_FS	= System.cpp RenderSystem.cpp
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 

@@ -18,6 +18,7 @@
 #include "AudioListener.hpp"
 #include "AudioSource.hpp"
 #include "SceneRenderer.hpp"
+#include "Light.hpp"
 
 #include "Matrix.hpp"
 
@@ -26,17 +27,19 @@
 
 int main()
 {
-	dn::Object obj;
+/*	dn::Object obj;
 
 	obj.setName("Object 1");
 	obj.addComponentData<dn::TransformData>();
+	obj.addComponentData<dn::MeshData>(&dn::Model::cubeEdges);
 	obj.addComponent<dn::MeshRenderer>(&dn::Model::cube);
 	obj.addComponent<dn::AudioSource>();
 
 	dn::Object obj2;
 
 	obj2.setName("Object 2");
-	obj2.addComponent<dn::Camera>();
+	obj2.addComponentData<dn::CameraData>();
+	obj2.addComponentData<dn::TransformData>();
 
 	dn::Scene scn;
 	scn.addSystem<dn::RenderSystem>();
@@ -44,20 +47,9 @@ int main()
 	scn.addObject(obj);
 	scn.addObject(obj2);
 
-/*	dn::RenderSystem renderSystem;
-	renderSystem.loadFilters(obj);
-	renderSystem.loadFilters(obj);
-	renderSystem.loadFilters(obj2);
-	dn::Entities<dn::MeshFilter> renderer = renderSystem.getEntities<dn::MeshFilter>();
-	for (auto i : renderer)
-	{
-		std::cout << i->object()->name() << std::endl;
-		if (i->transform == obj.getComponentData<dn::TransformData>())
-			std::cout << "TRANSFORM OKKK!!\n";
-	}
-*/
+	scn.start();
 	return (0);
-	dn::Window win(600, 400, "Window 1");
+*/	dn::Window win(600, 400, "Window 1");
 
 	win.keyPressEvent.addListener([](dn::Window &w, dn::KeyCode k, dn::Mod) {
 		if (k == dn::KeyCode::escape)
@@ -74,80 +66,93 @@ int main()
 	dn::Texture earthTexture("res/Earth_Diffuse.jpg");
 	dn::Texture chaletTexture("res/chalet.jpg");
 	dn::Model planetModel = dn::Model::loadObj("res/planet.obj");
-	dn::Model chaletModel = dn::Model::loadObj("res/chalet.obj");
+	//dn::Model chaletModel = dn::Model::loadObj("res/chalet.obj");
 	dn::Model gridPlaneModel = dn::Model::generateGridPlane(101, 2.f);
 //	dn::Model dragonModel = dn::Model::parse("res/dragon.obj");
 
 	dn::Object chalet;
-		chalet.addComponent<dn::Transform>(0.f, 0.f, 20.f);
-		chalet.getComponent<dn::Transform>()->scale() *= 10.f;
-		chalet.getComponent<dn::Transform>()->rotation().x = glm::radians(-90.f);
-		chalet.addComponent<dn::MeshRenderer>(&chaletModel);
-		chalet.getComponent<dn::MeshRenderer>()->setTexture(&chaletTexture);
+		chalet.addComponentData<dn::TransformData>(0.f, 0.f, 20.f);
+		chalet.getComponentData<dn::TransformData>()->scale() *= 10.f;
+		chalet.getComponentData<dn::TransformData>()->rotation().x = glm::radians(-90.f);
+	//	chalet.addComponentData<dn::MeshData>(&chaletModel);
+	//	chalet.getComponentData<dn::MeshData>()->setTexture(&chaletTexture);
 
 	dn::Object cube;
 		cube.setName("prout");
-		cube.addComponent<dn::Transform>();
-		cube.addComponent<dn::MeshRenderer>(&dn::Model::cube);
-		cube.getComponent<dn::MeshRenderer>()->setTexture(&minecraftTexture);
-		cube.addComponent<dn::AudioSource>(&rainClip);
-		cube.getComponent<dn::AudioSource>()->setLooping(true);
-		cube.getComponent<dn::MeshRenderer>()->setRenderMode(DN_TEXTURE_COLOR | DN_LIGHT_COLOR);
+		cube.addComponentData<dn::TransformData>();
+		cube.addComponentData<dn::MeshData>(&dn::Model::cube);
+		cube.getComponentData<dn::MeshData>()->setTexture(&minecraftTexture);
+		cube.getComponentData<dn::MeshData>()->setRenderMode(DN_TEXTURE_COLOR | DN_LIGHT_COLOR);
+		//cube.addComponent<dn::AudioSource>(&rainClip);
+		//cube.getComponent<dn::AudioSource>()->setLooping(true);
 
 	dn::Object surroundCube;
-		surroundCube.addComponent<dn::Transform>(cube.getComponent<dn::Transform>());
-		surroundCube.addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
-		surroundCube.getComponent<dn::MeshRenderer>()->setColor(0.f, 0.f, 0.f);
+		surroundCube.addComponentData<dn::TransformData>(cube.getComponentData<dn::TransformData>());
+		surroundCube.addComponentData<dn::MeshData>(&dn::Model::cubeEdges);
+		surroundCube.getComponentData<dn::MeshData>()->setColor(0.f, 0.f, 0.f);
 
 	dn::Object preCube;
-		preCube.addComponent<dn::Transform>();
-		preCube.addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges);
+		preCube.addComponentData<dn::TransformData>();
+		preCube.addComponentData<dn::MeshData>(&dn::Model::cubeEdges);
 
 	dn::Object camera;
-		dn::Transform *cameraTransform = camera.addComponent<dn::Transform>(0.f, 0.f, 5.f);
-		camera.addComponent<dn::Camera>(70.f, 0.02f, 100000000.f);
-		camera.addComponent<dn::AudioListener>();
+		dn::TransformData *cameraTransform = camera.addComponentData<dn::TransformData>(0.f, 0.f, 5.f);
+		camera.addComponentData<dn::CameraData>(70.f, 0.02f, 100000000.f);
+		//camera.addComponent<dn::AudioListener>();
 
 	dn::Object gridPlane;
-		gridPlane.addComponent<dn::Transform>();
-		gridPlane.addComponent<dn::MeshRenderer>(&gridPlaneModel);
-		gridPlane.getComponent<dn::MeshRenderer>()->setColor(1.f, 1.f, 1.f, 0.1f);
+		gridPlane.addComponentData<dn::TransformData>();
+		gridPlane.addComponentData<dn::MeshData>(&gridPlaneModel);
+		gridPlane.getComponentData<dn::MeshData>()->setColor(1.f, 1.f, 1.f, 0.1f);
 
 	dn::Object planet;
-		planet.addComponent<dn::Transform>()->position() = glm::vec3(1000.f, 500.f, 1000.f);
-		planet.getComponent<dn::Transform>()->scale() = glm::vec3(100.f, 100.f, 100.f);
-		planet.getComponent<dn::Transform>()->rotation() = glm::vec3(2.f, 1.f, 1.f);
-		planet.addComponent<dn::MeshRenderer>(&planetModel)->setTexture(&planetTexture);
+		planet.addComponentData<dn::TransformData>()->position() = glm::vec3(1000.f, 500.f, 1000.f);
+		planet.getComponentData<dn::TransformData>()->scale() = glm::vec3(100.f, 100.f, 100.f);
+		planet.getComponentData<dn::TransformData>()->rotation() = glm::vec3(2.f, 1.f, 1.f);
+		planet.addComponentData<dn::MeshData>(&planetModel)->setTexture(&planetTexture);
 
 	dn::Object earth;
-		earth.addComponent<dn::Transform>()->position() = glm::vec3(-1000.f, 500.f, -1000.f);
-		earth.getComponent<dn::Transform>()->scale() = glm::vec3(100.f, 100.f, 100.f);
-		earth.getComponent<dn::Transform>()->rotation() = glm::vec3(0.f, 4.f, 0.f);
-		earth.addComponent<dn::MeshRenderer>(&planetModel)->setTexture(&earthTexture);
+		earth.addComponentData<dn::TransformData>()->position() = glm::vec3(-1000.f, 500.f, -1000.f);
+		earth.getComponentData<dn::TransformData>()->scale() = glm::vec3(100.f, 100.f, 100.f);
+		earth.getComponentData<dn::TransformData>()->rotation() = glm::vec3(0.f, 4.f, 0.f);
+		earth.addComponentData<dn::MeshData>(&planetModel)->setTexture(&earthTexture);
 
-	dn::SceneRenderer scene;
+	dn::Scene scene;
+	scene.addSystem<dn::RenderSystem>();
 
-	scene.addObject(&camera);
-	scene.addObject(&gridPlane);
-	scene.addObject(&cube);
-	scene.addObject(&surroundCube);
-	scene.addObject(&preCube);
-	scene.addObject(&planet);
-	scene.addObject(&earth);
-	scene.addObject(&chalet);
+	scene.addObject(camera);
+	scene.addObject(gridPlane);
+	scene.addObject(cube);
+	scene.addObject(surroundCube);
+	scene.addObject(preCube);
+	scene.addObject(planet);
+	scene.addObject(earth);
+	//scene.addObject(chalet);
+
+	for (size_t i = 0; i < 50000; ++i)
+	{
+		dn::Object *o = new dn::Object;
+		o->addComponentData<dn::TransformData>(
+			dn::math::randomVector(-1000.f, 1000.f));
+		o->addComponentData<dn::MeshData>(&dn::Model::cube)->setTexture(&minecraftTexture);
+
+		scene.addObject(*o);
+		minecraftObjects.push_back(o);
+	}
+	std::cout << "objects addd !!!\n";
 
 	win.startEvent.addListener([&](dn::Window &win) {
 		win.focus();
 		win.setMouseLock(true);
 
-		cube.getComponent<dn::AudioSource>()->play();
+		//cube.getComponent<dn::AudioSource>()->play();
 
 		scene.start();
 
 	});
 
 	float speedMove = 0.1f;
-	dn::MeshRenderer::lightPosition = glm::vec3(0.f, 0.f, 100.f);
+	dn::Light::lightPosition = glm::vec3(0.f, 0.f, 100.f);
 
 	win.updateEvent.addListener([&](dn::Window &win) {
 
@@ -177,29 +182,31 @@ int main()
 			speedMove = 0.1f;
 
 		if (win.getKey(dn::KeyCode::O))
-			cube.getComponent<dn::Transform>()->position() += cube.getComponent<dn::Transform>()->right();
+			cube.getComponentData<dn::TransformData>()->position()
+				+= cube.getComponent<dn::Transform>()->right();
 		if (win.getKey(dn::KeyCode::P))
-			cube.getComponent<dn::Transform>()->position() -= cube.getComponent<dn::Transform>()->right();
+			cube.getComponentData<dn::TransformData>()->position()
+				-= cube.getComponentData<dn::TransformData>()->right();
 
 		if (win.getButton(dn::MouseButton::left))
 		{
 			dn::Object *obj = new dn::Object;
 			dn::Object *obj2 = new dn::Object;
 			glm::vec3 frwrd = cameraTransform->position() + cameraTransform->forward() * 5.f;
-			obj->addComponent<dn::Transform>()->position() = frwrd;
-			dn::MeshRenderer *m = obj->addComponent<dn::MeshRenderer>(&dn::Model::cube);
+			obj->addComponentData<dn::TransformData>()->position() = frwrd;
+			dn::MeshData *m = obj->addComponentData<dn::MeshData>(&dn::Model::cube);
 			if (win.getKey(dn::KeyCode::K))
 				m->setTexture(&minecraftTexture);
 			else
 				m->setTexture(&bricksTexture);
 		//	obj->addComponent<dn::AudioSource>(&rainClip)->setLooping(true);
 
-			obj2->addComponent<dn::Transform>()->position() = frwrd;
-			obj2->addComponent<dn::MeshRenderer>(&dn::Model::cubeEdges)->setColor(0.f, 0.f, 0.f);
+			obj2->addComponentData<dn::TransformData>()->position() = frwrd;
+			obj2->addComponentData<dn::MeshData>(&dn::Model::cubeEdges)->setColor(0.f, 0.f, 0.f);
 
-			scene.addObject(obj);
+			scene.addObject(*obj);
 		//	obj->getComponent<dn::AudioSource>()->play();
-			scene.addObject(obj2);
+			scene.addObject(*obj2);
 			minecraftObjects.push_back(obj);
 			minecraftObjects.push_back(obj2);
 		}
@@ -213,10 +220,11 @@ int main()
 		cameraTransform->rotation().x += win.mouseDeltaY() * dn::Application::deltaTime();
 		cameraTransform->rotation().y += win.mouseDeltaX() * dn::Application::deltaTime();
 
-		preCube.getComponent<dn::Transform>()->position() = cameraTransform->position() + cameraTransform->forward() * 5.f;
+		preCube.getComponentData<dn::TransformData>()->position()
+			= cameraTransform->position() + cameraTransform->forward() * 5.f;
 
 		win.updateViewport();
-		camera.getComponent<dn::Camera>()->setAspectRatio(win.aspectRatio());
+		camera.getComponentData<dn::CameraData>()->setAspectRatio(win.aspectRatio());
 
 		win.clear();
 
