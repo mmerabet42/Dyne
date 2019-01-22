@@ -25,31 +25,36 @@
 #include "Scene.hpp"
 #include "RenderSystem.hpp"
 
+class RotatorData: public dn::ComponentData
+{
+public:
+	float rotateSpeed;
+};
+
+struct RotatorFilter: public dn::SystemFilter<RotatorFilter, RotatorData, dn::TransformData>
+{
+	RotatorData *rotator;
+	dn::TransformData *transform;
+};
+
+class RotatorSystem: public dn::System<RotatorFilter>
+{
+public:
+
+	void onUpdate()
+	{
+		dn::Entities<RotatorFilter> rotators = getEntities<RotatorFilter>();
+		for (auto &e : rotators)
+		{
+			e->transform->rotation().y += e->rotator->rotateSpeed;
+		}
+	}
+
+};
+
 int main()
 {
-/*	dn::Object obj;
-
-	obj.setName("Object 1");
-	obj.addComponentData<dn::TransformData>();
-	obj.addComponentData<dn::MeshData>(&dn::Model::cubeEdges);
-	obj.addComponent<dn::MeshRenderer>(&dn::Model::cube);
-	obj.addComponent<dn::AudioSource>();
-
-	dn::Object obj2;
-
-	obj2.setName("Object 2");
-	obj2.addComponentData<dn::CameraData>();
-	obj2.addComponentData<dn::TransformData>();
-
-	dn::Scene scn;
-	scn.addSystem<dn::RenderSystem>();
-
-	scn.addObject(obj);
-	scn.addObject(obj2);
-
-	scn.start();
-	return (0);
-*/	dn::Window win(600, 400, "Window 1");
+	dn::Window win(600, 400, "Window 1");
 
 	win.keyPressEvent.addListener([](dn::Window &w, dn::KeyCode k, dn::Mod) {
 		if (k == dn::KeyCode::escape)
@@ -119,6 +124,7 @@ int main()
 
 	dn::Scene scene;
 	scene.addSystem<dn::RenderSystem>();
+	scene.addSystem<RotatorSystem>();
 
 	scene.addObject(camera);
 	scene.addObject(gridPlane);
@@ -129,17 +135,17 @@ int main()
 	scene.addObject(earth);
 	//scene.addObject(chalet);
 
-	for (size_t i = 0; i < 50000; ++i)
+	for (size_t i = 0; i < 5000; ++i)
 	{
 		dn::Object *o = new dn::Object;
 		o->addComponentData<dn::TransformData>(
-			dn::math::randomVector(-1000.f, 1000.f));
+			dn::math::randomVector(-200.f, 200.f));
 		o->addComponentData<dn::MeshData>(&dn::Model::cube)->setTexture(&minecraftTexture);
+		o->addComponentData<RotatorData>()->rotateSpeed = dn::math::random(0.f, 1.f);
 
 		scene.addObject(*o);
 		minecraftObjects.push_back(o);
 	}
-	std::cout << "objects addd !!!\n";
 
 	win.startEvent.addListener([&](dn::Window &win) {
 		win.focus();
