@@ -134,19 +134,19 @@ int main()
 	scene.addObject(planet);
 	scene.addObject(earth);
 	//scene.addObject(chalet);
-
+/*
 	for (size_t i = 0; i < 5000; ++i)
 	{
 		dn::Object *o = new dn::Object;
 		o->addComponentData<dn::TransformData>(
 			dn::math::randomVector(-200.f, 200.f));
 		o->addComponentData<dn::MeshData>(&dn::Model::cube)->setTexture(&minecraftTexture);
-		o->addComponentData<RotatorData>()->rotateSpeed = dn::math::random(0.f, 1.f);
+	//	o->addComponentData<RotatorData>()->rotateSpeed = dn::math::random(0.f, 1.f);
 
 		scene.addObject(*o);
 		minecraftObjects.push_back(o);
 	}
-
+*/
 	win.startEvent.addListener([&](dn::Window &win) {
 		win.focus();
 		win.setMouseLock(true);
@@ -200,6 +200,7 @@ int main()
 			dn::Object *obj2 = new dn::Object;
 			glm::vec3 frwrd = cameraTransform->position() + cameraTransform->forward() * 5.f;
 			obj->addComponentData<dn::TransformData>()->position() = frwrd;
+			obj->addComponentData<RotatorData>()->rotateSpeed = dn::math::random(0.01f, 0.5f);
 			dn::MeshData *m = obj->addComponentData<dn::MeshData>(&dn::Model::cube);
 			if (win.getKey(dn::KeyCode::K))
 				m->setTexture(&minecraftTexture);
@@ -215,6 +216,17 @@ int main()
 			scene.addObject(*obj2);
 			minecraftObjects.push_back(obj);
 			minecraftObjects.push_back(obj2);
+		}
+
+		if (win.getKeyDown(dn::KeyCode::Y))
+		{
+			for (int i = 0; i < minecraftObjects.size(); i += 1)
+				minecraftObjects[i]->getComponentData<dn::MeshData>()->setActive(false);
+		}
+		if (win.getKeyUp(dn::KeyCode::Y))
+		{
+			for (int i = 0; i < minecraftObjects.size(); i += 1)
+				minecraftObjects[i]->getComponentData<dn::MeshData>()->setActive(true);
 		}
 
 		if (win.getKeyDown(dn::KeyCode::C))

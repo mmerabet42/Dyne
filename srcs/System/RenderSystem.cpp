@@ -36,6 +36,25 @@ void dn::RenderSystem::onObjectAdded(dn::MeshFilter &p_filter)
 		this->_instances.emplace(p_filter.mesh->shader(), _layerModel(p_filter));
 }
 
+void dn::RenderSystem::onObjectRemoved(dn::MeshFilter &p_filter)
+{
+	dn::layer::Shader::iterator shader_it = this->_instances.find(p_filter.mesh->shader());
+	dn::layer::Model::iterator model_it = shader_it->second.find(p_filter.mesh->model());
+	dn::layer::Texture::iterator texture_it = model_it->second.second.find(p_filter.mesh->texture());
+	if (texture_it->second.first.size() == 1)
+	{
+		texture_it->second.first.clear();
+		texture_it->second.second.clear();
+	}
+	else
+	{
+		dn::layer::MeshFilter::iterator mesh_it = std::find(
+			texture_it->second.first.begin(), texture_it->second.first.end(), &p_filter);
+		texture_it->second.first.erase(mesh_it);
+		texture_it->second.second.pop_back();
+	}
+}
+
 void dn::RenderSystem::onObjectAdded(dn::CameraFilter &p_filter)
 {
 	this->_camera = p_filter.camera;

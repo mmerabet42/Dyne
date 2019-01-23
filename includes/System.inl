@@ -67,10 +67,10 @@ void dn::SystemBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 			// deleting it
 			delete (*it);
 			// and erasing it from the filter list
-			filters.erase(it);
-			this->_mapFilters.erase((dn::SystemFilterBase *)*it);
 			this->_allFilters.erase(std::find(this->_allFilters.begin(), this->_allFilters.end(),
 				(dn::SystemFilterBase *)*it));
+			this->_mapFilters.erase((dn::SystemFilterBase *)*it);
+			filters.erase(it);
 		}
 	}
 	// the object is tested on the other filters

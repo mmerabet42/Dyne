@@ -11,7 +11,6 @@
 
 namespace dn
 {
-
 	struct MeshFilter: public dn::SystemFilter<dn::MeshFilter,
 		dn::TransformData, dn::MeshData>
 	{
@@ -57,13 +56,15 @@ namespace dn
 	//			std::pair<dn::ModelInstance *,
 	//				std::map<dn::Texture *,
 	//					std::pair<std::vector<dn::MeshRenderer *>,
-	//							std::vector<dn::IntanceData>>>>>
-	
+	//						std::vector<dn::IntanceData>>>>>
+
 	class RenderSystem: public dn::System<dn::MeshFilter, dn::CameraFilter>
 	{
 	public:
 
 		void onObjectAdded(dn::MeshFilter &p_filter);
+		void onObjectRemoved(dn::MeshFilter &p_filter);
+
 		void onObjectAdded(dn::CameraFilter &p_filter);
 
 		void onUpdate();

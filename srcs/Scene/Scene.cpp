@@ -16,22 +16,31 @@ void dn::Scene::addObject(dn::Object &p_object)
 	if (it != this->_objects.end())
 		return ;
 	this->_objects.push_back(&p_object);
+	p_object.setScene(this);
 	// the object is tested on each system
-	for (auto system = this->_systems.begin(); system != this->_systems.end(); ++system)
+	std::map<size_t, dn::SystemBase<> *>::iterator system;
+	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
 		system->second->loadFilters(p_object);
 }
 
 void dn::Scene::start()
 {
 	this->_started = true;
-	std::map<size_t, dn::SystemBase<> *>::iterator it;
-	for (it = this->_systems.begin(); it != this->_systems.end(); ++it)
-		it->second->onStart();
+	std::map<size_t, dn::SystemBase<> *>::iterator system;
+	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
+		system->second->onStart();
 }
 
 void dn::Scene::update()
 {
-	std::map<size_t, dn::SystemBase<> *>::iterator it;
-	for (it = this->_systems.begin(); it != this->_systems.end(); ++it)
-		it->second->onUpdate();
+	std::map<size_t, dn::SystemBase<> *>::iterator system;
+	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
+		system->second->onUpdate();
+}
+
+void dn::Scene::objectUpdated(dn::Object *p_object)
+{
+	std::map<size_t, dn::SystemBase<> *>::iterator system;
+	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
+		system->second->loadFilters(*p_object);
 }

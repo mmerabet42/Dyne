@@ -1,8 +1,9 @@
 #include "Object.hpp"
 #include "Component.hpp"
+#include "Scene.hpp"
 
 dn::Object::Object(const std::string &p_name)
-	: _name(p_name), _running(false), _active(true), _components(), _componentsData()
+	: _name(p_name), _running(false), _active(true), _components(), _componentsData(), _scene(nullptr)
 {
 
 }
@@ -21,6 +22,22 @@ void dn::Object::setName(const std::string &p_name) { this->_name = p_name; }
 
 bool dn::Object::active() const { return (this->_active); }
 void dn::Object::setActive(const bool &p_active) { this->_active = p_active; }
+
+dn::Scene *dn::Object::scene() const
+{
+	return (this->_scene);
+}
+
+void dn::Object::setScene(dn::Scene *p_scene)
+{
+	this->_scene = p_scene;
+}
+
+void dn::Object::componentUpdated()
+{
+	if (this->_scene)
+		this->_scene->objectUpdated(this);
+}
 
 void dn::Object::start()
 {

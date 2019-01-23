@@ -8,7 +8,7 @@
 
 namespace dn
 {
-	// Forward declaration of the Component class, so no need to include the component header file
+	class Scene;
 
 	// An object is a component container
 	class Object
@@ -28,14 +28,16 @@ namespace dn
 		bool active() const;
 		void setActive(const bool &p_active = true);
 
+		dn::Scene *scene() const;
+		void setScene(dn::Scene *p_scene);
+
+		void componentUpdated();
+
 		// Returns the component that is of the specified type `T'
 		template <typename T>
 		T *getComponent();
 		template <typename T>
 		T *getComponentData();
-
-		dn::Component *getHashComponent(const size_t &p_hash_code);
-		dn::ComponentData *getHashComponentData(const size_t &p_hash_code);
 
 		// Attach a component
 		template <typename T, typename ... _Args>
@@ -49,6 +51,9 @@ namespace dn
 		template <typename T>
 		void removeComponentData();
 
+		dn::Component *getHashComponent(const size_t &p_hash_code);
+		dn::ComponentData *getHashComponentData(const size_t &p_hash_code);
+
 	private:
 		// Is true if the object has started
 		bool _running;
@@ -59,6 +64,8 @@ namespace dn
 		// The list of components attached to the object
 		std::map<size_t, dn::Component *> _components;
 		std::map<size_t, dn::ComponentData *> _componentsData;
+
+		dn::Scene *_scene;
 	};
 }
 

@@ -92,6 +92,7 @@ T *dn::Object::addComponentData(_Args ... p_args)
 	T *comp = new T(p_args ...);
 	// Attach the component to the object
 	this->_componentsData.insert(std::make_pair(comp_hash, comp));
+	comp->setObject(this);
 	// And finally, the component is returned
 	return (comp);
 }

@@ -22,6 +22,8 @@ namespace dn
 		void start();
 		void update();
 
+		void objectUpdated(dn::Object *p_object);
+
 	private:
 		std::vector<dn::Object *> _objects;
 		std::map<size_t, dn::SystemBase<> *> _systems;

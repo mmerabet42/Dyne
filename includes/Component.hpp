@@ -51,9 +51,14 @@ namespace dn
 		bool active() const;
 		void setActive(const bool &p_active = true);
 
+		dn::Object *object() const;
+		void setObject(dn::Object *p_object);
+
 	private:
 		// A component can be deactivated and activated
 		bool _active;
+		// The object it is attached to
+		dn::Object *_object;
 	};
 }
 
