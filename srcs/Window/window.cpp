@@ -9,7 +9,7 @@ dn::Window::Window(const int &p_width, const int &p_height, const std::string &p
 	_flags(DN_VISIBLE), _clearColor(0.f, 0.f, 0.f, 1.f), _opacity(1.f),
 	_framebufferWidth(0), _framebufferHeight(0),
 	_minwidth(DN_NONE), _minheight(DN_NONE), _maxwidth(DN_NONE), _maxheight(DN_NONE),
-	_mousePos{0.0, 0.0, 0.0, 0.0},
+	_mousePos{0.0, 0.0, 0.0, 0.0}, _scene(nullptr),
 
 	// Initializing all function pointer to null
 	_keyCb(nullptr), _startCb(nullptr), _updateCb(nullptr), _sizeCb(nullptr),

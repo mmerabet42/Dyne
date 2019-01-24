@@ -61,6 +61,11 @@ void dn::RenderSystem::onObjectAdded(dn::CameraFilter &p_filter)
 	this->_camera->setTransform(p_filter.transform);
 }
 
+void dn::RenderSystem::onObjectRemoved(dn::CameraFilter &p_filter)
+{
+	this->_camera = nullptr;
+}
+
 void dn::RenderSystem::onUpdate()
 {
 	if (!this->_camera)

@@ -66,6 +66,7 @@ namespace dn
 		void onObjectRemoved(dn::MeshFilter &p_filter);
 
 		void onObjectAdded(dn::CameraFilter &p_filter);
+		void onObjectRemoved(dn::CameraFilter &p_filter);
 
 		void onUpdate();
 	private:

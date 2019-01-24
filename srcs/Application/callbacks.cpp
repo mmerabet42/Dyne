@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "Window.hpp"
+#include "Scene.hpp"
 
 void	dn::Application::windowStartCallback(dn::Window *p_window)
 {
@@ -8,6 +9,8 @@ void	dn::Application::windowStartCallback(dn::Window *p_window)
 		p_window->_startCb(*p_window);
 	if (!p_window->getFlag(DN_CLOSED))
 		p_window->startEvent.trigger(*p_window);
+	if (!p_window->getFlag(DN_CLOSED) && p_window->_scene)
+		p_window->_scene->start();
 }
 
 void	dn::Application::windowUpdateCallback(dn::Window *p_window)
@@ -17,6 +20,8 @@ void	dn::Application::windowUpdateCallback(dn::Window *p_window)
 		p_window->_updateCb(*p_window);
 	if (!p_window->getFlag(DN_CLOSED))
 		p_window->updateEvent.trigger(*p_window);
+	if (!p_window->getFlag(DN_CLOSED) && p_window->_scene)
+		p_window->_scene->update();
 }
 
 void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int p_scancode, int p_action, int p_mods)

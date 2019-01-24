@@ -52,6 +52,69 @@ public:
 
 };
 
+struct PlayerFilter: public dn::SystemFilter<PlayerFilter, dn::CameraData, dn::TransformData>
+{
+	dn::CameraData *camera;
+	dn::TransformData *transform;
+};
+
+struct OtherFilter: public dn::SystemFilter<OtherFilter, dn::TransformData>
+{
+	dn::TransformData *transform;
+};
+
+class MoveSystem: public dn::System<PlayerFilter, OtherFilter>
+{
+	PlayerFilter *player;
+	OtherFilter *preCube;
+
+	float speedMove = 0.1f;
+public:
+
+	void onObjectAdded(PlayerFilter &p_player)
+	{
+		player = &p_player;
+	}
+
+	void onObjectAdded(OtherFilter &p_other)
+	{
+		if (p_other.object()->name() == "preCube")
+			preCube = &p_other;
+		else
+			destroyObject(p_other);
+	}
+
+	void onUpdate()
+	{
+		if (player)
+		{
+			if (scene()->window()->getKey(dn::KeyCode::W))
+				player->transform->position() += player->transform->forward() * speedMove;
+			if (scene()->window()->getKey(dn::KeyCode::S))
+				player->transform->position() -= player->transform->forward() * speedMove;
+
+			if (scene()->window()->getKey(dn::KeyCode::A))
+				player->transform->position() -= player->transform->right() * speedMove;
+			if (scene()->window()->getKey(dn::KeyCode::D))
+				player->transform->position() += player->transform->right() * speedMove;
+
+			if (scene()->window()->getKey(dn::KeyCode::leftShift))
+				player->transform->position() -= player->transform->up() * speedMove;
+			if (scene()->window()->getKey(dn::KeyCode::space))
+				player->transform->position() += player->transform->up() * speedMove;
+
+			if (scene()->window()->getKey(dn::KeyCode::leftControl))
+				speedMove = 2.f;
+			else
+				speedMove = 0.1f;
+
+			player->transform->rotation().x += scene()->window()->mouseDeltaY() * dn::Application::deltaTime();
+			player->transform->rotation().y += scene()->window()->mouseDeltaX() * dn::Application::deltaTime();
+
+		}
+	}
+};
+
 int main()
 {
 	dn::Window win(600, 400, "Window 1");
@@ -125,6 +188,7 @@ int main()
 	dn::Scene scene;
 	scene.addSystem<dn::RenderSystem>();
 	scene.addSystem<RotatorSystem>();
+	scene.addSystem<MoveSystem>();
 
 	scene.addObject(camera);
 	scene.addObject(gridPlane);
@@ -133,6 +197,8 @@ int main()
 	scene.addObject(preCube);
 	scene.addObject(planet);
 	scene.addObject(earth);
+
+	win.setScene(&scene);
 	//scene.addObject(chalet);
 /*
 	for (size_t i = 0; i < 5000; ++i)
@@ -153,7 +219,7 @@ int main()
 
 		//cube.getComponent<dn::AudioSource>()->play();
 
-		scene.start();
+	//	scene.start();
 
 	});
 
@@ -161,31 +227,6 @@ int main()
 	dn::Light::lightPosition = glm::vec3(0.f, 0.f, 100.f);
 
 	win.updateEvent.addListener([&](dn::Window &win) {
-
-		if (win.getKey(dn::KeyCode::W))
-			cameraTransform->position() += cameraTransform->forward() * speedMove;
-		if (win.getKey(dn::KeyCode::S))
-			cameraTransform->position() -= cameraTransform->forward() * speedMove;
-
-		if (win.getKey(dn::KeyCode::A))
-			cameraTransform->position() -= cameraTransform->right() * speedMove;
-		if (win.getKey(dn::KeyCode::D))
-			cameraTransform->position() += cameraTransform->right() * speedMove;
-
-		if (win.getKey(dn::KeyCode::leftShift))
-			cameraTransform->position() -= cameraTransform->up() * speedMove;
-		if (win.getKey(dn::KeyCode::space))
-			cameraTransform->position() += cameraTransform->up() * speedMove;
-
-		if (win.getKey(dn::KeyCode::keypadPlus))
-			camera.getComponent<dn::AudioListener>()->setVolume(0.1f, true);
-		if (win.getKey(dn::KeyCode::keypadMinus))
-			camera.getComponent<dn::AudioListener>()->setVolume(-0.1f, true);
-
-		if (win.getKey(dn::KeyCode::leftControl))
-			speedMove = (win.getKeyDown(dn::KeyCode::rightControl) ? 100.f : 2.f);
-		else
-			speedMove = 0.1f;
 
 		if (win.getKey(dn::KeyCode::O))
 			cube.getComponentData<dn::TransformData>()->position()
@@ -235,9 +276,6 @@ int main()
 		if (win.getKeyDown(dn::KeyCode::N))
 			std::cout << "Cubes: " << minecraftObjects.size() << std::endl;
 
-		cameraTransform->rotation().x += win.mouseDeltaY() * dn::Application::deltaTime();
-		cameraTransform->rotation().y += win.mouseDeltaX() * dn::Application::deltaTime();
-
 		preCube.getComponentData<dn::TransformData>()->position()
 			= cameraTransform->position() + cameraTransform->forward() * 5.f;
 
@@ -246,7 +284,7 @@ int main()
 
 		win.clear();
 
-		scene.update();
+	//	scene.update();
 	});
 
 	dn::Application::run();

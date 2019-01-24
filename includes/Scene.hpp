@@ -9,6 +9,8 @@
 
 namespace dn
 {
+	class Window;
+
 	class Scene
 	{
 	public:
@@ -24,9 +26,14 @@ namespace dn
 
 		void objectUpdated(dn::Object *p_object);
 
+		dn::Window *window() const;
+		void setWindow(dn::Window *p_window);
+
 	private:
 		std::vector<dn::Object *> _objects;
 		std::map<size_t, dn::SystemBase<> *> _systems;
+
+		dn::Window *_window;
 
 		bool _started;
 	};

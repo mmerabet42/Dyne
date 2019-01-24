@@ -2,7 +2,7 @@
 #include <algorithm>
 
 dn::Scene::Scene()
-	: _objects(), _systems(), _started(false)
+	: _objects(), _systems(), _started(false), _window(nullptr)
 {
 
 }
@@ -43,4 +43,14 @@ void dn::Scene::objectUpdated(dn::Object *p_object)
 	std::map<size_t, dn::SystemBase<> *>::iterator system;
 	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
 		system->second->loadFilters(*p_object);
+}
+
+dn::Window *dn::Scene::window() const
+{
+	return (this->_window);
+}
+
+void dn::Scene::setWindow(dn::Window *p_window)
+{
+	this->_window = p_window;
 }

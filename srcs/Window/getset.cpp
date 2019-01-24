@@ -1,5 +1,6 @@
 #include "Window.hpp"
 #include "Application.hpp"
+#include "Scene.hpp"
 
 /* Getters and setters */
 
@@ -150,3 +151,14 @@ void		dn::Window::setSizeLimits(const int &p_minwidth, const int &p_maxwidth, co
 }
 
 GLFWwindow	*dn::Window::glfw() const { return (this->_glfw); }
+
+dn::Scene *dn::Window::scene() const
+{
+	return (this->_scene);
+}
+
+void dn::Window::setScene(dn::Scene *p_scene)
+{
+	if ((this->_scene = p_scene))
+		this->_scene->setWindow(this);
+}

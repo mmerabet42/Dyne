@@ -45,6 +45,9 @@ namespace dn
 		virtual void onStart() {}
 		virtual void onUpdate() {}
 
+		template <typename Filter>
+		void destroyObject(Filter &p_filter);
+
 		void setScene(dn::Scene *p_scene);
 		dn::Scene *scene() const;
 
@@ -65,14 +68,16 @@ namespace dn
 		virtual void onObjectRemoved(Filter &p_filter) {}
 	};
 
-	template <typename Filter, typename ... Filters>
-	class System: public dn::SystemBase<Filter, Filters ...>
+	template <typename ... Filters>
+	class System: public dn::SystemBase<Filters ...>
 	{
 	public:
 		System();
 
-		bool passFilters(dn::Object &p_object);
 		void loadFilters(dn::Object &p_object) final;
+
+		template <typename Filter>
+		void destroyObject(Filter &p_filter);
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &getEntities();

@@ -6,17 +6,19 @@
 # include <map>
 
 # include "allgl.hpp"
-# include "Color.hpp"
 # include "Funcs.hpp"
 # include "Codes.hpp"
 # include "Event.hpp"
 # include "KeyCode.hpp"
+# include "Color.hpp"
 
 namespace dn
 {
 	// Forward declaration of the Application class to avoid cycles
 	// as the application header file uses the Window class
 	class Application;
+
+	class Scene;
 
 	class Window
 	{
@@ -95,9 +97,9 @@ namespace dn
 			double mouseDeltaX();
 			double mouseDeltaY();
 
-			dn::Color	clearColor() const;
-			void		setClearColor(const float &p_r, const float &p_g, const float &p_b);
-			void		setClearColor(const int &p_r, const int &p_g, const int &p_b);
+			dn::Color clearColor() const;
+			void setClearColor(const float &p_r, const float &p_g, const float &p_b);
+			void setClearColor(const int &p_r, const int &p_g, const int &p_b);
 
 			int		flags() const;
 			void	setFlag(const int &p_flag, const bool &p_set = true);
@@ -107,6 +109,9 @@ namespace dn
 			void	setOpacity(const float &p_opacity);
 
 			GLFWwindow	*glfw() const;
+
+			dn::Scene *scene() const;
+			void setScene(dn::Scene *p_scene);
 
 		void	setStartCb(const dn::startFunc &p_callback);
 		void	setUpdateCb(const dn::updateFunc &p_callback);
@@ -131,28 +136,29 @@ namespace dn
 		void	setScrollCb(const dn::scrollFunc &p_callback);
 		void	setDropCb(const dn::dropFunc &p_callback);
 
-		dn::Event<dn::Window &>						startEvent;
-		dn::Event<dn::Window &>						updateEvent;
-		dn::Event<dn::Window &>						closeEvent;
+		dn::Event<dn::Window &>					startEvent;
+		dn::Event<dn::Window &>					updateEvent;
+		dn::Event<dn::Window &>					closeEvent;
 
-		dn::Event<dn::Window &, dn::KeyCode, dn::Action, dn::Mod>	keyEvent;
-		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>				keyPressEvent;
-		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>				keyReleaseEvent;
-		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>				keyRepeatEvent;
-		dn::Event<dn::Window &, int, int>			sizeEvent;
-		dn::Event<dn::Window &, int, int>			posEvent;
-		dn::Event<dn::Window &, bool>				focusEvent;
-		dn::Event<dn::Window &, bool>				maximizeEvent;
-		dn::Event<dn::Window &, int, int>			framebufferSizeEvent;
-		dn::Event<dn::Window &>						refreshEvent;
+		dn::Event<dn::Window &, int, int>		sizeEvent;
+		dn::Event<dn::Window &, int, int>		posEvent;
+		dn::Event<dn::Window &, bool>			focusEvent;
+		dn::Event<dn::Window &, bool>			maximizeEvent;
+		dn::Event<dn::Window &, int, int>		framebufferSizeEvent;
+		dn::Event<dn::Window &>					refreshEvent;
+		dn::Event<dn::Window &, double, double>	mouseMoveEvent;
+		dn::Event<dn::Window &, bool>			mouseEnterEvent;
+		dn::Event<dn::Window &, double, double>	scrollEvent;
+
+		dn::Event<dn::Window &, dn::KeyCode, dn::Action, dn::Mod>		keyEvent;
+		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>					keyPressEvent;
+		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>					keyReleaseEvent;
+		dn::Event<dn::Window &, dn::KeyCode, dn::Mod>					keyRepeatEvent;
 		dn::Event<dn::Window &, dn::MouseButton, dn::Action, dn::Mod>	mouseButtonEvent;
 		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mousePressEvent;
 		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseRepeatEvent;
 		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseReleaseEvent;
-		dn::Event<dn::Window &, double, double>		mouseMoveEvent;
-		dn::Event<dn::Window &, bool>				mouseEnterEvent;
-		dn::Event<dn::Window &, double, double>		scrollEvent;
-		dn::Event<dn::Window &, const std::vector<std::string> &>	dropEvent;
+		dn::Event<dn::Window &, const std::vector<std::string> &>		dropEvent;
 
 	private:
 		int			_x;
@@ -175,6 +181,8 @@ namespace dn
 
 		dn::Window *_share;
 
+		dn::Scene *_scene;
+
 		// Stores the state of keys and mouses buttons (pressed, held, released)
 		std::map<int, int> _keyLogger;
 		std::map<int, int> _mouseLogger;
@@ -187,7 +195,7 @@ namespace dn
 
 		int			_flags;
 
-		dn::Color	_clearColor;
+		dn::Color _clearColor;
 
 		dn::startFunc			_startCb;
 		dn::updateFunc			_updateCb;

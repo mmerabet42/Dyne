@@ -2,23 +2,13 @@
 #include "Object.hpp"
 #include <algorithm>
 
-template <typename Filter, typename ... Filters>
-dn::System<Filter, Filters ...>::System()
+template <typename ... Filters>
+dn::System<Filters ...>::System()
 {
-	static const size_t hashes[] = { typeid(Filter).hash_code(), typeid(Filters).hash_code() ... };
+	static const size_t hashes[] = { typeid(Filters).hash_code() ... };
 
-	for (size_t i = 0; i < sizeof...(Filters) + 1; ++i)
+	for (size_t i = 0; i < sizeof...(Filters); ++i)
 		this->_filters.insert(std::make_pair(hashes[i], std::vector<dn::SystemFilterBase *>()));
-}
-
-template <typename Filter, typename ... Filters>
-bool dn::System<Filter, Filters ...>::passFilters(dn::Object &p_object)
-{
-	bool passes[] = { Filter::passFilter(p_object), Filters::passFilter(p_object)... };
-	for (size_t i = 0; i < sizeof...(Filters) + 1; ++i)
-		if (passes[i])
-			return (true);
-	return (false);
 }
 
 template <typename Filter, typename ... Filters>
@@ -62,7 +52,7 @@ void dn::SystemBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 		// then it is removed
 		if (it != filters.end())
 		{
-			// by first call the onObjectRemoved callback
+			// by first calling the onObjectRemoved callback
 			this->onObjectRemoved(*(Filter *)*it);
 			// deleting it
 			delete (*it);
@@ -77,15 +67,24 @@ void dn::SystemBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 	this->dn::SystemBase<Filters ...>::loadFilters(p_object);
 }
 
-template <typename Filter, typename ... Filters>
-void dn::System<Filter, Filters ...>::loadFilters(dn::Object &p_object)
+template <typename ... Filters>
+template <typename Filter>
+void dn::System<Filters ...>::destroyObject(Filter &p_filter)
 {
-	this->dn::SystemBase<Filter, Filters ...>::loadFilters(p_object);
+	static const size_t hash_code = typeid(Filter).hash_code();
+
+	std::cout << "mdrr\n";
 }
 
-template <typename Filter, typename ... Filters>
+template <typename ... Filters>
+void dn::System<Filters ...>::loadFilters(dn::Object &p_object)
+{
+	this->dn::SystemBase<Filters ...>::loadFilters(p_object);
+}
+
+template <typename ... Filters>
 template <typename Entity_filter>
-dn::Entities<Entity_filter> &dn::System<Filter, Filters ...>::getEntities()
+dn::Entities<Entity_filter> &dn::System<Filters ...>::getEntities()
 {
 	static const size_t hash_code = typeid(Entity_filter).hash_code();
 
@@ -96,15 +95,15 @@ dn::Entities<Entity_filter> &dn::System<Filter, Filters ...>::getEntities()
 	return (*(dn::Entities<Entity_filter> *)&it->second);
 }
 
-template <typename Filter, typename ... Filters>
-dn::Entities<dn::SystemFilterBase> &dn::System<Filter, Filters ...>::getEntities()
+template <typename ... Filters>
+dn::Entities<dn::SystemFilterBase> &dn::System<Filters ...>::getEntities()
 {
 	return (this->_allFilters);
 }
 
-template <typename Filter, typename ... Filters>
+template <typename ... Filters>
 template <typename Entity_filter>
-Entity_filter *dn::System<Filter, Filters ...>::getEntity(dn::SystemFilterBase *p_e)
+Entity_filter *dn::System<Filters ...>::getEntity(dn::SystemFilterBase *p_e)
 {
 	static const size_t hash_code = typeid(Entity_filter).hash_code();
 
@@ -114,22 +113,22 @@ Entity_filter *dn::System<Filter, Filters ...>::getEntity(dn::SystemFilterBase *
 	return (nullptr);
 }
 
-template <typename Filter, typename ... Filters>
+template <typename ... Filters>
 template <typename Entity_filter>
-dn::Entities<Entity_filter> &dn::System<Filter, Filters ...>::nullEntities()
+dn::Entities<Entity_filter> &dn::System<Filters ...>::nullEntities()
 {
 	static dn::Entities<Entity_filter> &nullFilter
-		= *(dn::Entities<Entity_filter> *)&dn::System<Filter, Filters...>::_nullFilter;
+		= *(dn::Entities<Entity_filter> *)&dn::System<Filters...>::_nullFilter;
 	return (nullFilter);
 }
 
-template <typename Filter, typename ... Filters>
+template <typename ... Filters>
 template <typename Entity_filter>
-bool dn::System<Filter, Filters ...>::isNull(const dn::Entities<Entity_filter> &p_entities)
+bool dn::System<Filters ...>::isNull(const dn::Entities<Entity_filter> &p_entities)
 {
 	return (p_entities.empty());
 }
 
-template <typename Filter, typename ... Filters>
-std::vector<dn::SystemFilterBase *> dn::System<Filter, Filters ...>::_nullFilter
+template <typename ... Filters>
+std::vector<dn::SystemFilterBase *> dn::System<Filters ...>::_nullFilter
 	= std::vector<dn::SystemFilterBase *>();

@@ -73,7 +73,7 @@ static const char *g_fragmentSource = GLSL(
 		}
 		if (bool(orenderMode & DN_LIGHT_COLOR))
 		{
-			vec3 diffuse = max(dot(onormal, lightDir), 0.0) * lightColor;
+			vec3 diffuse = max(dot(onormal, lightDir), 0.09) * lightColor;
 			usedColor = vec4(diffuse, 1.0) * usedColor;
 		}
 		color = usedColor;
