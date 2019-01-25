@@ -106,14 +106,14 @@ void		dn::Window::title(const std::string &p_title)
 		glfwSetWindowTitle(this->_glfw, this->_title.c_str());
 }
 
-dn::Color	dn::Window::clearColor() const { return (this->_clearColor); }
-void		dn::Window::setClearColor(const float &p_r, const float &p_g, const float &p_b)
+dn::Vector4f dn::Window::clearColor() const { return (this->_clearColor); }
+void dn::Window::setClearColor(const float &p_r, const float &p_g, const float &p_b)
 {
-	this->_clearColor.set(p_r, p_g, p_b);
+	this->_clearColor.set(p_r, p_g, p_b, 1.f);
 }
 void		dn::Window::setClearColor(const int &p_r, const int &p_g, const int &p_b)
 {
-	this->_clearColor.set(p_r, p_g, p_b);
+	this->_clearColor.set((float)p_r / 255.f, (float)p_g / 255.f, (float)p_b / 255.f, 1.f);
 }
 
 float		dn::Window::opacity() const { return (this->_opacity); }

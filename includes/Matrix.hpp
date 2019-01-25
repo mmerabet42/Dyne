@@ -18,7 +18,7 @@ namespace dn
 		template <dn::t_length Rows2, dn::t_length Columns2>
 		Matrix(const dn::Matrix<Rows2, Columns2, T> &p_mat);
 		template <typename ... Args>
-		Matrix(Args ... p_args);
+		Matrix(const Args & ... p_args);
 
 		dn::Vector<Rows, T> get(dn::t_length p_i) const;
 		dn::Vector<Rows, T> &get(dn::t_length p_i);
@@ -80,9 +80,9 @@ namespace dn
 	template <dn::t_length Rows, dn::t_length Columns>
 	using matf = dn::Matrix<Rows, Columns, float>;
 
-	typedef dn::Matrix<2, 2, float> mat2;
-	typedef dn::Matrix<3, 3, float> mat3;
-	typedef dn::Matrix<4, 4, float> mat4;
+	typedef dn::Matrix2f mat2f;
+	typedef dn::Matrix3f mat3f;
+	typedef dn::Matrix4f mat4f;
 }
 
 # include "Matrix.inl"

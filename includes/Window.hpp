@@ -10,7 +10,7 @@
 # include "Codes.hpp"
 # include "Event.hpp"
 # include "KeyCode.hpp"
-# include "Color.hpp"
+# include "Vector4.hpp"
 
 namespace dn
 {
@@ -97,7 +97,7 @@ namespace dn
 			double mouseDeltaX();
 			double mouseDeltaY();
 
-			dn::Color clearColor() const;
+			dn::Vector4f clearColor() const;
 			void setClearColor(const float &p_r, const float &p_g, const float &p_b);
 			void setClearColor(const int &p_r, const int &p_g, const int &p_b);
 
@@ -195,7 +195,7 @@ namespace dn
 
 		int			_flags;
 
-		dn::Color _clearColor;
+		dn::Vector4f _clearColor;
 
 		dn::startFunc			_startCb;
 		dn::updateFunc			_updateCb;

@@ -49,7 +49,7 @@ dn::Matrix<Rows, Columns, T>::Matrix(const dn::Matrix<Rows2, Columns2, T> &p_mat
 
 template <dn::t_length Rows, dn::t_length Columns, typename T>
 template <typename ... Args>
-dn::Matrix<Rows, Columns, T>::Matrix(Args ... p_args)
+dn::Matrix<Rows, Columns, T>::Matrix(const Args & ... p_args)
 {
 	T arr[Rows * Columns] = {(T)(p_args)...};
 	for (dn::t_length i = 0; i < Rows; ++i)

@@ -17,12 +17,9 @@ dn::Vector<Size, T>::Vector(const std::initializer_list<T> &p_list)
 
 template <dn::t_length Size, typename T>
 template <typename ... Args>
-dn::Vector<Size, T>::Vector(Args ... p_args)
-	: _data{(T)(p_args)...}
-{
-	for (dn::t_length i = sizeof...(p_args); i < Size; ++i)
-		this->_data[i] = T();
-}
+dn::Vector<Size, T>::Vector(Args && ... p_args)
+	: _data{std::forward<Args>(p_args)...}
+{}
 
 template <dn::t_length Size, typename T>
 template <dn::t_length Size2>
@@ -33,23 +30,50 @@ dn::Vector<Size, T>::Vector(const dn::Vector<Size2, T> &p_vec)
 }
 
 template <dn::t_length Size, typename T>
-T dn::Vector<Size, T>::get(dn::t_length p_i) const
+template <typename Arg>
+void dn::Vector<Size, T>::helper_set(size_t i, Arg && p_arg)
 {
-	while (p_i < 0)
-		p_i += Size;
-	while (p_i >= Size)
-		p_i -= Size;
-	return (this->_data[p_i]);
+	this->_data[i] = p_arg;
 }
 
 template <dn::t_length Size, typename T>
-T &dn::Vector<Size, T>::get(dn::t_length p_i)
+template <typename Arg, typename ... Args>
+void dn::Vector<Size, T>::helper_set(size_t i, Arg && p_arg, Args && ... p_args)
 {
-	while (p_i < 0)
-		p_i += Size;
-	while (p_i >= Size)
-		p_i -= Size;
-	return (this->_data[p_i]);
+	this->_data[i] = p_arg;
+	this->helper_set(i + 1, std::forward<Args>(p_args)...);
+}
+
+template <dn::t_length Size, typename T>
+template <typename ... Args>
+typename std::enable_if_t<(sizeof...(Args) == Size)>
+dn::Vector<Size, T>::set(Args && ... p_args)
+{
+	this->helper_set(0, std::forward<Args>(p_args)...);
+}
+
+template <dn::t_length Size, typename T>
+T dn::Vector<Size, T>::get(dn::t_length p_i) const
+{
+	return (this->_data[p_i % Size]);
+}
+
+template <dn::t_length Size, typename T>
+inline T &dn::Vector<Size, T>::get(dn::t_length p_i)
+{
+	return (this->_data[p_i % Size]);
+}
+
+template <dn::t_length Size, typename T>
+inline T dn::Vector<Size, T>::operator[](dn::t_length p_i) const
+{
+	return (this->get(p_i));
+}
+
+template <dn::t_length Size, typename T>
+inline T &dn::Vector<Size, T>::operator[](dn::t_length p_i)
+{
+	return (this->get(p_i));
 }
 
 template <dn::t_length Size, typename T>
@@ -104,30 +128,10 @@ dn::Vector<Size, T> dn::normalize(dn::Vector<Size, T> p_vec)
 }
 
 template <dn::t_length Size, typename T>
-T dn::Vector<Size, T>::operator[](dn::t_length p_i) const
-{
-	while (p_i < 0)
-		p_i += Size;
-	while (p_i >= Size)
-		p_i -= Size;
-	return (this->_data[p_i]);
-}
-
-template <dn::t_length Size, typename T>
-T &dn::Vector<Size, T>::operator[](dn::t_length p_i)
-{
-	while (p_i < 0)
-		p_i += Size;
-	while (p_i >= Size)
-		p_i -= Size;
-	return (this->_data[p_i]);
-}
-
-template <dn::t_length Size, typename T>
 dn::Vector<Size, T> &dn::Vector<Size, T>::operator+=(const dn::Vector<Size, T> &p_vec)
 {
 	for (dn::t_length i = 0; i < Size; ++i)
-		this->_data[i] += p_vec._rows[i];
+		this->_data[i] += p_vec._data[i];
 	return (*this);
 }
 
@@ -135,7 +139,7 @@ template <dn::t_length Size, typename T>
 dn::Vector<Size, T> &dn::Vector<Size, T>::operator-=(const dn::Vector<Size, T> &p_vec)
 {
 	for (dn::t_length i = 0; i < Size; ++i)
-		this->_data[i] -= p_vec._rows[i];
+		this->_data[i] -= p_vec._data[i];
 	return (*this);
 }
 
@@ -143,7 +147,7 @@ template <dn::t_length Size, typename T>
 dn::Vector<Size, T> &dn::Vector<Size, T>::operator*=(const dn::Vector<Size, T> &p_vec)
 {
 	for (dn::t_length i = 0; i < Size; ++i)
-		this->_data[i] *= p_vec._rows[i];
+		this->_data[i] *= p_vec._data[i];
 	return (*this);
 }
 
@@ -151,7 +155,7 @@ template <dn::t_length Size, typename T>
 dn::Vector<Size, T> &dn::Vector<Size, T>::operator/=(const dn::Vector<Size, T> &p_vec)
 {
 	for (dn::t_length i = 0; i < Size; ++i)
-		this->_data[i] /= p_vec._rows[i];
+		this->_data[i] /= p_vec._data[i];
 	return (*this);
 }
 

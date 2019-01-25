@@ -20,8 +20,6 @@
 #include "SceneRenderer.hpp"
 #include "Light.hpp"
 
-#include "Matrix.hpp"
-
 #include "Scene.hpp"
 #include "RenderSystem.hpp"
 
@@ -58,15 +56,15 @@ struct PlayerFilter: public dn::SystemFilter<PlayerFilter, dn::CameraData, dn::T
 	dn::TransformData *transform;
 };
 
-struct OtherFilter: public dn::SystemFilter<OtherFilter, dn::TransformData>
+struct PrecubeFilter: public dn::SystemFilter<PrecubeFilter, dn::TransformData>
 {
 	dn::TransformData *transform;
 };
 
-class MoveSystem: public dn::System<PlayerFilter, OtherFilter>
+class MoveSystem: public dn::System<PlayerFilter, PrecubeFilter>
 {
 	PlayerFilter *player;
-	OtherFilter *preCube;
+	PrecubeFilter *precube;
 
 	float speedMove = 0.1f;
 public:
@@ -76,10 +74,10 @@ public:
 		player = &p_player;
 	}
 
-	void onObjectAdded(OtherFilter &p_other)
+	void onObjectAdded(PrecubeFilter &p_other)
 	{
-		if (p_other.object()->name() == "preCube")
-			preCube = &p_other;
+		if (p_other.object()->name() == "precube")
+			precube = &p_other;
 		else
 			destroyObject(p_other);
 	}
@@ -108,9 +106,12 @@ public:
 			else
 				speedMove = 0.1f;
 
-			player->transform->rotation().x += scene()->window()->mouseDeltaY() * dn::Application::deltaTime();
-			player->transform->rotation().y += scene()->window()->mouseDeltaX() * dn::Application::deltaTime();
+			player->transform->rotation().x
+				+= scene()->window()->mouseDeltaY() * dn::Application::deltaTime();
+			player->transform->rotation().y
+				+= scene()->window()->mouseDeltaX() * dn::Application::deltaTime();
 
+			precube->transform->position() = player->transform->position() + player->transform->forward() * 5.f;
 		}
 	}
 };
@@ -160,10 +161,12 @@ int main()
 		surroundCube.getComponentData<dn::MeshData>()->setColor(0.f, 0.f, 0.f);
 
 	dn::Object preCube;
+		preCube.setName("precube");
 		preCube.addComponentData<dn::TransformData>();
 		preCube.addComponentData<dn::MeshData>(&dn::Model::cubeEdges);
 
 	dn::Object camera;
+		camera.setName("eourihvb");
 		dn::TransformData *cameraTransform = camera.addComponentData<dn::TransformData>(0.f, 0.f, 5.f);
 		camera.addComponentData<dn::CameraData>(70.f, 0.02f, 100000000.f);
 		//camera.addComponent<dn::AudioListener>();
@@ -247,10 +250,11 @@ int main()
 				m->setTexture(&minecraftTexture);
 			else
 				m->setTexture(&bricksTexture);
+			m->setRenderMode(DN_TEXTURE_COLOR | DN_LIGHT_COLOR);
 		//	obj->addComponent<dn::AudioSource>(&rainClip)->setLooping(true);
 
 			obj2->addComponentData<dn::TransformData>()->position() = frwrd;
-			obj2->addComponentData<dn::MeshData>(&dn::Model::cubeEdges)->setColor(0.f, 0.f, 0.f);
+			obj2->addComponentData<dn::MeshData>(&dn::Model::cubeEdges)->setColor(1.f, 1.f, 1.f);
 
 			scene.addObject(*obj);
 		//	obj->getComponent<dn::AudioSource>()->play();
@@ -275,9 +279,6 @@ int main()
 
 		if (win.getKeyDown(dn::KeyCode::N))
 			std::cout << "Cubes: " << minecraftObjects.size() << std::endl;
-
-		preCube.getComponentData<dn::TransformData>()->position()
-			= cameraTransform->position() + cameraTransform->forward() * 5.f;
 
 		win.updateViewport();
 		camera.getComponentData<dn::CameraData>()->setAspectRatio(win.aspectRatio());

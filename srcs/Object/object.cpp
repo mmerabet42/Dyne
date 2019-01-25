@@ -15,6 +15,12 @@ dn::Object::~Object()
 		if (it->second)
 			delete it->second;
 	this->_components.clear();
+
+	std::map<size_t, dn::ComponentData *>::iterator data_it = this->_componentsData.begin();
+	for (; data_it != this->_componentsData.end(); ++data_it)
+		if (data_it->second)
+			delete data_it->second;
+	this->_componentsData.clear();
 }
 
 std::string dn::Object::name() const { return (this->_name); }

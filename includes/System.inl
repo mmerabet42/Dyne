@@ -11,6 +11,15 @@ dn::System<Filters ...>::System()
 		this->_filters.insert(std::make_pair(hashes[i], std::vector<dn::SystemFilterBase *>()));
 }
 
+template <typename ... Filters>
+dn::System<Filters ...>::~System()
+{
+	this->_filters.clear();
+	this->_mapFilters.clear();
+	for (size_t i = 0; i < this->_allFilters.size(); ++i)
+		delete (this->_allFilters[i]);
+}
+
 template <typename Filter, typename ... Filters>
 void dn::SystemBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 {
@@ -67,13 +76,31 @@ void dn::SystemBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 	this->dn::SystemBase<Filters ...>::loadFilters(p_object);
 }
 
+template <typename Filter, typename ... Filters>
+void dn::SystemBase<Filter, Filters ...>::unloadFilter(dn::SystemFilterBase *p_filter)
+{
+	static const size_t hash_code1 = typeid(Filter).hash_code();
+
+	std::vector<dn::SystemFilterBase *> filters = this->_filters[hash_code1];
+	auto it = std::find(filters.begin(), filters.end(), (dn::SystemFilterBase *)&p_filter);
+	if (it == filters.end())
+	{
+		this->dn::SystemBase<Filters ...>::unloadFilter(p_filter);
+		return ;
+	}
+	this->onObjectRemoved(*(Filter *)p_filter);
+	delete (*it);
+	this->_allFilters.erase(std::find(this->_allFilters.begin(), this->_allFilters.end(),
+		(dn::SystemFilterBase *)*it));
+	this->_mapFilters.erase((dn::SystemFilterBase *)*it);
+	filters.erase(it);
+}
+
 template <typename ... Filters>
 template <typename Filter>
 void dn::System<Filters ...>::destroyObject(Filter &p_filter)
 {
-	static const size_t hash_code = typeid(Filter).hash_code();
-
-	std::cout << "mdrr\n";
+	this->dn::SystemBase<Filters ...>::unloadFilter((dn::SystemFilterBase *)&p_filter);
 }
 
 template <typename ... Filters>

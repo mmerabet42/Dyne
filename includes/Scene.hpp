@@ -15,6 +15,7 @@ namespace dn
 	{
 	public:
 		Scene();
+		~Scene();
 
 		template <typename S>
 		void addSystem();

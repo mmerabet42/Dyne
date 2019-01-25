@@ -39,14 +39,13 @@ namespace dn
 	class SystemBase<>
 	{
 	public:
+		virtual ~SystemBase() = default;
 
 		virtual void loadFilters(dn::Object &p_object);
+		virtual void unloadFilter(dn::SystemFilterBase *p_filter);
 
 		virtual void onStart() {}
 		virtual void onUpdate() {}
-
-		template <typename Filter>
-		void destroyObject(Filter &p_filter);
 
 		void setScene(dn::Scene *p_scene);
 		dn::Scene *scene() const;
@@ -63,9 +62,11 @@ namespace dn
 	{
 	public:
 		virtual void loadFilters(dn::Object &p_object);
+		virtual void unloadFilter(dn::SystemFilterBase *p_filter);
 
 		virtual void onObjectAdded(Filter &p_filter) {}
 		virtual void onObjectRemoved(Filter &p_filter) {}
+
 	};
 
 	template <typename ... Filters>
@@ -73,6 +74,7 @@ namespace dn
 	{
 	public:
 		System();
+		virtual ~System();
 
 		void loadFilters(dn::Object &p_object) final;
 

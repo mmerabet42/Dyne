@@ -7,6 +7,13 @@ dn::Scene::Scene()
 
 }
 
+dn::Scene::~Scene()
+{
+	std::map<size_t, dn::SystemBase<> *>::iterator it;
+	for (it = this->_systems.begin(); it != this->_systems.end(); ++it)
+		delete (it->second);
+}
+
 void dn::Scene::addObject(dn::Object &p_object)
 {
 	auto it = std::find_if(this->_objects.begin(), this->_objects.end(),

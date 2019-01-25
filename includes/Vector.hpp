@@ -1,8 +1,9 @@
-#ifndef VECTOR_HPP
-# define VECTOR_HPP
+#ifndef DN_VECTOR_HPP
+# define DN_VECTOR_HPP
 
 # include <iostream>
 # include <initializer_list>
+# include <type_traits>
 
 namespace dn
 {
@@ -15,18 +16,22 @@ namespace dn
 		Vector(const T &p_scalar = T());
 		Vector(const std::initializer_list<T> &p_list);
 		template <typename ... Args>
-		Vector(Args ... p_args);
+		Vector(Args && ... p_args);
 		template <dn::t_length Size2>
 		Vector(const dn::Vector<Size2, T> &p_vec);
+
+		template <typename ... Args>
+		typename std::enable_if_t<(sizeof...(Args) == Size)>
+		set(Args && ... p_args);
 
 		T get(dn::t_length p_i) const;
 		T &get(dn::t_length p_i);
 
-		T length() const;
-		T lengthSqrt() const;
-
 		T operator[](dn::t_length p_i) const;
 		T &operator[](dn::t_length p_i);
+
+		T length() const;
+		T lengthSqrt() const;
 
 		dn::Vector<Size, T> &operator+=(const dn::Vector<Size, T> &p_vec);
 		dn::Vector<Size, T> &operator-=(const dn::Vector<Size, T> &p_vec);
@@ -39,6 +44,11 @@ namespace dn
 		dn::Vector<Size, T> &operator/=(const T &p_scalar);
 	private:
 		T _data[Size];
+
+		template <typename Arg>
+		void helper_set(size_t i, Arg && p_arg);
+		template <typename Arg, typename ... Args>
+		void helper_set(size_t i, Arg && p_arg, Args && ... p_args);
 	};
 
 	template <dn::t_length Size, typename T>
@@ -79,17 +89,9 @@ namespace dn
 	T length(const dn::Vector<Size, T> &p_vec);
 	template <dn::t_length Size, typename T>
 	T lengthSqrt(const dn::Vector<Size, T> &p_vec);
-
-	typedef dn::Vector<2, float> Vector2f;
-	typedef dn::Vector<3, float> Vector3f;
-	typedef dn::Vector<4, float> Vector4f;
-
-	typedef Vector2f vec2;
-	typedef Vector3f vec3;
-	typedef Vector4f vec4;
 }
 
 
 # include "Vector.inl"
 
-#endif // VECTOR_HPP
+#endif // DN_VECTOR_HPP

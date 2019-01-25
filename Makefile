@@ -1,5 +1,5 @@
 NAME		=	libdn.a
-CC			=	g++ -std=c++14
+CC			=	g++ -std=c++17
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
 GET_PACKAGE	=	`pkg-config --static --libs glew glfw3 openal sndfile`
@@ -28,7 +28,7 @@ _INCLUDES	= #eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Ob
 _MAIN_FS	=
 _APP_FS		= application.cpp callbacks.cpp init.cpp \
 			  manage_window.cpp manage_dependents.cpp applicationDependent.cpp
-_WIN_FS		= window.cpp getset.cpp setcallbacks.cpp color.cpp
+_WIN_FS		= window.cpp getset.cpp setcallbacks.cpp
 _SHDR_FS	= shader.cpp defaultShader.cpp
 _MESH_FS	= prototype.cpp model.cpp models.cpp
 _MATH_FS	= smoothDamp.cpp random.cpp
