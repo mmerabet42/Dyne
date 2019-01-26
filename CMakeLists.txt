@@ -88,7 +88,7 @@ set(SOURCES
 
 add_library(dyne SHARED ${SOURCES})
 
-install(TARGETS dyne DESTINATION "${CMAKE_INSTALL_PREFIX}/dyne")
+install(TARGETS dyne DESTINATION "${CMAKE_INSTALL_PREFIX}/Dyne")
 
 target_link_libraries(dyne glfw3)
 target_link_libraries(dyne GLEW)
