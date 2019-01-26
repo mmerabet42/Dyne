@@ -101,8 +101,8 @@ void		dn::Window::restore()
 		glfwRestoreWindow(this->_glfw);
 }
 
-bool		dn::Window::iconified() const { return (this->_flags & DN_ICONIFIED); }
-bool		dn::Window::visible() const { return (this->_flags & DN_VISIBLE); }
+bool		dn::Window::isIconified() const { return (this->_flags & DN_ICONIFIED); }
+bool		dn::Window::isVisible() const { return (this->_flags & DN_VISIBLE); }
 
 void		dn::Window::hide()
 {
@@ -118,7 +118,7 @@ void		dn::Window::show()
 		glfwShowWindow(this->_glfw);
 }
 
-bool		dn::Window::focused() const
+bool		dn::Window::isFocused() const
 {
 	return (dn::Application::focusedWindow() == this);
 }
@@ -245,9 +245,9 @@ bool		dn::Window::getFlag(const int &p_flag) const
 	return (this->_flags & p_flag);
 }
 
-void		dn::Window::setContext(const bool &p_force)
+void		dn::Window::setContext()
 {
-	dn::Application::setContext(this, p_force);
+	dn::Application::setContext(this);
 }
 
 void		dn::Window::setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height)

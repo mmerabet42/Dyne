@@ -1,5 +1,5 @@
-#ifndef OBJECT_HPP
-# define OBJECT_HPP
+#ifndef DN_OBJECT_HPP
+# define DN_OBJECT_HPP
 
 # include <map>
 # include <typeinfo>
@@ -9,7 +9,6 @@
 namespace dn
 {
 	class Scene;
-
 	// An object is a component container
 	class Object
 	{
@@ -28,42 +27,53 @@ namespace dn
 		bool active() const;
 		void setActive(const bool &p_active = true);
 
+		bool mustBeUpdated() const;
+
 		dn::Scene *scene() const;
 		void setScene(dn::Scene *p_scene);
 
 		void componentUpdated();
+		void callUpdateScene();
 
 		// Returns the component that is of the specified type `T'
 		template <typename T>
-		T *getComponent();
+		T *getUComponent();
 		template <typename T>
-		T *getComponentData();
+		T *getDComponent();
+		template <typename T>
+		T *getComponent();
 
 		// Attach a component
-		template <typename T, typename ... _Args>
-		T *addComponent(_Args ... p_args);
-		template <typename T, typename ... _Args>
-		T *addComponentData(_Args ... p_args);
+		template <typename T, typename ... Args>
+		T *addUComponent(Args && ... p_args);
+		template <typename T, typename ... Args>
+		T *addDComponent(Args && ... p_args);
+		template <typename T, typename ... Args>
+		T *addComponent(Args && ... p_args);
 
 		// Detach a component
 		template <typename T>
-		void removeComponent();
+		void removeUComponent();
 		template <typename T>
-		void removeComponentData();
+		void removeDComponent();
+		template <typename T>
+		void removeComponent();
 
-		dn::Component *getHashComponent(const size_t &p_hash_code);
-		dn::ComponentData *getHashComponentData(const size_t &p_hash_code);
+		dn::UComponent *getHashUComponent(const size_t &p_hash_code);
+		dn::Component *getHashDComponent(const size_t &p_hash_code);
 
 	private:
 		// Is true if the object has started
 		bool _running;
 		// An object can be deactivated and activated
 		bool _active;
+		// if there is at least one updatable component
+		bool _mustBeUpdated;
 		// The object name
 		std::string _name;
 		// The list of components attached to the object
+		std::map<size_t, dn::UComponent *> _ucomponents;
 		std::map<size_t, dn::Component *> _components;
-		std::map<size_t, dn::ComponentData *> _componentsData;
 
 		dn::Scene *_scene;
 	};
@@ -71,4 +81,4 @@ namespace dn
 
 # include "Object.inl"
 
-#endif // OBJECT_HPP
+#endif // DN_OBJECT_HPP

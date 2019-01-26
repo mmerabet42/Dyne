@@ -45,7 +45,7 @@ int	dn::Application::addWindow(dn::Window *p_window)
 	return (dn::Application::_windows.size());
 }
 
-void dn::Application::setContext(dn::Window *p_window, const bool &p_force)
+void dn::Application::setContext(dn::Window *p_window)
 {
 	dn::Application::_context = p_window;
 	if (dn::Application::_running)

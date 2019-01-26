@@ -24,7 +24,7 @@ void	dn::Application::windowUpdateCallback(dn::Window *p_window)
 		p_window->_scene->update();
 }
 
-void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int p_scancode, int p_action, int p_mods)
+void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int, int p_action, int p_mods)
 {
 	/* This statement will always evaluate to true, so it is not necessary to do it */
 	dn::Window *win = dn::Application::getWindow(p_window);

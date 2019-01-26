@@ -1,28 +1,28 @@
-#ifndef RENDERSYSTEM_HPP
-# define RENDERSYSTEM_HPP
+#ifndef DN_RENDERENGINE_HPP
+# define DN_RENDERENGINE_HPP
 
 # include <memory>
 
 # include "Transform.hpp"
-# include "MeshRenderer.hpp"
+# include "Mesh.hpp"
 # include "Camera.hpp"
 # include "ModelInstance.hpp"
-# include "System.hpp"
+# include "Engine.hpp"
 
 namespace dn
 {
-	struct MeshFilter: public dn::SystemFilter<dn::MeshFilter,
-		dn::TransformData, dn::MeshData>
+	struct MeshFilter: public dn::EngineFilter<dn::MeshFilter,
+		dn::Transform, dn::Mesh>
 	{
-		dn::TransformData *transform;
-		dn::MeshData *mesh;
+		dn::Transform *transform;
+		dn::Mesh*mesh;
 	};
 
-	struct CameraFilter: public dn::SystemFilter<dn::CameraFilter,
-		dn::CameraData, dn::TransformData>
+	struct CameraFilter: public dn::EngineFilter<dn::CameraFilter,
+		dn::Camera, dn::Transform>
 	{
-		dn::CameraData *camera;
-		dn::TransformData *transform;
+		dn::Camera *camera;
+		dn::Transform *transform;
 	};
 
 	class Shader;
@@ -58,7 +58,7 @@ namespace dn
 	//					std::pair<std::vector<dn::MeshRenderer *>,
 	//						std::vector<dn::IntanceData>>>>>
 
-	class RenderSystem: public dn::System<dn::MeshFilter, dn::CameraFilter>
+	class RenderEngine: public dn::Engine<dn::MeshFilter, dn::CameraFilter>
 	{
 	public:
 
@@ -71,8 +71,8 @@ namespace dn
 		void onUpdate();
 	private:
 		dn::layer::Shader _instances;
-		dn::CameraData *_camera;
+		dn::Camera *_camera;
 	};
 }
 
-#endif
+#endif // DN_RENDERENGINE_HPP

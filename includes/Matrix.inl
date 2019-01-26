@@ -1,3 +1,6 @@
+#ifndef DN_MATRIX_INL
+# define DN_MATRIX_INL
+
 #include "Matrix.hpp"
 
 template <dn::t_length Rows, dn::t_length Columns, typename T>
@@ -266,3 +269,5 @@ dn::Vector<Rows, T> dn
 			result[i] += p_vec[j] * p_mat[j][i];
 	return (result);
 }
+
+#endif // DN_MATRIX_INL

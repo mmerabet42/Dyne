@@ -20,7 +20,7 @@ dn::Model dn::Model::generatePoints(const int &p_n, const float &p_radius)
 				dn::math::random(-p_radius, p_radius),
 				dn::math::random(-p_radius, p_radius),
 				dn::math::random(-p_radius, p_radius),
-			}, {1.f, 1.f, 1.f, 1.f}});
+			}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}});
 		indices.push_back((GLuint)i);
 	}
 	return (dn::Model(vertices, DN_POINTS, indices));
@@ -36,11 +36,19 @@ dn::Model dn::Model::generateGridPlane(const int &p_n, const float &p_distance)
 
 	for (int i = 0; i < p_n; ++i)
 	{
-		vertices.push_back({{pos, 0.f, -startPos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}});
-		vertices.push_back({{pos, 0.f, startPos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}});
+		vertices.push_back({
+			{pos, 0.f, -startPos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}, {0.f, 0.f, 0.f}
+		});
+		vertices.push_back({
+			{pos, 0.f, startPos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}, {0.f, 0.f, 0.f}
+		});
 
-		vertices.push_back({{-startPos, 0.f, pos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}});
-		vertices.push_back({{startPos, 0.f, pos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}});
+		vertices.push_back({
+			{-startPos, 0.f, pos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}, {0.f, 0.f, 0.f}
+		});
+		vertices.push_back({
+			{startPos, 0.f, pos}, {1.f, 1.f, 1.f, 0.3f}, {0.f, 0.f}, {0.f, 0.f, 0.f}
+		});
 
 		indices.push_back((i * 4) + 0);
 		indices.push_back((i * 4) + 1);
@@ -93,15 +101,15 @@ dn::Model dn::Model::cube({
 
 dn::Model dn::Model::cubeEdges({
 	// FRONT FACE
-	{{0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
-	{{0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
-	{{-0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
-	{{-0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+	{{0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
+	{{0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
+	{{-0.5f, -0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
+	{{-0.5f, 0.5f, 0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
 	// BACK FACE
-	{{0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
-	{{0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
-	{{-0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
-	{{-0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}},
+	{{0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
+	{{0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
+	{{-0.5f, -0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
+	{{-0.5f, 0.5f, -0.5f}, {1.f, 1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 0.f}},
 }, DN_LINE_STRIP, {
 	0, 1, 3, 2, 0, 4, 6, 2, 3, 7, 6, 4, 5, 1, 5, 7
 });
@@ -135,6 +143,10 @@ dn::Model dn::Model::loadObj(const std::string &p_path)
 			vertex.color[0] = 1.f;
 			vertex.color[1] = 1.f;
 			vertex.color[2] = 1.f;
+
+			vertex.normal[0] = 0.f;
+			vertex.normal[1] = 0.f;
+			vertex.normal[2] = 0.f;
 
 			vertices.push_back(vertex);
 			indices.push_back(indices.size());

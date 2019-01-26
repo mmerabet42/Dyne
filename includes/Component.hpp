@@ -1,5 +1,5 @@
-#ifndef COMPONENT_HPP
-# define COMPONENT_HPP
+#ifndef DN_COMPONENT_HPP
+# define DN_COMPONENT_HPP
 
 # include <string>
 
@@ -7,12 +7,12 @@ namespace dn
 {
 	class Object;
 
-	class Component
+	class UComponent
 	{
 	public:
-		Component(const std::string &p_name = "", dn::Object *p_object = nullptr);
-		Component(dn::Object *p_object, const std::string &p_name = "");
-		virtual ~Component();
+		UComponent(const std::string &p_name = "", dn::Object *p_object = nullptr);
+		UComponent(dn::Object *p_object, const std::string &p_name = "");
+		virtual ~UComponent();
 
 		dn::Object *object() const;
 		void setObject(dn::Object *p_object);
@@ -42,11 +42,11 @@ namespace dn
 		bool _active;
 	};
 
-	class ComponentData
+	class Component
 	{
 	public:
-		ComponentData();
-		virtual ~ComponentData();
+		Component();
+		virtual ~Component();
 
 		bool active() const;
 		void setActive(const bool &p_active = true);
@@ -62,4 +62,4 @@ namespace dn
 	};
 }
 
-#endif // COMPONENT_HPP
+#endif // DN_COMPONENT_HPP

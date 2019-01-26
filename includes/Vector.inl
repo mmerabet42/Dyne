@@ -1,3 +1,6 @@
+#ifndef DN_VECTOR_INL
+# define DN_VECTOR_INL
+
 #include "Vector.hpp"
 #include <cmath>
 
@@ -301,3 +304,5 @@ dn::Vector<Size, T> dn::operator/(dn::Vector<Size, T> p_vec, const U &p_scalar)
 	p_vec /= (T)p_scalar;
 	return (p_vec);
 }
+
+#endif // DN_VECTOR_INL

@@ -1,3 +1,6 @@
+#ifndef DN_VECTOR2_INL
+# define DN_VECTOR2_INL
+
 #include "Vector2.hpp"
 
 template <typename T>
@@ -30,3 +33,5 @@ template <typename T>
 inline T dn::Vector2<T>::y() const { return (this->get(1)); }
 template <typename T>
 inline T &dn::Vector2<T>::y() { return (this->get(1)); }
+
+#endif // DN_VECTOR2_INL

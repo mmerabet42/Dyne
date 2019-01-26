@@ -1,3 +1,6 @@
+#ifndef DN_VECTOR4_INL
+# define DN_VECTOR4_INL
+
 #include "Vector4.hpp"
 
 template <typename T>
@@ -60,3 +63,5 @@ template <typename T>
 inline T dn::Vector4<T>::a() const { return (this->get(3)); }
 template <typename T>
 inline T &dn::Vector4<T>::a() { return (this->get(3)); }
+
+#endif // DN_VECTOR4_INL

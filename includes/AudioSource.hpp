@@ -16,7 +16,7 @@ namespace dn
 		stopped = DN_STOPPED
 	};
 
-	class AudioSource: public dn::Component
+	class AudioSource: public dn::UComponent
 	{
 	public:
 		AudioSource(dn::Audio *p_audioClip = nullptr);

@@ -1,4 +1,4 @@
-#include "RenderSystem.hpp"
+#include "RenderEngine.hpp"
 #include "Model.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
@@ -11,7 +11,7 @@ static dn::layer::MeshFilterInstanceData _layerMeshFilterInstanceData(dn::MeshFi
 static dn::layer::ModelInstance _layerModelInstance(dn::MeshFilter &p_filter);
 static dn::layer::Model _layerModel(dn::MeshFilter &p_filter);
 
-void dn::RenderSystem::onObjectAdded(dn::MeshFilter &p_filter)
+void dn::RenderEngine::onObjectAdded(dn::MeshFilter &p_filter)
 {
 	dn::layer::Shader::iterator shader_it = this->_instances.find(p_filter.mesh->shader());
 	if (shader_it != this->_instances.end())
@@ -36,7 +36,7 @@ void dn::RenderSystem::onObjectAdded(dn::MeshFilter &p_filter)
 		this->_instances.emplace(p_filter.mesh->shader(), _layerModel(p_filter));
 }
 
-void dn::RenderSystem::onObjectRemoved(dn::MeshFilter &p_filter)
+void dn::RenderEngine::onObjectRemoved(dn::MeshFilter &p_filter)
 {
 	dn::layer::Shader::iterator shader_it = this->_instances.find(p_filter.mesh->shader());
 	dn::layer::Model::iterator model_it = shader_it->second.find(p_filter.mesh->model());
@@ -55,18 +55,18 @@ void dn::RenderSystem::onObjectRemoved(dn::MeshFilter &p_filter)
 	}
 }
 
-void dn::RenderSystem::onObjectAdded(dn::CameraFilter &p_filter)
+void dn::RenderEngine::onObjectAdded(dn::CameraFilter &p_filter)
 {
 	this->_camera = p_filter.camera;
 	this->_camera->setTransform(p_filter.transform);
 }
 
-void dn::RenderSystem::onObjectRemoved(dn::CameraFilter &p_filter)
+void dn::RenderEngine::onObjectRemoved(dn::CameraFilter &p_filter)
 {
 	this->_camera = nullptr;
 }
 
-void dn::RenderSystem::onUpdate()
+void dn::RenderEngine::onUpdate()
 {
 	if (!this->_camera)
 		return ;

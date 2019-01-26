@@ -1,5 +1,5 @@
-#ifndef SYSTEM_HPP
-# define SYSTEM_HPP
+#ifndef DN_ENGINE_HPP
+# define DN_ENGINE_HPP
 
 # include <map>
 # include <vector>
@@ -12,9 +12,9 @@ namespace dn
 	class Scene;
 	class Object;
 
-	struct SystemFilterBase
+	struct EngineFilterBase
 	{
-		virtual ~SystemFilterBase() {}
+		virtual ~EngineFilterBase() {}
 
 		dn::Object *object() const;
 
@@ -23,7 +23,7 @@ namespace dn
 	};
 
 	template <typename Filter, typename ... Components>
-	struct SystemFilter: public dn::SystemFilterBase
+	struct EngineFilter: public dn::EngineFilterBase
 	{
 		static bool passFilter(dn::Object &p_object);
 		static Filter *loadFilter(dn::Object &p_object);
@@ -33,16 +33,16 @@ namespace dn
 	using Entities = std::vector<Entity_filter *>;
 
 	template <typename ...>
-	class SystemBase;
+	class EngineBase;
 
 	template <>
-	class SystemBase<>
+	class EngineBase<>
 	{
 	public:
-		virtual ~SystemBase() = default;
+		virtual ~EngineBase() = default;
 
 		virtual void loadFilters(dn::Object &p_object);
-		virtual void unloadFilter(dn::SystemFilterBase *p_filter);
+		virtual void unloadFilter(dn::EngineFilterBase *p_filter);
 
 		virtual void onStart() {}
 		virtual void onUpdate() {}
@@ -52,17 +52,17 @@ namespace dn
 
 	protected:
 		dn::Scene *_scene;
-		std::vector<dn::SystemFilterBase *> _allFilters;
-		std::map<dn::SystemFilterBase *, size_t> _mapFilters;
-		std::map<size_t, std::vector<dn::SystemFilterBase *>> _filters;
+		std::vector<dn::EngineFilterBase *> _allFilters;
+		std::map<dn::EngineFilterBase *, size_t> _mapFilters;
+		std::map<size_t, std::vector<dn::EngineFilterBase *>> _filters;
 	};
 
 	template <typename Filter, typename ... Filters>
-	class SystemBase<Filter, Filters ...>: public dn::SystemBase<Filters ...>
+	class EngineBase<Filter, Filters ...>: public dn::EngineBase<Filters ...>
 	{
 	public:
 		virtual void loadFilters(dn::Object &p_object);
-		virtual void unloadFilter(dn::SystemFilterBase *p_filter);
+		virtual void unloadFilter(dn::EngineFilterBase *p_filter);
 
 		virtual void onObjectAdded(Filter &p_filter) {}
 		virtual void onObjectRemoved(Filter &p_filter) {}
@@ -70,11 +70,11 @@ namespace dn
 	};
 
 	template <typename ... Filters>
-	class System: public dn::SystemBase<Filters ...>
+	class Engine: public dn::EngineBase<Filters ...>
 	{
 	public:
-		System();
-		virtual ~System();
+		Engine();
+		virtual ~Engine();
 
 		void loadFilters(dn::Object &p_object) final;
 
@@ -84,10 +84,10 @@ namespace dn
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &getEntities();
 
-		dn::Entities<dn::SystemFilterBase> &getEntities();
+		dn::Entities<dn::EngineFilterBase> &getEntities();
 
 		template <typename Entity_filter>
-		Entity_filter *getEntity(dn::SystemFilterBase *p_e);
+		Entity_filter *getEntity(dn::EngineFilterBase *p_e);
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &nullEntities();
@@ -96,11 +96,11 @@ namespace dn
 		bool isNull(const dn::Entities<Entity_filter> &p_entities);
 
 	private:
-		static std::vector<dn::SystemFilterBase *> _nullFilter;
+		static std::vector<dn::EngineFilterBase *> _nullFilter;
 	};
 }
 
-# include "SystemFilter.inl"
-# include "System.inl"
+# include "EngineFilter.inl"
+# include "Engine.inl"
 
-#endif // SYSTEM_HPP
+#endif // DN_SYSTEM_HPP

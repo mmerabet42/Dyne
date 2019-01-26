@@ -1,15 +1,17 @@
-#include "System.hpp"
+#ifndef DN_ENGINEFILTER_INL
+
+#include "Engine.hpp"
 #include "Object.hpp"
 
 template <typename Filter, typename ... Components>
-bool dn::SystemFilter<Filter, Components ...>
+bool dn::EngineFilter<Filter, Components ...>
 	::passFilter(dn::Object &p_object)
 {
 	static const size_t hashes[] = { typeid(Components).hash_code()... };
 
 	for (size_t i = 0; i < sizeof...(Components); ++i)
 	{
-		dn::ComponentData *comp = p_object.getHashComponentData(hashes[i]);
+		dn::Component *comp = p_object.getHashDComponent(hashes[i]);
 		if (!comp || !comp->active())
 			return (false);
 	}
@@ -17,7 +19,7 @@ bool dn::SystemFilter<Filter, Components ...>
 }
 
 template <typename Filter, typename ... Components>
-Filter *dn::SystemFilter<Filter, Components ...>
+Filter *dn::EngineFilter<Filter, Components ...>
 	::loadFilter(dn::Object &p_object)
 {
 	// the array of the hash codes of each arguments
@@ -31,18 +33,15 @@ Filter *dn::SystemFilter<Filter, Components ...>
 
 	// point the filter object pointer to the object received in parameter
 	newFilter->_object = &p_object;
-	dn::ComponentData **components = (dn::ComponentData **)newFilter;
+	dn::Component **components = (dn::Component **)newFilter;
 	// jump vtbl (virtual function pointers)
 	++components;
 	// jump the _object pointer
 	++components;
 	// filling out all the memory layouts
 	for (size_t i = 0; i < sizeof...(Components); ++i)
-		components[i] = p_object.getHashComponentData(hashes[i]);
+		components[i] = p_object.getHashDComponent(hashes[i]);
 	return (newFilter);
 }
-/*
-dn::Object *dn::SystemFilterBase::object() const
-{
-	return (this->_object);
-}*/
+
+#endif // DN_ENGINEFILTER_INL

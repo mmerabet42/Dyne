@@ -7,7 +7,7 @@ namespace dn
 {
 	class Transform;
 
-	class AudioListener: public dn::Component
+	class AudioListener: public dn::UComponent
 	{
 	public:
 		AudioListener();

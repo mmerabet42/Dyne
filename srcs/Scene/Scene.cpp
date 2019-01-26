@@ -1,16 +1,17 @@
 #include "Scene.hpp"
+#include "Object.hpp"
 #include <algorithm>
 
 dn::Scene::Scene()
-	: _objects(), _systems(), _started(false), _window(nullptr)
+	: _objects(), _uobjects(), _engines(), _started(false), _window(nullptr)
 {
 
 }
 
 dn::Scene::~Scene()
 {
-	std::map<size_t, dn::SystemBase<> *>::iterator it;
-	for (it = this->_systems.begin(); it != this->_systems.end(); ++it)
+	std::map<size_t, dn::EngineBase<> *>::iterator it;
+	for (it = this->_engines.begin(); it != this->_engines.end(); ++it)
 		delete (it->second);
 }
 
@@ -25,31 +26,55 @@ void dn::Scene::addObject(dn::Object &p_object)
 	this->_objects.push_back(&p_object);
 	p_object.setScene(this);
 	// the object is tested on each system
-	std::map<size_t, dn::SystemBase<> *>::iterator system;
-	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
-		system->second->loadFilters(p_object);
+	this->updateEngines(&p_object);
+	this->updateUObject(&p_object);
 }
 
 void dn::Scene::start()
 {
 	this->_started = true;
-	std::map<size_t, dn::SystemBase<> *>::iterator system;
-	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
-		system->second->onStart();
+
+	auto object = this->_objects.begin();
+	for (; object != this->_objects.end(); ++object)
+		(*object)->start();
+
+	std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
+	for (; engine != this->_engines.end(); ++engine)
+		engine->second->onStart();
+
 }
 
 void dn::Scene::update()
 {
-	std::map<size_t, dn::SystemBase<> *>::iterator system;
-	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
-		system->second->onUpdate();
+	if (this->_uobjects.size() != 0)
+	{
+		auto object = this->_uobjects.begin();
+		for (; object != this->_uobjects.end(); ++object)
+			(*object)->update();
+	}
+
+	std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
+	for (; engine != this->_engines.end(); ++engine)
+		engine->second->onUpdate();
 }
 
-void dn::Scene::objectUpdated(dn::Object *p_object)
+void dn::Scene::updateEngines(dn::Object *p_object)
 {
-	std::map<size_t, dn::SystemBase<> *>::iterator system;
-	for (system = this->_systems.begin(); system != this->_systems.end(); ++system)
-		system->second->loadFilters(*p_object);
+	std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
+	for (; engine != this->_engines.end(); ++engine)
+		engine->second->loadFilters(*p_object);
+}
+
+void dn::Scene::updateUObject(dn::Object *p_object)
+{
+	if (p_object->mustBeUpdated())
+		this->_uobjects.emplace_back(p_object);
+	else
+	{
+		auto it = std::find(this->_uobjects.begin(), this->_uobjects.end(), p_object);
+		if (it != this->_uobjects.end())
+			this->_uobjects.erase(it);
+	}
 }
 
 dn::Window *dn::Scene::window() const

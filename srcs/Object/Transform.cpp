@@ -8,7 +8,7 @@ dn::Transform::Transform(
 		const glm::vec3 &p_position,
 		const glm::vec3 &p_rotation,
 		const glm::vec3 &p_scale)
-	: Component("Transform"), _parent(p_parent), _position(p_position), _rotation(p_rotation), _scale(p_scale) { }
+	: Component(), _parent(p_parent), _position(p_position), _rotation(p_rotation), _scale(p_scale) { }
 
 dn::Transform::Transform(
 		const glm::vec3 &p_position,
@@ -21,7 +21,7 @@ dn::Transform::Transform(
 		const float &p_xPos, const float &p_yPos, const float &p_zPos,
 		const float &p_xRot, const float &p_yRot, const float &p_zRot,
 		const float &p_xScl, const float &p_yScl, const float &p_zScl)
-	: Component("Transform"), _parent(p_parent), _position(p_xPos, p_yPos, p_zPos), _rotation(p_xRot, p_yRot, p_zRot), _scale(p_xScl, p_yScl, p_zScl) { }
+	: Component(), _parent(p_parent), _position(p_xPos, p_yPos, p_zPos), _rotation(p_xRot, p_yRot, p_zRot), _scale(p_xScl, p_yScl, p_zScl) { }
 
 dn::Transform::Transform(
 		const float &p_xPos, const float &p_yPos, const float &p_zPos,
@@ -89,6 +89,3 @@ void dn::Transform::lookAt(const glm::vec3 &p_target)
 {
 	this->_rotation = this->rotationMat() * glm::vec4(glm::normalize(this->_position - p_target), 0.f);
 }
-
-void dn::Transform::start() { }
-void dn::Transform::update() { }

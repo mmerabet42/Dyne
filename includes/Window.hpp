@@ -34,18 +34,18 @@ namespace dn
 
 		void iconify();
 		void restore();
-		bool iconified() const;
+		bool isIconified() const;
 	
 		void hide();
 		void show();
-		bool visible() const;
+		bool isVisible() const;
 
 		void focus();
-		bool focused() const;
+		bool isFocused() const;
 
 		void setMouseLock(const bool &p_lock);
 
-		void setContext(const bool &p_force = false);
+		void setContext();
 		void setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height);
 		void updateViewport();
 
@@ -66,10 +66,10 @@ namespace dn
 		/* Getters and setters */
 
 			int		width() const;
-			void	width(const int &p_width);
+			void	setWidth(const int &p_width);
 
 			int		height() const;
-			void	height(const int &p_height);
+			void	setHeight(const int &p_height);
 
 			int		framebufferWidth() const;
 			int		framebufferHeight() const;
@@ -81,16 +81,16 @@ namespace dn
 			void	setSizeLimits(const int &p_minwidth, const int &p_minheight, const int &p_maxwidth, const int &p_maxheight);
 
 			int		x() const;
-			void	x(const int &p_x);
+			void	setX(const int &p_x);
 
 			int		y() const;
-			void	y(const int &p_y);
+			void	setY(const int &p_y);
 
 			void	setSize(const int &p_width, const int &p_height);
 			void	setPos(const int &p_x, const int &p_y);
 
 			std::string	title() const;
-			void		title(const std::string &p_title);
+			void		setTitle(const std::string &p_title);
 
 			double mouseX() const;
 			double mouseY() const;
@@ -112,29 +112,6 @@ namespace dn
 
 			dn::Scene *scene() const;
 			void setScene(dn::Scene *p_scene);
-
-		void	setStartCb(const dn::startFunc &p_callback);
-		void	setUpdateCb(const dn::updateFunc &p_callback);
-		void	setCloseCb(const dn::closeFunc &p_callback);
-
-		void	setKeyCb(const dn::keyFunc &p_callback);
-		void	setKeyPressCb(const dn::keyPressFunc &p_callback);
-		void	setKeyRepeatCb(const dn::keyRepeatFunc &p_callback);
-		void	setKeyReleaseCb(const dn::keyReleaseFunc &p_callback);
-		void	setSizeCb(const dn::sizeFunc &p_callback);
-		void	setPosCb(const dn::posFunc &p_callback);
-		void	setFocusCb(const dn::focusFunc &p_callback);
-		void	setMaximizeCb(const dn::maximizeFunc &p_callback);
-		void	setFramebufferSizeCb(const dn::framebufferSizeFunc &p_callback);
-		void	setRefreshCb(const dn::refreshFunc &p_callback);
-		void	setMouseButtonCb(const dn::mouseButtonFunc &p_callback);
-		void	setMousePressCb(const dn::mousePressFunc &p_callback);
-		void	setMouseRepeatCb(const dn::mouseRepeatFunc &p_callback);
-		void	setMouseReleaseCb(const dn::mouseReleaseFunc &p_callback);
-		void	setMouseMoveCb(const dn::mouseMoveFunc &p_callback);
-		void	setMouseEnterCb(const dn::mouseEnterFunc &p_callback);
-		void	setScrollCb(const dn::scrollFunc &p_callback);
-		void	setDropCb(const dn::dropFunc &p_callback);
 
 		dn::Event<dn::Window &>					startEvent;
 		dn::Event<dn::Window &>					updateEvent;
@@ -159,6 +136,29 @@ namespace dn
 		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseRepeatEvent;
 		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseReleaseEvent;
 		dn::Event<dn::Window &, const std::vector<std::string> &>		dropEvent;
+
+		void	setStartCb(const dn::startFunc &p_callback);
+		void	setUpdateCb(const dn::updateFunc &p_callback);
+		void	setCloseCb(const dn::closeFunc &p_callback);
+
+		void	setKeyCb(const dn::keyFunc &p_callback);
+		void	setKeyPressCb(const dn::keyPressFunc &p_callback);
+		void	setKeyRepeatCb(const dn::keyRepeatFunc &p_callback);
+		void	setKeyReleaseCb(const dn::keyReleaseFunc &p_callback);
+		void	setSizeCb(const dn::sizeFunc &p_callback);
+		void	setPosCb(const dn::posFunc &p_callback);
+		void	setFocusCb(const dn::focusFunc &p_callback);
+		void	setMaximizeCb(const dn::maximizeFunc &p_callback);
+		void	setFramebufferSizeCb(const dn::framebufferSizeFunc &p_callback);
+		void	setRefreshCb(const dn::refreshFunc &p_callback);
+		void	setMouseButtonCb(const dn::mouseButtonFunc &p_callback);
+		void	setMousePressCb(const dn::mousePressFunc &p_callback);
+		void	setMouseRepeatCb(const dn::mouseRepeatFunc &p_callback);
+		void	setMouseReleaseCb(const dn::mouseReleaseFunc &p_callback);
+		void	setMouseMoveCb(const dn::mouseMoveFunc &p_callback);
+		void	setMouseEnterCb(const dn::mouseEnterFunc &p_callback);
+		void	setScrollCb(const dn::scrollFunc &p_callback);
+		void	setDropCb(const dn::dropFunc &p_callback);
 
 	private:
 		int			_x;

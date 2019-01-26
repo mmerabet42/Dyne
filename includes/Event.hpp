@@ -8,12 +8,12 @@
 namespace dn
 {
 	// A simple event system
-	template <typename ... _Args>
+	template <typename ... Args>
 	class Event
 	{
 	public:
-		typedef std::function<void(_Args ...)> func;
-		typedef void(*ptrfunc)(_Args ...);
+		typedef std::function<void(Args ...)> func;
+		typedef void(*ptrfunc)(Args ...);
 
 		Event()
 			: _triggered(false) {}
@@ -28,14 +28,14 @@ namespace dn
 
 		// Triggers the event, all added listeners are called with the same
 		// argument that this function received
-		virtual void trigger(_Args ... p_args)
+		virtual void trigger(Args ... p_args)
 		{
 			if (this->_triggered)
 				return ;
 			this->_triggered = true;
 			typename std::vector<func>::iterator it = this->_listeners.begin();
 			for (; it != this->_listeners.end() && this->_triggered; ++it)
-				(*it)(p_args ...);
+				(*it)(std::forward<Args>(p_args) ...);
 			this->_triggered = false;
 		}
 

@@ -1,15 +1,15 @@
-#ifndef SCENE_HPP
-# define SCENE_HPP
+#ifndef DN_SCENE_HPP
+# define DN_SCENE_HPP
 
 # include <vector>
 # include <map>
 
-# include "System.hpp"
-# include "Object.hpp"
+# include "Engine.hpp"
 
 namespace dn
 {
 	class Window;
+	class Object;
 
 	class Scene
 	{
@@ -17,22 +17,25 @@ namespace dn
 		Scene();
 		~Scene();
 
-		template <typename S>
-		void addSystem();
+		template <typename E, typename ... Args>
+		void addEngine(Args && ... p_args);
 
 		void addObject(dn::Object &p_object);
 
 		void start();
 		void update();
 
-		void objectUpdated(dn::Object *p_object);
+		void updateEngines(dn::Object *p_object);
+		void updateUObject(dn::Object *p_object);
 
 		dn::Window *window() const;
 		void setWindow(dn::Window *p_window);
 
 	private:
 		std::vector<dn::Object *> _objects;
-		std::map<size_t, dn::SystemBase<> *> _systems;
+		std::vector<dn::Object *> _uobjects;
+
+		std::map<size_t, dn::EngineBase<> *> _engines;
 
 		dn::Window *_window;
 
@@ -42,4 +45,4 @@ namespace dn
 
 # include "Scene.inl"
 
-#endif // SCENE_HPP
+#endif // DN_SCENE_HPP

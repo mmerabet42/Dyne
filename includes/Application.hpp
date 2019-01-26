@@ -54,7 +54,7 @@ namespace dn
 			static dn::Window *getWindow(dn::Window *p_window);
 			// Set and get the current context, all opengl draws are done
 			// on the window that has the current context
-			static void setContext(dn::Window *p_window, const bool &p_force = false);
+			static void setContext(dn::Window *p_window);
 			static dn::Window *context();
 
 		// Manage stuff that depends on the application. Meaning that they

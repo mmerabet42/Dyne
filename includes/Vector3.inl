@@ -1,3 +1,6 @@
+#ifndef DN_VECTOR3_INL
+# define DN_VECTOR3_INL
+
 #include "Vector3.hpp"
 
 template <typename T>
@@ -50,3 +53,5 @@ template <typename T>
 inline T dn::Vector3<T>::b() const { return (this->get(2)); }
 template <typename T>
 inline T &dn::Vector3<T>::b() { return (this->get(2)); }
+
+#endif // DN_VECTOR3_INL

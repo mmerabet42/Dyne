@@ -5,7 +5,7 @@
 /* Getters and setters */
 
 int		dn::Window::width() const { return (this->_width); }
-void	dn::Window::width(const int &p_width)
+void	dn::Window::setWidth(const int &p_width)
 {
 	if (p_width < 0)
 		return ;
@@ -15,7 +15,7 @@ void	dn::Window::width(const int &p_width)
 }
 
 int		dn::Window::height() const { return (this->_height); }
-void	dn::Window::height(const int &p_height)
+void	dn::Window::setHeight(const int &p_height)
 {
 	if (p_height < 0)
 		return ;
@@ -43,7 +43,7 @@ void	dn::Window::setSize(const int &p_width, const int &p_height)
 }
 
 int		dn::Window::x() const { return (this->_x); }
-void	dn::Window::x(const int &p_x)
+void	dn::Window::setX(const int &p_x)
 {
 	if (p_x < 0)
 		return ;
@@ -55,7 +55,7 @@ void	dn::Window::x(const int &p_x)
 }
 
 int		dn::Window::y() const { return (this->_y); }
-void	dn::Window::y(const int &p_y)
+void	dn::Window::setY(const int &p_y)
 {
 	if (p_y < 0)
 		return ;
@@ -99,7 +99,7 @@ double dn::Window::mouseDeltaY()
 }
 
 std::string	dn::Window::title() const { return (this->_title); }
-void		dn::Window::title(const std::string &p_title)
+void		dn::Window::setTitle(const std::string &p_title)
 {
 	this->_title = p_title;
 	if (this->_glfw)
