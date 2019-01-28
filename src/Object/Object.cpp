@@ -1,6 +1,6 @@
-#include "Object.hpp"
-#include "Component.hpp"
-#include "Scene.hpp"
+#include "dn/Object.hpp"
+#include "dn/Component.hpp"
+#include "dn/Scene.hpp"
 
 dn::Object::Object(const std::string &p_name)
 	: _name(p_name), _ucomponents(), _components(),

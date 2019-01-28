@@ -1,8 +1,6 @@
-#include "Model.hpp"
-#include "Math.hpp"
-#include "utils.hpp"
-#include <fstream>
-#include <array>
+#include "dn/Model.hpp"
+#include "dn/Math.hpp"
+#include "dn/Utils.hpp"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 #define TINYOBJLOADER_IMPLEMENTATION

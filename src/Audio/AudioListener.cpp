@@ -1,7 +1,7 @@
-#include "AudioListener.hpp"
-#include "Transform.hpp"
-#include "Object.hpp"
-#include "allgl.hpp"
+#include "dn/AudioListener.hpp"
+#include "dn/Transform.hpp"
+#include "dn/Object.hpp"
+#include "dn/allgl.hpp"
 
 dn::AudioListener::AudioListener()
 	: UComponent("AudioListener"), _transform(nullptr),

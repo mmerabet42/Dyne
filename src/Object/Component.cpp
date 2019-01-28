@@ -1,5 +1,5 @@
-#include "Component.hpp"
-#include "Object.hpp"
+#include "dn/Component.hpp"
+#include "dn/Object.hpp"
 
 dn::Component::Component()
 	: _active(true), _object(nullptr)

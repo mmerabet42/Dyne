@@ -1,5 +1,5 @@
-#include "Mesh.hpp"
-#include "Codes.hpp"
+#include "dn/Mesh.hpp"
+#include "dn/Codes.hpp"
 
 dn::Mesh::Mesh(dn::Model *p_model, dn::Shader *p_shader)
 	: Component(), _model(p_model), _shader(p_shader),

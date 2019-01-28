@@ -1,4 +1,4 @@
-#include "Model.hpp"
+#include "dn/Model.hpp"
 
 dn::Model::Model(const dn::VertexArray &p_vertices, const GLenum &p_method, const dn::IndiceArray &p_indices)
 	: _vertices(p_vertices), _method(p_method), _indices(p_indices)

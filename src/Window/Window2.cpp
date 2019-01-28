@@ -1,6 +1,6 @@
-#include "Window.hpp"
-#include "Application.hpp"
-#include "Scene.hpp"
+#include "dn/Window.hpp"
+#include "dn/Application.hpp"
+#include "dn/Scene.hpp"
 
 /* Getters and setters */
 

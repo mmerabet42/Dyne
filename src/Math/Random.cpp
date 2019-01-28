@@ -1,4 +1,4 @@
-#include "Math.hpp"
+#include "dn/Math.hpp"
 #include <random>
 
 float dn::math::random(const float &p_min, const float &p_max)

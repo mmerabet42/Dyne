@@ -1,8 +1,8 @@
-#include "ModelInstance.hpp"
-#include "Application.hpp"
-#include "Shader.hpp"
-#include "Model.hpp"
-#include "Vertex.hpp"
+#include "dn/ModelInstance.hpp"
+#include "dn/Application.hpp"
+#include "dn/Shader.hpp"
+#include "dn/Model.hpp"
+#include "dn/Vertex.hpp"
 #include "glm/matrix.hpp"
 
 dn::ModelInstance::ModelInstance(dn::Shader *p_shader, dn::Model *p_model)

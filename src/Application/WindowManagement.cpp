@@ -1,5 +1,5 @@
-#include "Application.hpp"
-#include "Window.hpp"
+#include "dn/Application.hpp"
+#include "dn/Window.hpp"
 #include <algorithm>
 
 std::vector<dn::Window *>				dn::Application::_windows;

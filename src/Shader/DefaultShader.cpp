@@ -1,4 +1,4 @@
-#include "Shader.hpp"
+#include "dn/Shader.hpp"
 
 static const char *g_vertexSource = GLSL(
 	in vec3 position;

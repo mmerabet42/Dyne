@@ -1,13 +1,13 @@
-#include "Window.hpp"
-#include "Application.hpp"
+#include "dn/Window.hpp"
+#include "dn/Application.hpp"
 
 /* Constructors */
 
 dn::Window::Window(const int &p_width, const int &p_height, const std::string &p_title, dn::Window *p_share)
 	// Initializing the window attributes to default
 	: _x(0), _y(0), _width(p_width), _height(p_height), _title(p_title), _glfw(nullptr), _share(p_share),
-	_flags(DN_VISIBLE), _clearColor(0.f, 0.f, 0.f, 1.f), _opacity(1.f),
-	_framebufferWidth(0), _framebufferHeight(0),
+	_flags(DN_VISIBLE | DN_AUTOCLEAR), _clearColor(0.f, 0.f, 0.f, 1.f), _opacity(1.f),
+	_framebufferWidth(p_width), _framebufferHeight(p_height),
 	_minwidth(DN_NONE), _minheight(DN_NONE), _maxwidth(DN_NONE), _maxheight(DN_NONE),
 	_mousePos{0.0, 0.0, 0.0, 0.0}, _scene(nullptr),
 

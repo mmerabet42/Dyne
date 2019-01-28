@@ -1,4 +1,4 @@
-#include "Component.hpp"
+#include "dn/Component.hpp"
 
 dn::UComponent::UComponent(const std::string &p_name)
 	: _object(nullptr), _name(p_name), _active(true)

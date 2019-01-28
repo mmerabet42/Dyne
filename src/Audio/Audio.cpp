@@ -1,5 +1,7 @@
-#include "Audio.hpp"
-#include "Application.hpp"
+#include "dn/Audio.hpp"
+#define DR_WAV_IMPLEMENTATION
+#include "dr_wav.h"
+#include "dn/Application.hpp"
 
 dn::Audio::Audio(const std::string &p_path, const bool &p_forceMono)
 	: _path(p_path), _fileInfo(), _buffer(0), _samples(nullptr), _nbSamples(0),
@@ -12,7 +14,7 @@ dn::Audio::~Audio()
 	dn::Application::destroyDependent(this);
 }
 
-SF_INFO dn::Audio::fileInfo() const
+drwav dn::Audio::fileInfo() const
 {
 	return (this->_fileInfo);
 }
@@ -41,13 +43,13 @@ void dn::Audio::create()
 {
 	if (this->_buffer)
 		return ;
-	SNDFILE *file = sf_open(this->_path.c_str(), SFM_READ, &this->_fileInfo);
-	this->_nbSamples = (ALsizei)(this->_fileInfo.channels * this->_fileInfo.frames);
+	if (!drwav_init_file(&this->_fileInfo, this->_path.c_str()))
+		return ;
+	this->_nbSamples = (ALsizei)(this->_fileInfo.channels * this->_fileInfo.totalPCMFrameCount);
 	this->_samples = new ALshort[this->_nbSamples];
 
-	sf_read_short(file, this->_samples, this->_nbSamples);
-	sf_close(file);
-
+	drwav_read_pcm_frames_s16(&this->_fileInfo, this->_fileInfo.totalPCMFrameCount, this->_samples);
+	drwav_uninit(&this->_fileInfo);
 	ALenum format;
 	if (this->_fileInfo.channels == 1)
 		format = AL_FORMAT_MONO16;
@@ -64,7 +66,7 @@ void dn::Audio::create()
 		format,
 		this->_samples,
 		this->_nbSamples * sizeof(ALshort),
-		(ALsizei)this->_fileInfo.samplerate);
+		(ALsizei)this->_fileInfo.sampleRate);
 }
 
 void dn::Audio::destroy()

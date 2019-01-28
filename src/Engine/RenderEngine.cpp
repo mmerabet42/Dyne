@@ -1,8 +1,10 @@
-#include "RenderEngine.hpp"
-#include "Model.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
-#include "Light.hpp"
+#include "dn/RenderEngine.hpp"
+#include "dn/Model.hpp"
+#include "dn/Shader.hpp"
+#include "dn/Texture.hpp"
+#include "dn/Light.hpp"
+#include "dn/Scene.hpp"
+#include "dn/Window.hpp"
 
 glm::vec3 dn::Light::lightPosition(0.f, 0.f, 0.f);
 glm::vec3 dn::Light::lightColor(1.f, 1.f, 1.f);
@@ -59,6 +61,19 @@ void dn::RenderEngine::onObjectAdded(dn::CameraFilter &p_filter)
 {
 	this->_camera = p_filter.camera;
 	this->_camera->setTransform(p_filter.transform);
+	if (this->scene()->window())
+		this->_camera->setAspectRatio(this->scene()->window()->aspectRatio());
+}
+
+void dn::RenderEngine::onWindowLink(dn::Window &p_window)
+{
+	if (this->_camera)
+		this->_camera->setAspectRatio(p_window.aspectRatio());
+
+	p_window.framebufferSizeEvent.addListener([&](dn::Window &w, int, int) {
+		if (this->_camera)
+			this->_camera->setAspectRatio(w.aspectRatio());
+	});
 }
 
 void dn::RenderEngine::onObjectRemoved(dn::CameraFilter &p_filter)
@@ -71,20 +86,15 @@ void dn::RenderEngine::onUpdate()
 	if (!this->_camera)
 		return ;
 
-	GLint viewProjectionU;
-	GLint unitU;
-	GLint lightColorU;
-	GLint lightPositionU;
-
 	dn::layer::Shader::iterator shader_it = this->_instances.begin();
 	for (; shader_it != this->_instances.end(); ++shader_it)
 	{
 		shader_it->first->use(true);
 
-		viewProjectionU = shader_it->first->getUniform("viewprojection");
-		unitU = shader_it->first->getUniform("unit");
-		lightPositionU = shader_it->first->getUniform("lightPosition");
-		lightColorU = shader_it->first->getUniform("lightColor");
+		GLint viewProjectionU = shader_it->first->getUniform("viewprojection");
+		GLint unitU = shader_it->first->getUniform("unit");
+		GLint lightPositionU = shader_it->first->getUniform("lightPosition");
+		GLint lightColorU = shader_it->first->getUniform("lightColor");
 
 		if (viewProjectionU != -1)
 			glUniformMatrix4fv(viewProjectionU, 1, GL_FALSE, &this->_camera->viewProjectionMat()[0][0]);

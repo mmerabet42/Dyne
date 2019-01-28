@@ -1,6 +1,6 @@
-#include "AudioSource.hpp"
-#include "Transform.hpp"
-#include "Object.hpp"
+#include "dn/AudioSource.hpp"
+#include "dn/Transform.hpp"
+#include "dn/Object.hpp"
 
 dn::AudioSource::AudioSource(dn::Audio *p_audioClip)
 	: UComponent("AudioSource"),

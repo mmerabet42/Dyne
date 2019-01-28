@@ -2,23 +2,23 @@ NAME		=	libdn.a
 CC			=	g++ -std=c++17
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
-GET_PACKAGE	=	`pkg-config --static --libs glew glfw3 openal sndfile`
+GET_PACKAGE	=	`pkg-config --static --libs glfw3 openal sndfile`
 
 MAIN_FILE	= main.cpp
 OUT			= a.out
 
-INCLUDE_FLG	= -I ~/.brew/include -I includes/
+INCLUDE_FLG	= -I ~/.brew/include -I include/
 
 OSNAME		= $(shell uname -s)
 ifeq ($(OSNAME),Linux)
-	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) $(INCLUDE_FLG) -o $(OUT)# -g3 -fsanitize=address
+	COMPILE	= $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -ldl $(INCLUDE_FLG) -o $(OUT) -g3 -fsanitize=address
 endif
 ifeq ($(OSNAME),Darwin)
 	COMPILE = $(CC) $(MAIN_FILE) $(NAME) $(GET_PACKAGE) -framework OpenGL -framework OpenAL $(INCLUDE_FLG) -o $(OUT)# -g3 -fsanitize=address
 endif
 
-SRCD		= srcs/
-INCLUDES_D	= includes/
+SRCD		= src/
+INCLUDES_D	= include/
 _INCLUDES	= #eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Object.hpp \
 			  #Shader.hpp Vertex.hpp Model.hpp Component.hpp Transform.hpp MeshRenderer.hpp \
 			  #Prototype.hpp Camera.hpp stb_image.h Codes.hpp ApplicationDependent.hpp \
@@ -26,20 +26,20 @@ _INCLUDES	= #eng.hpp Window.hpp Application.hpp Color.hpp Funcs.hpp Event.hpp Ob
 			  #ModelInstance.hpp KeyCode.hpp
 
 _MAIN_FS	=
-_APP_FS		= application.cpp callbacks.cpp init.cpp \
-			  manage_window.cpp manage_dependents.cpp applicationDependent.cpp
-_WIN_FS		= window.cpp getset.cpp setcallbacks.cpp
-_SHDR_FS	= shader.cpp defaultShader.cpp
-_MESH_FS	= prototype.cpp model.cpp models.cpp
-_MATH_FS	= smoothDamp.cpp random.cpp
-_OBJ_FS		= object.cpp component.cpp componentData.cpp \
-			  transform.cpp meshrenderer.cpp camera.cpp \
-			  CameraData.cpp transformData.cpp MeshData.cpp
-_TXTR_FS	= texture.cpp
-_AUDIO_FS	= audio.cpp audioSource.cpp audioListener.cpp
-_UTILS_FS	= utils.cpp
-_SCENE_FS	= SceneRenderer.cpp Scene.cpp modelInstance.cpp
-_SYSTEM_FS	= System.cpp RenderSystem.cpp
+_APP_FS		= Application.cpp Callbacks.cpp Init.cpp \
+			  WindowManagement.cpp DependentsManagement.cpp ApplicationDependent.cpp
+_WIN_FS		= Window.cpp Window2.cpp CallbackSetters.cpp
+_SHDR_FS	= Shader.cpp DefaultShader.cpp
+_MESH_FS	= Model.cpp Models.cpp
+_MATH_FS	= SmoothDamp.cpp Random.cpp
+_OBJ_FS		= Object.cpp UComponent.cpp Component.cpp \
+			  Transform.cpp Camera.cpp Mesh.cpp 
+_TXTR_FS	= Texture.cpp
+_AUDIO_FS	= Audio.cpp AudioSource.cpp AudioListener.cpp
+_UTILS_FS	= Utils.cpp
+_SCENE_FS	= Scene.cpp ModelInstance.cpp
+_SYSTEM_FS	= Engine.cpp RenderEngine.cpp
+_GLAD_FS	= glad.c
 
 INCLUDES	= $(addprefix $(INCLUDES_D),$(_INCLUDES))
 
@@ -61,17 +61,19 @@ TXTR_FS		= $(addprefix $(SRCD)Texture/,$(_TXTR_FS))
 TXTR_O		= $(_TXTR_FS:.cpp=.o)
 AUDIO_FS	= $(addprefix $(SRCD)Audio/,$(_AUDIO_FS))
 AUDIO_O		= $(_AUDIO_FS:.cpp=.o)
-UTILS_FS	= $(addprefix $(SRCD)utils/,$(_UTILS_FS))
+UTILS_FS	= $(addprefix $(SRCD)Utils/,$(_UTILS_FS))
 UTILS_O		= $(_UTILS_FS:.cpp=.o)
 SCENE_FS	= $(addprefix $(SRCD)Scene/,$(_SCENE_FS))
 SCENE_O		= $(_SCENE_FS:.cpp=.o)
-SYSTEM_FS	= $(addprefix $(SRCD)System/,$(_SYSTEM_FS))
+SYSTEM_FS	= $(addprefix $(SRCD)Engine/,$(_SYSTEM_FS))
 SYSTEM_O	= $(_SYSTEM_FS:.cpp=.o)
+GLAD_FS		= $(addprefix $(SRCD)glad/,$(_GLAD_FS))
+GLAD_O		= $(_GLAD_FS:.c=.o)
 
 SRCS		= $(MAIN_FS) $(APP_FS) $(WIN_FS) $(SHDR_FS) $(MESH_FS) $(MATH_FS) \
-			  $(OBJ_FS) $(TXTR_FS) $(AUDIO_FS) $(UTILS_FS) $(SCENE_FS) $(SYSTEM_FS)
+			  $(OBJ_FS) $(TXTR_FS) $(AUDIO_FS) $(UTILS_FS) $(SCENE_FS) $(SYSTEM_FS) $(GLAD_FS)
 OBJS		= $(MAIN_O) $(APP_O) $(WIN_O) $(SHDR_O) $(MESH_O) $(MATH_O) $(SYSTEM_O) \
-			  $(OBJ_O) $(TXTR_O) $(AUDIO_O) $(UTILS_O) $(SCENE_O)
+			  $(OBJ_O) $(TXTR_O) $(AUDIO_O) $(UTILS_O) $(SCENE_O) $(GLAD_O)
 OBJD		= .objs/
 OBJB		= $(addprefix $(OBJD),$(OBJS))
 
@@ -132,7 +134,7 @@ $(OBJD)%.o: $(SRCD)Audio/%.cpp $(INCLUDES)# Makefile
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)utils/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Utils/%.cpp $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
@@ -142,7 +144,12 @@ $(OBJD)%.o: $(SRCD)Scene/%.cpp $(INCLUDES)# Makefile
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
 
-$(OBJD)%.o: $(SRCD)System/%.cpp $(INCLUDES)# Makefile
+$(OBJD)%.o: $(SRCD)Engine/%.cpp $(INCLUDES)# Makefile
+	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
+	@mkdir -p $(OBJD)
+	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)
+
+$(OBJD)%.o: $(SRCD)glad/%.c $(INCLUDES)# Makefile
 	@printf "\r\033[K$(CGREEN)Compiling$(CEND): $<"
 	@mkdir -p $(OBJD)
 	@$(CC) $(CLFAGS) -o $@ -c $< $(INCLUDE_FLG)

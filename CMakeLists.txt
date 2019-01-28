@@ -1,77 +1,80 @@
 cmake_minimum_required(VERSION 3.3)
 project("Dyne")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder -Wno-unused-parameter")
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address")
 
-include_directories("includes")
+include_directories("include")
 
 # Application source directory
 set(SRC_Application
-		srcs/Application/Application.cpp
-		srcs/Application/Callbacks.cpp
-		srcs/Application/Init.cpp
-		srcs/Application/WindowManagement.cpp
-		srcs/Application/DependentsManagement.cpp
-		srcs/Application/ApplicationDependent.cpp)
+		src/Application/Application.cpp
+		src/Application/Callbacks.cpp
+		src/Application/Init.cpp
+		src/Application/WindowManagement.cpp
+		src/Application/DependentsManagement.cpp
+		src/Application/ApplicationDependent.cpp)
 # list(TRANSFORM SRC_Application PREPEND "srcs/Application")
 
 # Window source directory
 set(SRC_Window
-		srcs/Window/Window.cpp
-		srcs/Window/Window2.cpp
-		srcs/Window/CallbackSetters.cpp)
+		src/Window/Window.cpp
+		src/Window/Window2.cpp
+		src/Window/CallbackSetters.cpp)
 
 # Shader source directory
 set(SRC_Shader
-		srcs/Shader/Shader.cpp
-		srcs/Shader/DefaultShader.cpp)
+		src/Shader/Shader.cpp
+		src/Shader/DefaultShader.cpp)
 
 # Model source directory
 set(SRC_Model
-		srcs/Model/Model.cpp
-		srcs/Model/Models.cpp)
+		src/Model/Model.cpp
+		src/Model/Models.cpp)
 
 # Math source directory
 set(SRC_Math
-		srcs/Math/SmoothDamp.cpp
-		srcs/Math/Random.cpp)
+		src/Math/SmoothDamp.cpp
+		src/Math/Random.cpp)
 
 # Object source directory
 set(SRC_Object
-		srcs/Object/Object.cpp
-		srcs/Object/UComponent.cpp
-		srcs/Object/Component.cpp
-		srcs/Object/Transform.cpp
-		srcs/Object/Camera.cpp
-		srcs/Object/Mesh.cpp)
+		src/Object/Object.cpp
+		src/Object/UComponent.cpp
+		src/Object/Component.cpp
+		src/Object/Transform.cpp
+		src/Object/Camera.cpp
+		src/Object/Mesh.cpp)
 
 # Texture source directory
 set(SRC_Texture
-		srcs/Texture/Texture.cpp)
+		src/Texture/Texture.cpp)
 
 # Audio source directory
 set(SRC_Audio
-#		srcs/Audio/AudioSource.cpp
-#		srcs/Audio/AudioListener.cpp
-		srcs/Audio/Audio.cpp)
+		src/Audio/AudioListener.cpp
+		src/Audio/AudioSource.cpp
+		src/Audio/Audio.cpp)
 
 # utils source directory
 set(SRC_utils
-		srcs/Utils/Utils.cpp)
+		src/Utils/Utils.cpp)
 
 # Scene source directory
 set(SRC_Scene
-		srcs/Scene/Scene.cpp
-		srcs/Scene/ModelInstance.cpp)
+		src/Scene/Scene.cpp
+		src/Scene/ModelInstance.cpp)
 
 # Engine source directory
 set(SRC_Engine
-		srcs/Engine/Engine.cpp
-		srcs/Engine/RenderEngine.cpp)
+		src/Engine/Engine.cpp
+		src/Engine/RenderEngine.cpp)
+
+set(SRC_glad
+		src/glad/glad.c)
 
 set(SOURCES
 	${SRC_Application}
@@ -84,14 +87,14 @@ set(SOURCES
 	${SRC_Audio}
 	${SRC_utils}
 	${SRC_Scene}
-	${SRC_Engine})
+	${SRC_Engine}
+	${SRC_glad})
 
 add_library(dyne SHARED ${SOURCES})
 
-install(TARGETS dyne DESTINATION "${CMAKE_INSTALL_PREFIX}/Dyne")
+install(TARGETS dyne DESTINATION "/usr/lib")
 
 target_link_libraries(dyne glfw3)
-target_link_libraries(dyne GLEW)
 target_link_libraries(dyne GL)
 target_link_libraries(dyne openal)
-target_link_libraries(dyne sndfile)
+target_link_libraries(dyne X11)

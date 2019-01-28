@@ -1,5 +1,5 @@
-#include "Scene.hpp"
-#include "Object.hpp"
+#include "dn/Scene.hpp"
+#include "dn/Object.hpp"
 #include <algorithm>
 
 dn::Scene::Scene()
@@ -84,5 +84,16 @@ dn::Window *dn::Scene::window() const
 
 void dn::Scene::setWindow(dn::Window *p_window)
 {
-	this->_window = p_window;
+	if (this->_window)
+	{
+		std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
+		for (; engine != this->_engines.end(); ++engine)
+			engine->second->onWindowUnlink(*this->_window);
+	}
+	if ((this->_window = p_window))
+	{
+		std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
+		for (; engine != this->_engines.end(); ++engine)
+			engine->second->onWindowLink(*this->_window);
+	}
 }

@@ -1,5 +1,5 @@
-#include "Application.hpp"
-#include "Window.hpp"
+#include "dn/Application.hpp"
+#include "dn/Window.hpp"
 
 // Basically it returns if the run() function has already been called
 bool	dn::Application::running() { return (dn::Application::_running); }

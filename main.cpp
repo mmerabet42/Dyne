@@ -2,26 +2,25 @@
 #include <memory>
 #include <cstring>
 
-#include "Window.hpp"
-#include "Application.hpp"
-#include "Math.hpp"
-#include "Object.hpp"
-#include "Component.hpp"
-#include "Model.hpp"
+#include "dn/Window.hpp"
+#include "dn/Application.hpp"
+#include "dn/Math.hpp"
+#include "dn/Component.hpp"
+#include "dn/Model.hpp"
 
-#include "Transform.hpp"
-#include "Mesh.hpp"
-#include "Camera.hpp"
-#include "Texture.hpp"
-#include "Audio.hpp"
-//#include "AudioListener.hpp"
-//#include "AudioSource.hpp"
-//#include "SceneRenderer.hpp"
-#include "Light.hpp"
+#include "dn/Transform.hpp"
+#include "dn/Mesh.hpp"
+#include "dn/Camera.hpp"
+#include "dn/Texture.hpp"
+#include "dn/Object.hpp"
+#include "dn/AudioListener.hpp"
+#include "dn/AudioSource.hpp"
+#include "dn/Audio.hpp"
+#include "dn/Light.hpp"
 #include "glm/glm.hpp"
 
-#include "Scene.hpp"
-#include "RenderEngine.hpp"
+#include "dn/Scene.hpp"
+#include "dn/RenderEngine.hpp"
 
 class RotatorData: public dn::Component
 {
@@ -170,6 +169,7 @@ int main()
 		cube.getComponent<dn::Mesh>()->setTexture(&minecraftTexture);
 		cube.getComponent<dn::Mesh>()->setRenderMode(DN_TEXTURE_COLOR | DN_LIGHT_COLOR);
 		cube.addComponent<RotateLol>();
+		cube.addComponent<dn::AudioSource>(&rainClip);
 
 	dn::Object surroundCube;
 		surroundCube.addComponent<dn::Transform>(cube.getComponent<dn::Transform>());
@@ -185,7 +185,7 @@ int main()
 		camera.setName("eourihvb");
 		dn::Transform *cameraTransform = camera.addComponent<dn::Transform>(0.f, 0.f, 5.f);
 		camera.addComponent<dn::Camera>(70.f, 0.02f, 100000000.f);
-		//camera.addComponent<dn::AudioListener>();
+		camera.addComponent<dn::AudioListener>();
 
 	dn::Object gridPlane;
 		gridPlane.addComponent<dn::Transform>();
@@ -236,10 +236,8 @@ int main()
 		win.focus();
 		win.setMouseLock(true);
 
-		//cube.getComponent<dn::AudioSource>()->play();
-
-	//	scene.start();
-
+		cube.getComponent<dn::AudioSource>()->play();
+		cube.getComponent<dn::AudioSource>()->setLooping(true);
 	});
 
 	float speedMove = 0.1f;
@@ -273,7 +271,6 @@ int main()
 			obj2->addComponent<dn::Mesh>(&dn::Model::cubeEdges)->setColor(1.f, 1.f, 1.f);
 
 			scene.addObject(*obj);
-		//	obj->getComponent<dn::AudioSource>()->play();
 			scene.addObject(*obj2);
 			minecraftObjects.push_back(obj);
 			minecraftObjects.push_back(obj2);
@@ -300,8 +297,6 @@ int main()
 		camera.getComponent<dn::Camera>()->setAspectRatio(win.aspectRatio());
 
 		win.clear();
-
-	//	scene.update();
 	});
 
 	dn::Application::run();

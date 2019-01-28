@@ -1,6 +1,6 @@
-#include "Camera.hpp"
-#include "Transform.hpp"
-#include "Object.hpp"
+#include "dn/Camera.hpp"
+#include "dn/Transform.hpp"
+#include "dn/Object.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
 #include "glm/gtx/transform.hpp"
 

@@ -1,5 +1,5 @@
-#include "Shader.hpp"
-#include "Application.hpp"
+#include "dn/Shader.hpp"
+#include "dn/Application.hpp"
 #include <fstream>
 #include <sstream>
 #include <algorithm>

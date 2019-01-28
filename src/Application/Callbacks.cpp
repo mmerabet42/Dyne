@@ -1,6 +1,6 @@
-#include "Application.hpp"
-#include "Window.hpp"
-#include "Scene.hpp"
+#include "dn/Application.hpp"
+#include "dn/Window.hpp"
+#include "dn/Scene.hpp"
 
 void	dn::Application::windowStartCallback(dn::Window *p_window)
 {
@@ -152,6 +152,7 @@ void	dn::Application::windowFramebufferSizeCallback(GLFWwindow *p_window, int p_
 	/* Update the two framebufferSize's attributes of the window */
 	win->_framebufferWidth = p_width;
 	win->_framebufferHeight = p_height;
+	win->updateViewport();
 	/* Calling the appropriate callback */
 	if (win->_framebufferSizeCb)
 		win->_framebufferSizeCb(*win, p_width, p_height);

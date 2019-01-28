@@ -1,5 +1,5 @@
-#include "Application.hpp"
-#include "ApplicationDependent.hpp"
+#include "dn/Application.hpp"
+#include "dn/ApplicationDependent.hpp"
 #include <algorithm>
 
 std::vector<dn::ApplicationDependent *> dn::Application::_dependents;

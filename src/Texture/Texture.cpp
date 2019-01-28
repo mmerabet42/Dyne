@@ -1,5 +1,5 @@
-#include "Texture.hpp"
-#include "Application.hpp"
+#include "dn/Texture.hpp"
+#include "dn/Application.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"

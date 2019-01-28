@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "dn/Utils.hpp"
 #include <sstream>
 
 std::vector<std::string> dn::split(const std::string &p_str, const char &p_delimiter, const bool &p_keepEmpty)
@@ -13,7 +13,7 @@ std::vector<std::string> dn::split(const std::string &p_str, const char &p_delim
 	return (sp);
 }
 
-#include "KeyCode.hpp"
+#include "dn/KeyCode.hpp"
 #include <map>
 
 static const std::map<dn::KeyCode, std::string> g_keyNames = {
