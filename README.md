@@ -15,7 +15,7 @@ Dyne currently compiles on Linux, will soon in Windows. It does on MacOs but not
 
 Dyne requires some libraries in order to work:
 
-- GLEW (OpenGL loader)
+- OpenGL (open graphic library, must be already installed)
 - GLFW (to create and manage windows)
 - OpenAL (to manage 3D sound)
 
