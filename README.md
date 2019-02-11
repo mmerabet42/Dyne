@@ -3,6 +3,7 @@
 
 **Dyne** is a C++ library for creating games and applications, it is still under development and is lacking of many features.
 
+
 # Why ?
 
 Well, the main purpose of this project was to improve my programming knowledge. This is the first answer that comes in my mind, but of course, it is more complicated than that.
@@ -12,6 +13,8 @@ To make it short: On day i've wondered how computers managed to render things on
 # Installation
 
 Dyne currently compiles on Linux, will soon in Windows. It does on MacOs but nothing renders, i dont know why, so i will focus on Linux and Windows for now.
+
+Dyne uses some features of the 2017 version (C++17).
 
 Dyne requires some libraries in order to work:
 
@@ -27,19 +30,17 @@ And uses these libraries but you dont need to install them:
 
 So once you have the required libraries you can compile the Dyne library:
 
-- We need a build directory, so if it doesn't exist, you need to create it: `mkdir build`.
+- We need a build directory, so if it doesn't exist, you need to create it `mkdir build`.
 - Then use this command to compile the library.
 
 ```bash
-> (cd build; cmake ..; make; sudo make install)
+(cd build; cmake ..; make; sudo make install)
 ```
-
-
-This command will generate the library we are looking for 'libdn.a', we will use it to compile our projects.
+- Now, the Dyne library must have been installed, you can start using it.
 
 ## Example
 
-Let's first start with a simple example, that shows a window.
+Let's first start with a 'Hello World' example.
 
 ```C++
 
@@ -48,16 +49,18 @@ Let's first start with a simple example, that shows a window.
 
 int main()
 {
-  dn::Window window(600, 500, "Window Title");
+  dn::Window window(600, 500, "Hello world");
   
   return dn::Application::run();
 }
 
 ```
 
+Compile the example `g++ -std=c++17 example.cpp -Ipath/to/include/of/dyne`
+
 And voila, these two lines of codes creates a window, and shows it.
 
-In the really first two line we've included the *Application.hpp* and *Window.hpp* files, we  need them in order to create a window
+In the really first two line we've included the *Application.hpp* and *Window.hpp* files, we need them in order to create a window
 ```C++
 dn::Window window(600, 500, "Window Title");
 ```
