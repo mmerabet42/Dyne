@@ -1,17 +1,13 @@
 
 # Dyne ?
 
-**Dyne** is the biggest project i have made until now. It is supposed to be a general purpose engine, in which you can create window applications of any kind, and also 2D and 3D games most importantly.
-
-In the current version you can create any kind of applications with a minimum of abstraction, meaning that you dont have to do some low-level thing in order to work with the engine.
+**Dyne** is a C++ library for creating games and applications, it is still under development and is lacking of many features.
 
 # Why ?
 
-Well, there was no specific goal except that it was just for learning and improving my current knowledge, until i reached a point that i wanted to make a real game engine that can be used to create any kind of game.
+Well, the main purpose of this project was to improve my programming knowledge. This is the first answer that comes in my mind, but of course, it is more complicated than that.
 
-I've used the Unity3D engine for a year and i really liked the way it abstracted things using GameObjects and Components, so once i learned OpenGL and GLFW i wanted to reimplement that system.
-
-I also heard about the ECS of Unity that uses data-oriented programming, which is really great and interesting for performance. So obviously, will come a point, were i will try to implement it.
+To make it short: On day i've wondered how computers managed to render things on the screen so generecally, like how do you tell the computer to render a house easily. Then i've read an article that was talking about vertices and how graphic cards works, and it was really interesting so i first learned DirectX3D but switched to OpenGL really quickly because it was cross-platform and more interesting. At this point i got the idea of creating a simle game engine, to learn OpenGL and the GLFW library (everyone does that). Then it was just about improving it everytime, and Dyne is the new and latest version.
 
 # Installation
 
@@ -22,13 +18,22 @@ Dyne requires some libraries in order to work:
 - GLEW (OpenGL loader)
 - GLFW (to create and manage windows)
 - OpenAL (to manage 3D sound)
-- sndfile (to open and read WAV files)
+
+And uses these libraries but you dont need to install them:
+
+- dr_wav (header only library for reading WAV files)
+- tiny_obj_loader (header only library for reading OBJ files)
+- stb_image (header only library for reading images)
 
 So once you have the required libraries you can compile the Dyne library:
 
+- We need a build directory, so if it doesn't exist, you need to create it: `mkdir build`.
+- Then use this command to compile the library.
+
 ```bash
-$> make
+> (cd build; cmake ..; make; sudo make install)
 ```
+
 
 This command will generate the library we are looking for 'libdn.a', we will use it to compile our projects.
 
