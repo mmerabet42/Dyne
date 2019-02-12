@@ -9,9 +9,13 @@
 
 namespace dn
 {
+	// Forward declaring the Scene class, because Engines needs a pointer to the
+	// scene they are connected to
 	class Scene;
+	// Engine filters needs a pointer to the object they are connected to
 	class Object;
 
+	// Needed to represent all filters
 	struct EngineFilterBase
 	{
 		virtual ~EngineFilterBase() {}
@@ -22,6 +26,11 @@ namespace dn
 		dn::Object *_object;
 	};
 
+	// Custom filters must inherit this class.
+	// The first template argument is the inheriting class, it might seem unusual
+	// but it is necessary for it to work (to fill the datas)
+	// The following template arguments are the components that should have the object
+	// in order to pass the filter
 	template <typename Filter, typename ... Components>
 	struct EngineFilter: public dn::EngineFilterBase
 	{
@@ -29,14 +38,21 @@ namespace dn
 		static Filter *loadFilter(dn::Object &p_object);
 	};
 
-	template <typename Entity_filter>
-	using Entities = std::vector<Entity_filter *>;
+	// A default filter which accepts any objects
+	struct BasicFilter: public dn::EngineFilter<dn::BasicFilter> {};
+
+	// A more usual way to get the entities: dn::Entities<Filter> e
+	// instead of: std::vector<Filter *> e
+	template <typename EntityFilter>
+	using Entities = std::vector<EntityFilter *>;
 
 	class Window;
 
+	// Complicated to explain
 	template <typename ...>
 	class EngineBase;
 
+	// But necessary for having generic engines
 	template <>
 	class EngineBase<>
 	{
@@ -74,17 +90,14 @@ namespace dn
 
 	};
 
+	// Custom classes must inherit this class in order to be added to scenes
+	// and apply behaviour
 	template <typename ... Filters>
 	class Engine: public dn::EngineBase<Filters ...>
 	{
 	public:
 		Engine();
 		virtual ~Engine();
-
-		void loadFilters(dn::Object &p_object) final;
-
-		template <typename Filter>
-		void destroyObject(Filter &p_filter);
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &getEntities();
@@ -96,6 +109,11 @@ namespace dn
 
 		template <typename Entity_filter>
 		dn::Entities<Entity_filter> &nullEntities();
+
+		void loadFilters(dn::Object &p_object) final;
+
+		template <typename Filter>
+		void destroyObject(Filter &p_filter);
 
 		template <typename Entity_filter>
 		bool isNull(const dn::Entities<Entity_filter> &p_entities);

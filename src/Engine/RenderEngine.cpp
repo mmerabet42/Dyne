@@ -9,19 +9,19 @@
 glm::vec3 dn::Light::lightPosition(0.f, 0.f, 0.f);
 glm::vec3 dn::Light::lightColor(1.f, 1.f, 1.f);
 
-static dn::layer::MeshFilterInstanceData _layerMeshFilterInstanceData(dn::MeshFilter &p_filter);
-static dn::layer::ModelInstance _layerModelInstance(dn::MeshFilter &p_filter);
-static dn::layer::Model _layerModel(dn::MeshFilter &p_filter);
+static dn::layerMeshFilterInstanceData _layerMeshFilterInstanceData(dn::MeshFilter &p_filter);
+static dn::layerModelInstance _layerModelInstance(dn::MeshFilter &p_filter);
+static dn::layerModel _layerModel(dn::MeshFilter &p_filter);
 
 void dn::RenderEngine::onObjectAdded(dn::MeshFilter &p_filter)
 {
-	dn::layer::Shader::iterator shader_it = this->_instances.find(p_filter.mesh->shader());
+	dn::layerShader::iterator shader_it = this->_instances.find(p_filter.mesh->shader());
 	if (shader_it != this->_instances.end())
 	{
-		dn::layer::Model::iterator model_it = shader_it->second.find(p_filter.mesh->model());
+		dn::layerModel::iterator model_it = shader_it->second.find(p_filter.mesh->model());
 		if (model_it != shader_it->second.end())
 		{
-			dn::layer::Texture::iterator texture_it = model_it->second.second.find(p_filter.mesh->texture());
+			dn::layerTexture::iterator texture_it = model_it->second.second.find(p_filter.mesh->texture());
 			if (texture_it != model_it->second.second.end())
 			{
 				texture_it->second.first.push_back(&p_filter);
@@ -40,9 +40,9 @@ void dn::RenderEngine::onObjectAdded(dn::MeshFilter &p_filter)
 
 void dn::RenderEngine::onObjectRemoved(dn::MeshFilter &p_filter)
 {
-	dn::layer::Shader::iterator shader_it = this->_instances.find(p_filter.mesh->shader());
-	dn::layer::Model::iterator model_it = shader_it->second.find(p_filter.mesh->model());
-	dn::layer::Texture::iterator texture_it = model_it->second.second.find(p_filter.mesh->texture());
+	dn::layerShader::iterator shader_it = this->_instances.find(p_filter.mesh->shader());
+	dn::layerModel::iterator model_it = shader_it->second.find(p_filter.mesh->model());
+	dn::layerTexture::iterator texture_it = model_it->second.second.find(p_filter.mesh->texture());
 	if (texture_it->second.first.size() == 1)
 	{
 		texture_it->second.first.clear();
@@ -50,7 +50,7 @@ void dn::RenderEngine::onObjectRemoved(dn::MeshFilter &p_filter)
 	}
 	else
 	{
-		dn::layer::MeshFilter::iterator mesh_it = std::find(
+		dn::layerMeshFilter::iterator mesh_it = std::find(
 			texture_it->second.first.begin(), texture_it->second.first.end(), &p_filter);
 		texture_it->second.first.erase(mesh_it);
 		texture_it->second.second.pop_back();
@@ -86,7 +86,7 @@ void dn::RenderEngine::onUpdate()
 	if (!this->_camera)
 		return ;
 
-	dn::layer::Shader::iterator shader_it = this->_instances.begin();
+	dn::layerShader::iterator shader_it = this->_instances.begin();
 	for (; shader_it != this->_instances.end(); ++shader_it)
 	{
 		shader_it->first->use(true);
@@ -105,13 +105,13 @@ void dn::RenderEngine::onUpdate()
 		if (lightColorU != -1)
 			glUniform3fv(lightColorU, 1, &dn::Light::lightColor[0]);
 
-		dn::layer::Model::iterator model_it = shader_it->second.begin();
+		dn::layerModel::iterator model_it = shader_it->second.begin();
 		for (; model_it != shader_it->second.end(); ++model_it)
 		{
 			model_it->second.first->bind();
 			model_it->second.first->bindInstanceVb();
 
-			dn::layer::Texture::iterator texture_it = model_it->second.second.begin();
+			dn::layerTexture::iterator texture_it = model_it->second.second.begin();
 			for (; texture_it != model_it->second.second.end(); ++texture_it)
 			{
 				if (texture_it->first)
@@ -138,28 +138,28 @@ void dn::RenderEngine::onUpdate()
 	}
 }
 
-dn::layer::MeshFilterInstanceData _layerMeshFilterInstanceData(dn::MeshFilter &p_filter)
+dn::layerMeshFilterInstanceData _layerMeshFilterInstanceData(dn::MeshFilter &p_filter)
 {
-	dn::layer::MeshFilter meshFilter_layer;
-	dn::layer::InstanceData instanceData_layer;
+	dn::layerMeshFilter meshFilter_layer;
+	dn::layerInstanceData instanceData_layer;
 
 	meshFilter_layer.push_back(&p_filter);
 	instanceData_layer.push_back(dn::InstanceData());
-	return (dn::layer::MeshFilterInstanceData(meshFilter_layer, instanceData_layer));
+	return (dn::layerMeshFilterInstanceData(meshFilter_layer, instanceData_layer));
 }
 
-dn::layer::ModelInstance _layerModelInstance(dn::MeshFilter &p_filter)
+dn::layerModelInstance _layerModelInstance(dn::MeshFilter &p_filter)
 {
 	dn::ModelInstance *mdl = new dn::ModelInstance(p_filter.mesh->shader(), p_filter.mesh->model());
-	dn::layer::Texture texture_layer;
+	dn::layerTexture texture_layer;
 
 	texture_layer.emplace(p_filter.mesh->texture(), _layerMeshFilterInstanceData(p_filter));
-	return (dn::layer::ModelInstance(mdl, texture_layer));
+	return (dn::layerModelInstance(mdl, texture_layer));
 }
 
-dn::layer::Model _layerModel(dn::MeshFilter &p_filter)
+dn::layerModel _layerModel(dn::MeshFilter &p_filter)
 {
-	dn::layer::Model model_layer;
+	dn::layerModel model_layer;
 
 	model_layer.emplace(p_filter.mesh->model(), _layerModelInstance(p_filter));
 	return (model_layer);

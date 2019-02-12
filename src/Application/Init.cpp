@@ -51,3 +51,8 @@ double dn::Application::deltaTime()
 {
 	return (dn::Application::_deltaTime);
 }
+
+float dn::Application::deltaTimef()
+{
+	return ((float)dn::Application::_deltaTime);
+}

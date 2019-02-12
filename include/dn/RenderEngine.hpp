@@ -15,7 +15,7 @@ namespace dn
 		dn::Transform, dn::Mesh>
 	{
 		dn::Transform *transform;
-		dn::Mesh*mesh;
+		dn::Mesh *mesh;
 	};
 
 	struct CameraFilter: public dn::EngineFilter<dn::CameraFilter,
@@ -40,16 +40,13 @@ namespace dn
 	// best optimization, but it is a first step, and definetely better than
 	// my previous version which was binding the shader, the model vao and textures
 	// for each cubes.
-	namespace layer
-	{
-		typedef std::vector<dn::MeshFilter *> MeshFilter;
-		typedef std::vector<dn::InstanceData> InstanceData;
-		typedef std::pair<dn::layer::MeshFilter, dn::layer::InstanceData> MeshFilterInstanceData;
-		typedef std::map<dn::Texture *, dn::layer::MeshFilterInstanceData> Texture;
-		typedef std::pair<std::shared_ptr<dn::ModelInstance>, dn::layer::Texture> ModelInstance;
-		typedef std::map<dn::Model *, dn::layer::ModelInstance> Model;
-		typedef std::map<dn::Shader *, dn::layer::Model> Shader;
-	}
+	typedef std::vector<dn::MeshFilter *> layerMeshFilter;
+	typedef std::vector<dn::InstanceData> layerInstanceData;
+	typedef std::pair<dn::layerMeshFilter, dn::layerInstanceData> layerMeshFilterInstanceData;
+	typedef std::map<dn::Texture *, dn::layerMeshFilterInstanceData> layerTexture;
+	typedef std::pair<std::shared_ptr<dn::ModelInstance>, dn::layerTexture> layerModelInstance;
+	typedef std::map<dn::Model *, dn::layerModelInstance> layerModel;
+	typedef std::map<dn::Shader *, dn::layerModel> layerShader;
 	// Without the typedefs it would look like this
 	//	std::map<dn::Shader *,
 	//		std::map<dn::Model *,
@@ -72,7 +69,7 @@ namespace dn
 
 		void onUpdate();
 	private:
-		dn::layer::Shader _instances;
+		dn::layerShader _instances;
 		dn::Camera *_camera;
 	};
 }

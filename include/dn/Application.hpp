@@ -44,6 +44,7 @@ namespace dn
 		// The time and delta time respectively
 		static double time();
 		static double deltaTime();
+		static float deltaTimef();
 
 		// Manage windows
 
