@@ -20,7 +20,8 @@ void dn::Scene::addObject(dn::Object &p_object)
 	auto it = std::find_if(this->_objects.begin(), this->_objects.end(),
 		[&p_object](dn::Object *p_o) {
 			return (&p_object == p_o);
-		});
+		}
+	);
 	if (it != this->_objects.end())
 		return ;
 	this->_objects.push_back(&p_object);

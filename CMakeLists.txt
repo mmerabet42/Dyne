@@ -92,10 +92,12 @@ set(SOURCES
 
 add_library(dyne SHARED ${SOURCES})
 
+add_subdirectory(deps/glfw)
+
 install(TARGETS dyne DESTINATION "/usr/lib")
 
 find_package(OpenGL REQUIRED)
 
-target_link_libraries(dyne glfw3)
+target_link_libraries(dyne glfw)
 target_link_libraries(dyne openal)
 target_link_libraries(dyne X11)

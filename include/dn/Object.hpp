@@ -4,6 +4,7 @@
 # include <map>
 # include <typeinfo>
 # include <string>
+# include <type_traits>
 # include "Component.hpp"
 
 namespace dn
@@ -45,9 +46,9 @@ namespace dn
 
 		// Attach a component
 		template <typename T, typename ... Args>
-		T *addUComponent(Args && ... p_args);
-		template <typename T, typename ... Args>
 		T *addDComponent(Args && ... p_args);
+		template <typename T, typename ... Args>
+		T *addUComponent(Args && ... p_args);
 		template <typename T, typename ... Args>
 		T *addComponent(Args && ... p_args);
 

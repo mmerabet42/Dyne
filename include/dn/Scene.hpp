@@ -32,11 +32,18 @@ namespace dn
 		void setWindow(dn::Window *p_window);
 
 	private:
+		// All objects added to the scene
 		std::vector<dn::Object *> _objects;
+		// All Objects that have at least one 'UComponent', they need to be updated
+		// like engines
 		std::vector<dn::Object *> _uobjects;
 
+		// All engines added to the scene
 		std::map<size_t, dn::EngineBase<> *> _engines;
+		// Engines that can receive callbacks (like mouse pressed, moved etc.)
+//		std::vector<dn::CallbackReceiver *> _callbackReceivers;
 
+		// The window to which the scene is connected to
 		dn::Window *_window;
 
 		bool _started;

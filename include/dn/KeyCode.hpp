@@ -6,7 +6,7 @@
 
 namespace dn
 {
-	enum KeyCode {
+	enum class KeyCode {
 		unknown			= DN_KEY_UNKNOWN,
 		space			= DN_KEY_SPACE,
 		appostrophe		= DN_KEY_APPOSTROPHE,
@@ -130,7 +130,7 @@ namespace dn
 		menu			= DN_KEY_MENU,
 	};
 
-	enum Mod {
+	enum class Mod {
 		control = DN_MOD_CONTROL,
 		shift = DN_MOD_SHIFT,
 		alt = DN_MOD_ALT,
@@ -139,7 +139,7 @@ namespace dn
 
 	std::string getKeyName(const dn::KeyCode &p_keyCode);
 
-	enum MouseButton {
+	enum class MouseButton {
 		mouse1		= DN_MOUSE_1,
 		mouse2		= DN_MOUSE_2,
 		mouse3		= DN_MOUSE_3,
@@ -153,7 +153,7 @@ namespace dn
 		middle	= DN_MOUSE_MIDDLE
 	};
 
-	enum Action {
+	enum class Action {
 		pressed = DN_PRESS,
 		released = DN_RELEASE,
 		repeat = DN_REPEAT
