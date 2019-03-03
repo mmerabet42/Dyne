@@ -2,9 +2,9 @@
 # define DN_ALLGL_HPP
 
 # include "glad/glad.h"
-# include "glfw/glfw3.h"
-# include <AL/al.h>
-# include <AL/alc.h>
+# include "glfw/include/GLFW/glfw3.h"
+# include "openal/include/AL/al.h"
+# include "openal/include/AL/alc.h"
 
 # include <iostream>
 

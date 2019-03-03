@@ -55,7 +55,7 @@ void dn::EngineBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 		filters.emplace_back((dn::EngineFilterBase *)filter);
 		this->_allFilters.emplace_back((dn::EngineFilterBase *)filter);
 		this->_mapFilters.emplace((dn::EngineFilterBase *)filter, hash_code);
-		// and the onObjectAdded callback of the system is called
+		// and the onObjectAdded callback of the engine is called
 		this->onObjectAdded(*filter);
 	}
 	else
@@ -103,6 +103,7 @@ template <typename ... Filters>
 template <typename Filter>
 void dn::Engine<Filters ...>::destroyObject(Filter &p_filter)
 {
+//	std::cout << "unloading filter: " << p_filter.object()->name() << std::endl;
 	this->dn::EngineBase<Filters ...>::unloadFilter((dn::EngineFilterBase *)&p_filter);
 }
 

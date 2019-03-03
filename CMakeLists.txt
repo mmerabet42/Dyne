@@ -4,10 +4,11 @@ project("Dyne")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address")
 
-include_directories("include")
+include_directories(include)
 
 # Application source directory
 set(SRC_Application
@@ -90,14 +91,17 @@ set(SOURCES
 	${SRC_Engine}
 	${SRC_glad})
 
-add_library(dyne SHARED ${SOURCES})
-
+add_subdirectory(deps/openal)
 add_subdirectory(deps/glfw)
+
+include_directories(deps)
+
+add_library(dyne SHARED ${SOURCES})
 
 install(TARGETS dyne DESTINATION "/usr/lib")
 
 find_package(OpenGL REQUIRED)
 
+target_link_libraries(dyne OpenAL)
 target_link_libraries(dyne glfw)
-target_link_libraries(dyne openal)
 target_link_libraries(dyne X11)

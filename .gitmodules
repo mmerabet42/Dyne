@@ -1,3 +1,6 @@
 [submodule "deps/glfw"]
 	path = deps/glfw
-	url = https://github.com/glfw/glfw.git
+	url = https://github.com/mmerabet42/glfw.git
+[submodule "deps/openal"]
+	path = deps/openal
+	url = https://github.com/mmerabet42/openal-soft

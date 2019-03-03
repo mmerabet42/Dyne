@@ -78,7 +78,9 @@ public:
 		if (p_other.object()->name() == "precube")
 			precube = &p_other;
 		else
+		{
 			destroyObject(p_other);
+		}
 	}
 
 	void onUpdate()
@@ -188,6 +190,7 @@ int main()
 		camera.addComponent<dn::AudioListener>();
 
 	dn::Object gridPlane;
+		gridPlane.setName("gridPlane");
 		gridPlane.addComponent<dn::Transform>();
 		gridPlane.addComponent<dn::Mesh>(&gridPlaneModel);
 		gridPlane.getComponent<dn::Mesh>()->setColor(1.f, 1.f, 1.f, 0.1f);
