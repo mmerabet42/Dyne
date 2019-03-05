@@ -98,7 +98,7 @@ include_directories(deps)
 
 add_library(dyne SHARED ${SOURCES})
 
-install(TARGETS dyne DESTINATION "/usr/lib")
+install(TARGETS dyne DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/")
 
 find_package(OpenGL REQUIRED)
 

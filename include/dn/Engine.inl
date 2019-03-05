@@ -7,11 +7,11 @@
 
 template <typename ... Filters>
 dn::Engine<Filters ...>::Engine()
+//	: _filters{ {typeid(Filters).hash_code(), std::vector<dn::EngineFilterBase *>()}... }
 {
-	static const size_t hashes[] = { typeid(Filters).hash_code() ... };
-
-	for (size_t i = 0; i < sizeof...(Filters); ++i)
-		this->_filters.emplace(hashes[i], std::vector<dn::EngineFilterBase *>());
+	this->_filters = {
+		{ typeid(Filters).hash_code(), std::vector<dn::EngineFilterBase *>() }...
+	};
 }
 
 template <typename ... Filters>
@@ -38,6 +38,7 @@ void dn::EngineBase<Filter, Filters ...>::loadFilters(dn::Object &p_object)
 	// is present in the filter list, that means that a component has been removed
 	// so the filter is unloaded from the filter list and from the engine completely
 	std::vector<dn::EngineFilterBase *> &filters = this->_filters[hash_code];
+
 	auto it = std::find_if(filters.begin(), filters.end(),
 		[&p_object](dn::EngineFilterBase *p_f) {
 			return (p_f->object() == &p_object);

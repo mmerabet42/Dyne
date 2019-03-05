@@ -1,6 +1,7 @@
 #include "dn/Application.hpp"
 #include "dn/Window.hpp"
 #include "dn/Scene.hpp"
+#include "dn/CallbackReceiver.hpp"
 
 void	dn::Application::windowStartCallback(dn::Window *p_window)
 {

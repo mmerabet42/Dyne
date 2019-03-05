@@ -2,10 +2,11 @@
 # define DN_CALLBACKRECEIVER_HPP
 
 # include "dn/KeyCode.hpp"
-# include "dn/Window.hpp"
 
 namespace dn
 {
+	class Window;
+
 	class CallbackReceiver
 	{
 	public:
@@ -24,12 +25,10 @@ namespace dn
 		virtual void onMaximize			(dn::Window &, bool) {}
 		virtual void onFrameBufferSize	(dn::Window &, int, int) {}
 		virtual void onRefresh			(dn::Window &) {}
-		virtual void onMouseMove		(dn::Window &, double double) {}
+		virtual void onMouseMove		(dn::Window &, double, double) {}
 		virtual void onMouseEnter		(dn::Window &, bool) {}
 		virtual void onScroll			(dn::Window &, double, double) {}
-
-	private:
-		
+		virtual void onDrop				(dn::Window &, const std::vector<std::string> &);
 	};
 }
 
