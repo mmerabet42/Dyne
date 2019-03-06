@@ -222,6 +222,6 @@ namespace dn
 		/* The dn::Application class has access to all of the dn::Window attributes. */
 		friend class dn::Application;
 	};
-}
+} // namespace dn
 
 #endif // DN_WINDOW_HPP

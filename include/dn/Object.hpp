@@ -36,29 +36,30 @@ namespace dn
 		void componentUpdated();
 		void callUpdateScene();
 
-		// Returns the component that is of the specified type `T'
+		// Returns the component of type 'T'
 		template <typename T>
-		T *getUComponent();
+		std::enable_if_t<std::is_base_of_v<dn::UComponent, T>, T *>
+		/* T* */getComponent();
 		template <typename T>
-		T *getDComponent();
-		template <typename T>
-		T *getComponent();
+		std::enable_if_t<std::is_base_of_v<dn::Component, T>, T *>
+		/* T* */getComponent();
+
 
 		// Attach a component
 		template <typename T, typename ... Args>
-		T *addDComponent(Args && ... p_args);
+		std::enable_if_t<std::is_base_of_v<dn::UComponent, T>, T *>
+		/* T* */addComponent(Args && ... p_args);
 		template <typename T, typename ... Args>
-		T *addUComponent(Args && ... p_args);
-		template <typename T, typename ... Args>
-		T *addComponent(Args && ... p_args);
+		std::enable_if_t<std::is_base_of_v<dn::Component, T>, T *>
+		/* T* */addComponent(Args && ... p_args);
 
 		// Detach a component
 		template <typename T>
-		void removeUComponent();
+		std::enable_if_t<std::is_base_of_v<dn::UComponent, T>, void>
+		/* void */removeComponent();
 		template <typename T>
-		void removeDComponent();
-		template <typename T>
-		void removeComponent();
+		std::enable_if_t<std::is_base_of_v<dn::Component, T>, void>
+		/* void */removeComponent();
 
 		dn::UComponent *getHashUComponent(const size_t &p_hash_code);
 		dn::Component *getHashDComponent(const size_t &p_hash_code);
@@ -78,7 +79,7 @@ namespace dn
 
 		dn::Scene *_scene;
 	};
-}
+} // namespace dn
 
 # include "dn/Object.inl"
 

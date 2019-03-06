@@ -60,7 +60,7 @@ struct PrecubeFilter: public dn::EngineFilter<PrecubeFilter, dn::Transform>
 	dn::Transform *transform;
 };
 
-class MoveEngine: public dn::Engine<PlayerFilter, PrecubeFilter>
+class MoveEngine: public dn::Engine<PlayerFilter, PrecubeFilter>, public dn::CallbackReceiver
 {
 	PlayerFilter *player;
 	PrecubeFilter *precube;
@@ -107,14 +107,20 @@ public:
 			else
 				speedMove = 0.1f;
 
-			player->transform->rotation().x
-				+= scene()->window()->mouseDeltaY() * dn::Application::deltaTime();
-			player->transform->rotation().y
-				+= scene()->window()->mouseDeltaX() * dn::Application::deltaTime();
-
 			precube->transform->position()
 				= player->transform->position() + player->transform->forward() * 5.f;
 		}
+	}
+
+	void onMouseMove(dn::Window &p_w, double, double)
+	{
+		player->transform->rotation().x
+			+= p_w.mouseDeltaY() * dn::Application::deltaTime();
+		player->transform->rotation().y
+			+= p_w.mouseDeltaX() * dn::Application::deltaTime();
+
+		precube->transform->position()
+			= player->transform->position() + player->transform->forward() * 5.f;
 	}
 };
 

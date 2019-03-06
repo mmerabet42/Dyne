@@ -63,6 +63,24 @@ void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int
 		else if (p_action == DN_RELEASE)
 			win->keyReleaseEvent.trigger(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
 	}
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onKey(*win, (dn::KeyCode)p_keycode, (dn::Action)p_action, (dn::Mod)p_mods);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+			if (p_action == DN_PRESS)
+				receiver->onKeyPress(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+			else if (p_action == DN_REPEAT)
+				receiver->onKeyRepeat(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+			else if (p_action == DN_RELEASE)
+				receiver->onKeyRelease(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowSizeCallback(GLFWwindow *p_window, int p_width, int p_height)
@@ -79,6 +97,16 @@ void	dn::Application::windowSizeCallback(GLFWwindow *p_window, int p_width, int 
 		win->_sizeCb(*win, p_width, p_height);
 	if (!win->getFlag(DN_CLOSED))
 		win->sizeEvent.trigger(*win, p_width, p_height);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onSize(*win, p_width, p_height);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowPosCallback(GLFWwindow *p_window, int p_x, int p_y)
@@ -95,6 +123,16 @@ void	dn::Application::windowPosCallback(GLFWwindow *p_window, int p_x, int p_y)
 		win->_posCb(*win, p_x, p_y);
 	if (!win->getFlag(DN_CLOSED))
 		win->posEvent.trigger(*win, p_x, p_y);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onPos(*win, p_x, p_y);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowCloseCallback(GLFWwindow *p_window)
@@ -124,6 +162,16 @@ void	dn::Application::windowFocusCallback(GLFWwindow *p_window, int p_focused)
 		win->_focusCb(*win, p_focused);
 	if (!win->getFlag(DN_CLOSED))
 		win->focusEvent.trigger(*win, p_focused);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onFocus(*win, p_focused);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowMaximizeCallback(GLFWwindow *p_window, int p_maximized)
@@ -142,6 +190,16 @@ void	dn::Application::windowMaximizeCallback(GLFWwindow *p_window, int p_maximiz
 		win->_maximizeCb(*win, p_maximized);
 	if (!win->getFlag(DN_CLOSED))
 		win->maximizeEvent.trigger(*win, p_maximized);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onMaximize(*win, p_maximized);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowFramebufferSizeCallback(GLFWwindow *p_window, int p_width, int p_height)
@@ -159,6 +217,16 @@ void	dn::Application::windowFramebufferSizeCallback(GLFWwindow *p_window, int p_
 		win->_framebufferSizeCb(*win, p_width, p_height);
 	if (!win->getFlag(DN_CLOSED))
 		win->framebufferSizeEvent.trigger(*win, p_width, p_height);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onFramebufferSize(*win, p_width, p_height);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowRefreshCallback(GLFWwindow *p_window)
@@ -172,6 +240,16 @@ void	dn::Application::windowRefreshCallback(GLFWwindow *p_window)
 		win->_refreshCb(*win);
 	if (!win->getFlag(DN_CLOSED))
 		win->refreshEvent.trigger(*win);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onRefresh(*win);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_button , int p_action, int p_mods)
@@ -190,7 +268,10 @@ void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_butt
 	if (win->_mouseButtonCb)
 		win->_mouseButtonCb(*win, (dn::MouseButton)p_button, (dn::Action)p_action, (dn::Mod)p_mods);
 	if (!win->getFlag(DN_CLOSED))
-		win->mouseButtonEvent.trigger(*win, (dn::MouseButton)p_button, (dn::Action)p_action, (dn::Mod)p_mods);
+		win->mouseButtonEvent.trigger(*win,
+									  (dn::MouseButton)p_button,
+									  (dn::Action)p_action,
+									  (dn::Mod)p_mods);
 
 	if (!win->getFlag(DN_CLOSED))
 	{
@@ -210,6 +291,27 @@ void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_butt
 		else if (p_action == DN_RELEASE)
 			win->mouseReleaseEvent.trigger(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
 	}
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onMouseButton(*win,
+									(dn::MouseButton)p_button,
+									(dn::Action)p_action,
+									(dn::Mod)p_mods);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+			if (p_action == DN_PRESS)
+				receiver->onMousePress(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+			else if (p_action == DN_REPEAT)
+				receiver->onMouseRepeat(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+			else if (p_action == DN_RELEASE)
+				receiver->onMouseRelease(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, double p_y)
@@ -227,6 +329,16 @@ void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, 
 		win->_mouseMoveCb(*win, p_x, p_y);
 	if (!win->getFlag(DN_CLOSED))
 		win->mouseMoveEvent.trigger(*win, p_x, p_y);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onMouseMove(*win, p_x, p_y);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowMouseEnterCallback(GLFWwindow *p_window, int p_entered)
@@ -240,6 +352,16 @@ void	dn::Application::windowMouseEnterCallback(GLFWwindow *p_window, int p_enter
 		win->_mouseEnterCb(*win, p_entered);
 	if (!win->getFlag(DN_CLOSED))
 		win->mouseEnterEvent.trigger(*win, p_entered);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onMouseEnter(*win, p_entered);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowScrollCallback(GLFWwindow *p_window, double p_x, double p_y)
@@ -253,6 +375,16 @@ void	dn::Application::windowScrollCallback(GLFWwindow *p_window, double p_x, dou
 		win->_scrollCb(*win, p_x, p_y);
 	if (!win->getFlag(DN_CLOSED))
 		win->scrollEvent.trigger(*win, p_x, p_y);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onScroll(*win, p_x, p_y);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }
 
 void	dn::Application::windowDropCallback(GLFWwindow *p_window, int p_count, const char **p_paths)
@@ -267,4 +399,14 @@ void	dn::Application::windowDropCallback(GLFWwindow *p_window, int p_count, cons
 		win->_dropCb(*win, paths);
 	if (!win->getFlag(DN_CLOSED))
 		win->dropEvent.trigger(*win, paths);
+	if (!win->getFlag(DN_CLOSED) && win->scene())
+	{
+		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
+		for (auto &receiver: receivers)
+		{
+			receiver->onDrop(*win, paths);
+			if (win->getFlag(DN_CLOSED))
+				break ;
+		}
+	}
 }

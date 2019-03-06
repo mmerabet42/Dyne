@@ -4,7 +4,8 @@
 #include "dn/Object.hpp"
 
 template <typename T>
-T *dn::Object::getUComponent()
+std::enable_if_t<std::is_base_of_v<dn::UComponent, T>, T *>
+/* T* */dn::Object::getComponent()
 {
 	// Get the hash value of the given type
 	static const size_t comp_hash = typeid(T).hash_code();
@@ -19,7 +20,8 @@ T *dn::Object::getUComponent()
 }
 
 template <typename T>
-T *dn::Object::getDComponent()
+std::enable_if_t<std::is_base_of_v<dn::Component, T>, T *>
+/* T* */dn::Object::getComponent()
 {
 	// Get the hash value of the given type
 	static const size_t comp_hash = typeid(T).hash_code();
@@ -33,18 +35,10 @@ T *dn::Object::getDComponent()
 	return (nullptr);
 }
 
-template <typename T>
-T *dn::Object::getComponent()
-{
-	if constexpr (std::is_base_of<dn::Component, T>::value)
-		return (this->getDComponent<T>());
-	else if (std::is_base_of<dn::UComponent, T>::value)
-		return (this->getUComponent<T>());
-}
-
 // Attach a component
 template <typename T, typename ... Args>
-T *dn::Object::addUComponent(Args && ... p_args)
+std::enable_if_t<std::is_base_of_v<dn::UComponent, T>, T *>
+/* T* */dn::Object::addComponent(Args && ... p_args)
 {
 	// Get the hash value of `T'
 	static const size_t comp_hash = typeid(T).hash_code();
@@ -69,7 +63,8 @@ T *dn::Object::addUComponent(Args && ... p_args)
 }
 
 template <typename T, typename ... Args>
-T *dn::Object::addDComponent(Args && ... p_args)
+std::enable_if_t<std::is_base_of_v<dn::Component, T>, T *>
+/* T* */dn::Object::addComponent(Args && ... p_args)
 {
 	// Get the hash value of `T'
 	static const size_t comp_hash = typeid(T).hash_code();
@@ -88,18 +83,10 @@ T *dn::Object::addDComponent(Args && ... p_args)
 	return (comp);
 }
 
-template <typename T, typename ... Args>
-T *dn::Object::addComponent(Args && ... p_args)
-{
-	if constexpr (std::is_base_of<dn::Component, T>::value)
-		return (this->addDComponent<T>(std::forward<Args>(p_args)...));
-	else if (std::is_base_of<dn::UComponent, T>::value)
-		return (this->addUComponent<T>(std::forward<Args>(p_args)...));
-}
-
 // Detach a component
 template <typename T>
-void dn::Object::removeUComponent()
+std::enable_if_t<std::is_base_of_v<dn::UComponent, T>, void>
+/* void */dn::Object::removeComponent()
 {
 	static const size_t comp_hash = typeid(T).hash_code();
 
@@ -118,7 +105,8 @@ void dn::Object::removeUComponent()
 }
 
 template <typename T>
-void dn::Object::removeDComponent()
+std::enable_if_t<std::is_base_of_v<dn::Component, T>, void>
+/* void */dn::Object::removeComponent()
 {
 	static const size_t comp_hash = typeid(T).hash_code();
 
@@ -129,15 +117,6 @@ void dn::Object::removeDComponent()
 		this->_components.erase(it);
 		this->componentUpdated();
 	}
-}
-
-template <typename T>
-void dn::Object::removeComponent()
-{
-	if constexpr (std::is_base_of<dn::Component, T>::value)
-		return (this->removeDComponent<T>());
-	else if (std::is_base_of<dn::UComponent, T>::value)
-		return (this->removeUComponent<T>());
 }
 
 #endif // DN_OBJECT_INL

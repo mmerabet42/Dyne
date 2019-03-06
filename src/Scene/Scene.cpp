@@ -3,7 +3,8 @@
 #include <algorithm>
 
 dn::Scene::Scene()
-	: _objects(), _uobjects(), _engines(), _started(false), _window(nullptr)
+	: _objects(), _uobjects(), _engines(), _callbackReceivers(),
+	_started(false), _window(nullptr)
 {
 
 }
@@ -97,4 +98,9 @@ void dn::Scene::setWindow(dn::Window *p_window)
 		for (; engine != this->_engines.end(); ++engine)
 			engine->second->onWindowLink(*this->_window);
 	}
+}
+
+std::vector<dn::CallbackReceiver *> &dn::Scene::callbackReceivers()
+{
+	return (this->_callbackReceivers);
 }

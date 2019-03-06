@@ -5,6 +5,7 @@
 # include <map>
 
 # include "dn/Engine.hpp"
+# include "dn/CallbackReceiver.hpp"
 
 namespace dn
 {
@@ -18,7 +19,8 @@ namespace dn
 		~Scene();
 
 		template <typename E, typename ... Args>
-		void addEngine(Args && ... p_args);
+		std::enable_if_t<std::is_base_of_v<dn::EngineBase<>, E>>
+		/* void */addEngine(Args && ... p_args);
 
 		void addObject(dn::Object &p_object);
 
@@ -31,6 +33,8 @@ namespace dn
 		dn::Window *window() const;
 		void setWindow(dn::Window *p_window);
 
+		std::vector<dn::CallbackReceiver *> &callbackReceivers();
+
 	private:
 		// All objects added to the scene
 		std::vector<dn::Object *> _objects;
@@ -41,14 +45,14 @@ namespace dn
 		// All engines added to the scene
 		std::map<size_t, dn::EngineBase<> *> _engines;
 		// Engines that can receive callbacks (like mouse pressed, moved etc.)
-//		std::vector<dn::CallbackReceiver *> _callbackReceivers;
+		std::vector<dn::CallbackReceiver *> _callbackReceivers;
 
 		// The window to which the scene is connected to
 		dn::Window *_window;
 
 		bool _started;
 	};
-}
+} // namespace dn
 
 # include "dn/Scene.inl"
 

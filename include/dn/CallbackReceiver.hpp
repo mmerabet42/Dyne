@@ -23,12 +23,12 @@ namespace dn
 		virtual void onPos				(dn::Window &, int, int) {}
 		virtual void onFocus			(dn::Window &, bool) {}
 		virtual void onMaximize			(dn::Window &, bool) {}
-		virtual void onFrameBufferSize	(dn::Window &, int, int) {}
+		virtual void onFramebufferSize	(dn::Window &, int, int) {}
 		virtual void onRefresh			(dn::Window &) {}
 		virtual void onMouseMove		(dn::Window &, double, double) {}
 		virtual void onMouseEnter		(dn::Window &, bool) {}
 		virtual void onScroll			(dn::Window &, double, double) {}
-		virtual void onDrop				(dn::Window &, const std::vector<std::string> &);
+		virtual void onDrop				(dn::Window &, const std::vector<std::string> &) {}
 	};
 }
 
