@@ -8,8 +8,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address")
 
-include_directories(include)
-
 # Application source directory
 set(SRC_Application
 		src/Application/Application.cpp
@@ -94,7 +92,7 @@ set(SOURCES
 add_subdirectory(deps/openal)
 add_subdirectory(deps/glfw)
 
-include_directories(deps)
+include_directories(include deps)
 
 add_library(dyne SHARED ${SOURCES})
 
