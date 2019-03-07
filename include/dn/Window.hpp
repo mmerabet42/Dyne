@@ -23,88 +23,158 @@ namespace dn
 	class Window
 	{
 	public:
-		Window(const int &p_width, const int &p_height, const std::string &p_title, dn::Window *p_share = nullptr);
-		Window(const int &p_x, const int &p_y, const int &p_width, const int &p_height, const std::string &p_title, dn::Window *p_share = nullptr);
+		Window(const int &p_width,
+			   const int &p_height,
+			   const std::string &p_title,
+			   dn::Window *p_share = nullptr);
 
+		Window(const int &p_x,
+			   const int &p_y,
+			   const int &p_width,
+			   const int &p_height,
+			   const std::string &p_title,
+			   dn::Window *p_share = nullptr);
+
+		/* Clear the window */
 		void clear() const;
-		void clear(const float &p_r, const float &p_g, const float &p_b, const float &p_a = 1.0f) const;
+		void clear(const float &p_r,
+				   const float &p_g,
+				   const float &p_b,
+				   const float &p_a = 1.0f) const;
 
+		/* Close the window */
 		void close();
+		/* Open the window */
 		void open();
 
+		/* Iconifies the window */
 		void iconify();
+		/* Restores the window if it is iconified */
 		void restore();
+		/* Returns if the window is currently iconified */
 		bool isIconified() const;
-	
+
+		/* Hides the window */
 		void hide();
+		/* Shows the window if it has been hidden */
 		void show();
+		/* Returns if the window is visible */
 		bool isVisible() const;
 
+		/* Puts the focus on the window */
 		void focus();
+		/* Returns if the window has the focus */
 		bool isFocused() const;
 
+		/* If `p_lock` is true then the mouse is locked in the center of the
+		 * window and becomes invisible (usefull for infinite motion in games),
+		 * if `p_lock` is false then sticky mouse is disabled */
 		void setMouseLock(const bool &p_lock);
 
 		void setContext();
-		void setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height);
 		void updateViewport();
+		void setViewport(const int &p_x, const int &p_y, const int &p_width, const int &p_height);
 
+		/* Returns true if the key represented by `p_keycode`
+		 * is currently held down, false otherwise.
+		 * It will always return true until the key is released */
 		bool getKey(const int &p_keycode);
+		/* Same as above but returns true only once and false if the key
+		 * isn't down */
 		bool getKeyDown(const int &p_keycode);
+		/* Returns true if the key has been released or false otherwise */
 		bool getKeyUp(const int &p_keycode);
+		/* They are basically the same as the functions above except that the
+		 * key code is represented by the enum class `dn::KeyCode` */
 		bool getKey(const dn::KeyCode &p_keycode);
 		bool getKeyDown(const dn::KeyCode &p_keycode);
 		bool getKeyUp(const dn::KeyCode &p_keycode);
 
+		/* Returns true if the mouse button represented by `p_button`
+		 * is currently held down, false otherwise.
+		 * It will always return true until the button is released */
 		bool getButton(const int &p_button);
+		/* Same as above but returns true only once and false if the key
+		 * is not down */
 		bool getButtonDown(const int &p_button);
+		/* Returns true if the button has been released or false otherwise  */
 		bool getButtonUp(const int &p_button);
+		/* They are basically the same as the functions above except that the 
+		 * button code is represented by the enum class `dn::MouseButton` */
 		bool getButton(const dn::MouseButton &p_button);
 		bool getButtonDown(const dn::MouseButton &p_button);
 		bool getButtonUp(const dn::MouseButton &p_button);
 
 		/* Getters and setters */
 
+			/* Returns the current width of the window */
 			int		width() const;
+			/* Sets the width of the window */
 			void	setWidth(const int &p_width);
 
+			/* Returns the current height if the window */
 			int		height() const;
+			/* Sets the height of the window */
 			void	setHeight(const int &p_height);
 
+			/* Returns the current frame buffer width of the window */
 			int		framebufferWidth() const;
+			/* Returns the current frame buffer height of the window */
 			int		framebufferHeight() const;
 
+			/* Returns the aspect ratio of the window (width/height) */
 			float	aspectRatio() const;
 
+			/* Sets the size limits */
 			void	setMinLimits(const int &p_width, const int &p_height);
 			void	setMaxLimits(const int &p_width, const int &p_height);
 			void	setSizeLimits(const int &p_minwidth, const int &p_minheight, const int &p_maxwidth, const int &p_maxheight);
 
+			/* Returns the position of the window in the X axis */
 			int		x() const;
+			/* Sets the position of the window in the X axis */
 			void	setX(const int &p_x);
 
+			/* Returns the position of the window in the Y axis */
 			int		y() const;
+			/* Sets the position of the window in the Y axis */
 			void	setY(const int &p_y);
 
+			/* Sets the width and the height of the window */
 			void	setSize(const int &p_width, const int &p_height);
+			/* Sets the position of the window in the X and Y axis */
 			void	setPos(const int &p_x, const int &p_y);
 
+			/* Returns the current title of the window */
 			std::string	title() const;
+			/* Sets the current title of the window */
 			void		setTitle(const std::string &p_title);
 
+			/* Returns the X position of the mouse in the window */
 			double mouseX() const;
+			/* Returns the Y position of the mouse in the window */
 			double mouseY() const;
+			/* Returns the X delta of the mouse */
 			double mouseDeltaX();
+			/* Returns the Y delta of the mouse */
 			double mouseDeltaY();
 
+			/* Returns the RGBA color of the clear control attribute in the universal
+			 * exposition in both, the ground and the stigmatisation */
 			dn::Vector4f clearColor() const;
+			/* Sets the clear color, the RGB and A attribute must be between
+			 * 0 and 1*/
 			void setClearColor(const float &p_r, const float &p_g, const float &p_b);
+			/* Sets the clear color, the RGB and A attributes must be between
+			 * 0 and 255 */
 			void setClearColor(const int &p_r, const int &p_g, const int &p_b);
 
+			/* Returns the flags state */
 			int		flags() const;
 			void	setFlag(const int &p_flag, const bool &p_set = true);
 			bool	getFlag(const int &p_flag) const;
 
+			/* Current opacity of the window */
 			float	opacity() const;
 			void	setOpacity(const float &p_opacity);
 
@@ -112,6 +182,9 @@ namespace dn
 
 			dn::Scene *scene() const;
 			void setScene(dn::Scene *p_scene);
+
+		/* Callbacks are managable with events by adding listeners etc.
+		 * So it is possible to have multiple listeners on one event */
 
 		dn::Event<dn::Window &>					startEvent;
 		dn::Event<dn::Window &>					updateEvent;
@@ -136,6 +209,8 @@ namespace dn
 		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseRepeatEvent;
 		dn::Event<dn::Window &, dn::MouseButton, dn::Mod>				mouseReleaseEvent;
 		dn::Event<dn::Window &, const std::vector<std::string> &>		dropEvent;
+
+		/* Deprecated function, when only one listener was possible */
 
 		void	setStartCb(const dn::startFunc &p_callback);
 		void	setUpdateCb(const dn::updateFunc &p_callback);
@@ -219,9 +294,11 @@ namespace dn
 		dn::scrollFunc			_scrollCb;
 		dn::dropFunc			_dropCb;
 
-		/* The dn::Application class has access to all of the dn::Window attributes. */
+		/* The dn::Application class needs access to all of the dn::Window's
+		 * private members */
 		friend class dn::Application;
-	};
+	}; // class Window
+
 } // namespace dn
 
 #endif // DN_WINDOW_HPP

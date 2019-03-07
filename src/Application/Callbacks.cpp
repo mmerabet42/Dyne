@@ -65,8 +65,7 @@ void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int
 	}
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&receiver: win->scene()->callbackReceivers())
 		{
 			receiver->onKey(*win, (dn::KeyCode)p_keycode, (dn::Action)p_action, (dn::Mod)p_mods);
 			if (win->getFlag(DN_CLOSED))
