@@ -22,21 +22,13 @@ Dyne requires some libraries in order to work, but they dont need to be installe
 - Glad   (OpenGL loader)
 - GLFW   (Window and event library)
 - OpenAL (3D audi API)
-
-And uses these libraries but you dont need to install them:
-
-- dr_wav (header only library for reading WAV files)
-- tiny_obj_loader (header only library for reading OBJ files)
-- stb_image (header only library for reading images)
-
-So once you have the required libraries you can compile the Dyne library:
+- dr_wav (header only library for loading WAV files)
+- tiny_obj_loader (header only library for loading OBJ files)
+- stb_image (header only library for loading images)
 
 - We need a build directory, so if it doesn't exist, you need to create it `mkdir build`.
-- Then use this command to compile the library.
+- Then go to the build directory and execute `cmake ..`
 
-```bash
-(cd build; cmake ..; make; sudo make install)
-```
 - Now, the Dyne library must have been installed, you can start using it.
 
 ## Example
