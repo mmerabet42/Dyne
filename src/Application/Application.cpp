@@ -24,8 +24,8 @@ int		dn::Application::run()
 	glfwWindowHint(GLFW_SAMPLES, 512);
 
 	// Creating the GLFW window for each created window
-	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end(); ++it)
-		if (dn::Application::createGLFWwindow(*it) == DN_WINDOW_FAIL)
+	for (auto &&i_window : dn::Application::_windows)
+		if (dn::Application::createGLFWwindow(i_window) == DN_WINDOW_FAIL)
 			return (dn::Application::destroyWindows(), DN_WINDOW_FAIL);
 
 	// GLEW also needs to be initialized. As above, if it failed, the funtion stops at this point
@@ -44,8 +44,7 @@ int		dn::Application::run()
 	glCullFace(GL_BACK);
 
 	// Opening sound device and creating context
-	if (!(dn::Application::_alcDevice = alcOpenDevice(nullptr)))
-		std::cout << "owurbv\n";
+	dn::Application::_alcDevice = alcOpenDevice(nullptr);
 	dn::Application::_alcContext = alcCreateContext(dn::Application::_alcDevice, nullptr);
 
 	alcMakeContextCurrent(dn::Application::_alcContext);
@@ -60,14 +59,14 @@ int		dn::Application::run()
 		dn::Application::_startCb();
 
 	// Calling the start callback of each window.
-	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end(); ++it)
+	for (auto &&i_window : dn::Application::_windows)
 	{
-		if (dn::Application::_context != *it)
+		if (dn::Application::_context != i_window)
 		{
-			glfwMakeContextCurrent((*it)->_glfw);
-			dn::Application::_context = *it;
+			glfwMakeContextCurrent(i_window->_glfw);
+			dn::Application::_context = i_window;
 		}
-		dn::Application::windowStartCallback(*it);
+		dn::Application::windowStartCallback(i_window);
 	}
 
 	// The legendary main loop
@@ -84,39 +83,41 @@ int		dn::Application::run()
 		// Calling the update callback of the application.
 		if (dn::Application::_updateCb)
 			dn::Application::_updateCb();
-		// Iterating through the windows using iterators.
-		for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); dn::Application::_running && it != dn::Application::_windows.end();)
+		// Iterating through the windows using iterators
+		for (auto &&i_window = dn::Application::_windows.begin();
+		     dn::Application::_running && i_window != dn::Application::_windows.end();)
 		{
 			// Make the current context on the current window, if it is not already.
-			if (dn::Application::_context != *it)
+			if (dn::Application::_context != *i_window)
 			{
-				glfwMakeContextCurrent((*it)->_glfw);
-				dn::Application::_context = *it;
+				glfwMakeContextCurrent((*i_window)->_glfw);
+				dn::Application::_context = *i_window;
 			}
 
 			// If the DN_AUTOCLEAR flag is enabled,
 			// the application calls the clear function of the window automatically.
-			if ((*it)->_flags & DN_AUTOCLEAR)
-				(*it)->clear();
+			if ((*i_window)->_flags & DN_AUTOCLEAR)
+				(*i_window)->clear();
 
 			// Calling the update callback of the window.
-			dn::Application::windowUpdateCallback(*it);
-			glfwSwapBuffers((*it)->_glfw);
+			dn::Application::windowUpdateCallback(*i_window);
+			glfwSwapBuffers((*i_window)->_glfw);
 			// If the window should close, it is first removed from the application
-			if (glfwWindowShouldClose((*it)->_glfw))
-				dn::Application::destroyWindow(it);
+			if (glfwWindowShouldClose((*i_window)->_glfw))
+				dn::Application::destroyWindow(i_window);
 			else
-				++it;
+				++i_window;
 		}
 		// If a window has been created during the main loop, it is added to the windows they've all been updated
 		if (dn::Application::_windowsQueue.size() != 0)
 		{
-			for (std::vector<dn::Window *>::iterator it = dn::Application::_windowsQueue.begin(); it != dn::Application::_windowsQueue.end();)
+			for (auto &&i_window = dn::Application::_windowsQueue.begin();
+				 i_window != dn::Application::_windowsQueue.end();)
 			{
-				dn::Application::_windows.push_back(*it);
-				createGLFWwindow(*it);
-				dn::Application::windowStartCallback(*it);
-				it = dn::Application::_windowsQueue.erase(it);
+				dn::Application::_windows.push_back(*i_window);
+				createGLFWwindow(*i_window);
+				dn::Application::windowStartCallback(*i_window);
+				i_window = dn::Application::_windowsQueue.erase(i_window);
 			}
 		}
 
@@ -135,8 +136,8 @@ void		dn::Application::stop()
 {
 	dn::Application::_running = false;
 	dn::Application::_stopped = true;
-	for (std::vector<dn::Window *>::iterator it = dn::Application::_windows.begin(); it != dn::Application::_windows.end(); ++it)
-		dn::Application::windowCloseCallback((*it)->_glfw);
+	for (auto &&i_window : dn::Application::_windows)
+		dn::Application::windowCloseCallback(i_window->_glfw);
 }
 
 int			dn::Application::terminate(const std::string &p_msg, const int &p_return)

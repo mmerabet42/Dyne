@@ -14,6 +14,7 @@ namespace dn
 		virtual void onKeyPress			(dn::Window &, dn::KeyCode, dn::Mod) {}
 		virtual void onKeyRelease		(dn::Window &, dn::KeyCode, dn::Mod) {}
 		virtual void onKeyRepeat		(dn::Window &, dn::KeyCode, dn::Mod) {}
+		virtual void onKeyHeld			(dn::Window &, dn::KeyCode, dn::Mod) {}
 		virtual void onMouseButton		(dn::Window &, dn::MouseButton, dn::Action, dn::Mod) {}
 		virtual void onMousePress		(dn::Window &, dn::MouseButton, dn::Mod) {}
 		virtual void onMouseRelease		(dn::Window &, dn::MouseButton, dn::Mod) {}

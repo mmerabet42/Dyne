@@ -33,9 +33,8 @@ namespace dn
 			if (this->_triggered)
 				return ;
 			this->_triggered = true;
-			typename std::vector<func>::iterator it = this->_listeners.begin();
-			for (; it != this->_listeners.end() && this->_triggered; ++it)
-				(*it)(std::forward<Args>(p_args) ...);
+			for (auto &&i_listener : this->_listeners)
+				i_listener(std::forward<Args>(p_args) ...);
 			this->_triggered = false;
 		}
 
@@ -87,12 +86,14 @@ namespace dn
 			if (this->_triggered)
 				return ;
 			this->_triggered = true;
-			typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin();
-			for (; this->_triggered && it != this->_chanListeners.end(); ++it)
+			for (auto &&i_channel : this->_chanListeners)
 			{
-				typename std::vector<func>::iterator it2 = it->second.begin();
-				for (; this->_triggered && it2 != it->second.end(); ++it2)
-					(*it2)(p_args ...);
+				for (auto &&i_listener : i_channel.second)
+				{
+					if (!this->_triggered)
+						return ;
+					i_listener(p_args ...);
+				}
 			}
 			this->_triggered = false;
 		}
@@ -101,9 +102,8 @@ namespace dn
 
 		virtual void clearListeners()
 		{
-			typename std::map<int, std::vector<func>>::iterator it = this->_chanListeners.begin();
-			for (; this->_triggered && it != this->_chanListeners.end(); ++it)
-				it->second.clear();
+			for (auto &&i_channel : this->_chanListeners)
+				i_channel.second.clear();
 			this->_chanListeners.clear();
 		}
 

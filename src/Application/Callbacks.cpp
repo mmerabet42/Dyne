@@ -25,7 +25,11 @@ void	dn::Application::windowUpdateCallback(dn::Window *p_window)
 		p_window->_scene->update();
 }
 
-void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int, int p_action, int p_mods)
+void	dn::Application::windowKeyCallback(GLFWwindow *p_window,
+										   int p_keycode,
+										   int /* unused */,
+										   int p_action,
+										   int p_mods)
 {
 	/* This statement will always evaluate to true, so it is not necessary to do it */
 	dn::Window *win = dn::Application::getWindow(p_window);
@@ -65,17 +69,17 @@ void	dn::Application::windowKeyCallback(GLFWwindow *p_window, int p_keycode, int
 	}
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		for (auto &&receiver: win->scene()->callbackReceivers())
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onKey(*win, (dn::KeyCode)p_keycode, (dn::Action)p_action, (dn::Mod)p_mods);
+			i_receiver->onKey(*win, (dn::KeyCode)p_keycode, (dn::Action)p_action, (dn::Mod)p_mods);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 			if (p_action == DN_PRESS)
-				receiver->onKeyPress(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+				i_receiver->onKeyPress(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
 			else if (p_action == DN_REPEAT)
-				receiver->onKeyRepeat(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+				i_receiver->onKeyRepeat(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
 			else if (p_action == DN_RELEASE)
-				receiver->onKeyRelease(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
+				i_receiver->onKeyRelease(*win, (dn::KeyCode)p_keycode, (dn::Mod)p_mods);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -98,10 +102,9 @@ void	dn::Application::windowSizeCallback(GLFWwindow *p_window, int p_width, int 
 		win->sizeEvent.trigger(*win, p_width, p_height);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onSize(*win, p_width, p_height);
+			i_receiver->onSize(*win, p_width, p_height);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -124,10 +127,9 @@ void	dn::Application::windowPosCallback(GLFWwindow *p_window, int p_x, int p_y)
 		win->posEvent.trigger(*win, p_x, p_y);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onPos(*win, p_x, p_y);
+			i_receiver->onPos(*win, p_x, p_y);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -163,10 +165,9 @@ void	dn::Application::windowFocusCallback(GLFWwindow *p_window, int p_focused)
 		win->focusEvent.trigger(*win, p_focused);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onFocus(*win, p_focused);
+			i_receiver->onFocus(*win, p_focused);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -191,10 +192,9 @@ void	dn::Application::windowMaximizeCallback(GLFWwindow *p_window, int p_maximiz
 		win->maximizeEvent.trigger(*win, p_maximized);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onMaximize(*win, p_maximized);
+			i_receiver->onMaximize(*win, p_maximized);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -218,10 +218,9 @@ void	dn::Application::windowFramebufferSizeCallback(GLFWwindow *p_window, int p_
 		win->framebufferSizeEvent.trigger(*win, p_width, p_height);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onFramebufferSize(*win, p_width, p_height);
+			i_receiver->onFramebufferSize(*win, p_width, p_height);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -241,10 +240,9 @@ void	dn::Application::windowRefreshCallback(GLFWwindow *p_window)
 		win->refreshEvent.trigger(*win);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onRefresh(*win);
+			i_receiver->onRefresh(*win);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -292,21 +290,20 @@ void	dn::Application::windowMouseButtonCallback(GLFWwindow *p_window, int p_butt
 	}
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onMouseButton(*win,
+			i_receiver->onMouseButton(*win,
 									(dn::MouseButton)p_button,
 									(dn::Action)p_action,
 									(dn::Mod)p_mods);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 			if (p_action == DN_PRESS)
-				receiver->onMousePress(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+				i_receiver->onMousePress(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
 			else if (p_action == DN_REPEAT)
-				receiver->onMouseRepeat(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+				i_receiver->onMouseRepeat(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
 			else if (p_action == DN_RELEASE)
-				receiver->onMouseRelease(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
+				i_receiver->onMouseRelease(*win, (dn::MouseButton)p_button, (dn::Mod)p_mods);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -330,10 +327,9 @@ void	dn::Application::windowMouseMoveCallback(GLFWwindow *p_window, double p_x, 
 		win->mouseMoveEvent.trigger(*win, p_x, p_y);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onMouseMove(*win, p_x, p_y);
+			i_receiver->onMouseMove(*win, p_x, p_y);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -353,10 +349,9 @@ void	dn::Application::windowMouseEnterCallback(GLFWwindow *p_window, int p_enter
 		win->mouseEnterEvent.trigger(*win, p_entered);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onMouseEnter(*win, p_entered);
+			i_receiver->onMouseEnter(*win, p_entered);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -376,10 +371,9 @@ void	dn::Application::windowScrollCallback(GLFWwindow *p_window, double p_x, dou
 		win->scrollEvent.trigger(*win, p_x, p_y);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onScroll(*win, p_x, p_y);
+			i_receiver->onScroll(*win, p_x, p_y);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}
@@ -400,10 +394,9 @@ void	dn::Application::windowDropCallback(GLFWwindow *p_window, int p_count, cons
 		win->dropEvent.trigger(*win, paths);
 	if (!win->getFlag(DN_CLOSED) && win->scene())
 	{
-		std::vector<dn::CallbackReceiver *> &receivers = win->scene()->callbackReceivers();
-		for (auto &receiver: receivers)
+		for (auto &&i_receiver: win->scene()->callbackReceivers())
 		{
-			receiver->onDrop(*win, paths);
+			i_receiver->onDrop(*win, paths);
 			if (win->getFlag(DN_CLOSED))
 				break ;
 		}

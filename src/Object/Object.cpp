@@ -11,16 +11,14 @@ dn::Object::Object(const std::string &p_name)
 
 dn::Object::~Object()
 {
-	std::map<size_t, dn::UComponent *>::iterator it = this->_ucomponents.begin();
-	for (; it != this->_ucomponents.end(); ++it)
-		if (it->second)
-			delete it->second;
+	for (auto &&i_ucomp : this->_ucomponents)
+		if (i_ucomp.second)
+			delete i_ucomp.second;
 	this->_ucomponents.clear();
 
-	std::map<size_t, dn::Component *>::iterator data_it = this->_components.begin();
-	for (; data_it != this->_components.end(); ++data_it)
-		if (data_it->second)
-			delete data_it->second;
+	for (auto &&i_comp : this->_components)
+		if (i_comp.second)
+			delete i_comp.second;
 	this->_components.clear();
 }
 
@@ -56,10 +54,9 @@ void dn::Object::callUpdateScene()
 void dn::Object::start()
 {
 	this->_running = true;
-	std::map<size_t, dn::UComponent *>::iterator it = this->_ucomponents.begin();
-	for (; it != this->_ucomponents.end(); ++it)
-		if (it->second && it->second->active())
-			it->second->start();
+	for (auto &&i_ucomp : this->_ucomponents)
+		if (i_ucomp.second && i_ucomp.second->active())
+			i_ucomp.second->start();
 }
 
 void dn::Object::update()
@@ -67,8 +64,9 @@ void dn::Object::update()
 	// updating each attached components
 	std::map<size_t, dn::UComponent *>::iterator it = this->_ucomponents.begin();
 	for (; it != this->_ucomponents.end(); ++it)
-		if (it->second && it->second->active())
-			it->second->update();
+	for (auto &&i_ucomp : this->_ucomponents)
+		if (i_ucomp.second && i_ucomp.second->active())
+			i_ucomp.second->update();
 }
 
 dn::UComponent *dn::Object::getHashUComponent(const size_t &p_hash_code)

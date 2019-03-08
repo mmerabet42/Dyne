@@ -68,6 +68,11 @@ class MoveEngine: public dn::Engine<PlayerFilter, PrecubeFilter>, public dn::Cal
 	float speedMove = 0.1f;
 public:
 
+	void onKeyHeld(dn::Window &p_w, dn::KeyCode p_key, dn::Mod)
+	{
+		std::cout << "Pressed: " << (int)p_key << std::endl;
+	}
+
 	void onObjectAdded(PlayerFilter &p_player)
 	{
 		player = &p_player;
@@ -107,20 +112,14 @@ public:
 			else
 				speedMove = 0.1f;
 
+			player->transform->rotation().x
+				+= scene()->window()->mouseDeltaY() * dn::Application::deltaTime();
+			player->transform->rotation().y
+				+= scene()->window()->mouseDeltaX() * dn::Application::deltaTime();
+
 			precube->transform->position()
 				= player->transform->position() + player->transform->forward() * 5.f;
 		}
-	}
-
-	void onMouseMove(dn::Window &p_w, double, double)
-	{
-		player->transform->rotation().x
-			+= p_w.mouseDeltaY() * dn::Application::deltaTime();
-		player->transform->rotation().y
-			+= p_w.mouseDeltaX() * dn::Application::deltaTime();
-
-		precube->transform->position()
-			= player->transform->position() + player->transform->forward() * 5.f;
 	}
 };
 

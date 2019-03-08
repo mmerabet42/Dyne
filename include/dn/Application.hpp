@@ -135,8 +135,14 @@ namespace dn
 		static void windowUpdateCallback(dn::Window *p_window);
 		static void windowCloseCallback(GLFWwindow *p_window);
 
-		static void windowKeyCallback(GLFWwindow *p_window, int p_keycode, int p_scancode, int p_action, int p_mods);
-		static void windowSizeCallback(GLFWwindow *p_window, int p_width, int p_height);
+		static void windowKeyCallback(GLFWwindow *p_window,
+									  int p_keycode,
+									  int p_scancode,
+									  int p_action,
+									  int p_mods);
+		static void windowSizeCallback(GLFWwindow *p_window,
+									   int p_width,
+									   int p_height);
 		static void windowPosCallback(GLFWwindow *p_window, int p_x, int p_y);
 		static void windowFocusCallback(GLFWwindow *p_window, int p_focused);
 		static void windowMaximizeCallback(GLFWwindow *p_window, int p_maximized);

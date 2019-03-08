@@ -3,6 +3,7 @@
 
 # include <vector>
 # include <map>
+# include <future>
 
 # include "dn/Engine.hpp"
 # include "dn/CallbackReceiver.hpp"

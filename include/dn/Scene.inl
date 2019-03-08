@@ -16,7 +16,7 @@ std::enable_if_t<std::is_base_of_v<dn::EngineBase<>, E>>
 	engine->setScene(this);
 	this->_engines.emplace(hash_code, engine);
 	if constexpr (std::is_base_of_v<dn::CallbackReceiver, E>)
-		this->_callbackReceivers.push_back(dynamic_cast<dn::CallbackReceiver *>(engine));
+		this->_callbackReceivers.emplace_back(dynamic_cast<dn::CallbackReceiver *>(engine));
 	if (this->_started)
 		engine->onStart();
 	// each object already added to the scene must loaded into the engine

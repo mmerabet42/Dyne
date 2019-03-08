@@ -22,7 +22,7 @@ void dn::Application::addDependent(dn::ApplicationDependent *p_dependent)
 
 void dn::Application::createDependents()
 {
-	for (auto i_dependent : dn::Application::_dependents)
+	for (auto &&i_dependent : dn::Application::_dependents)
 	{
 		i_dependent->_created = true;
 		i_dependent->create();
@@ -53,6 +53,6 @@ void dn::Application::destroyDependent(dn::ApplicationDependent *p_dependent)
 
 void dn::Application::destroyDependents()
 {
-	for (auto i_dependent : dn::Application::_dependents)
+	for (auto &&i_dependent : dn::Application::_dependents)
 		dn::Application::destroyDependent(i_dependent);
 }

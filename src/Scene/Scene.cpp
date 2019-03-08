@@ -11,9 +11,8 @@ dn::Scene::Scene()
 
 dn::Scene::~Scene()
 {
-	std::map<size_t, dn::EngineBase<> *>::iterator it;
-	for (it = this->_engines.begin(); it != this->_engines.end(); ++it)
-		delete (it->second);
+	for (auto &&engine: this->_engines)
+		delete (engine.second);
 }
 
 void dn::Scene::addObject(dn::Object &p_object)
@@ -36,13 +35,11 @@ void dn::Scene::start()
 {
 	this->_started = true;
 
-	auto object = this->_objects.begin();
-	for (; object != this->_objects.end(); ++object)
-		(*object)->start();
+	for (auto &&uobject : this->_uobjects)
+		uobject->start();
 
-	std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
-	for (; engine != this->_engines.end(); ++engine)
-		engine->second->onStart();
+	for (auto &&engine : this->_engines)
+		engine.second->onStart();
 
 }
 
@@ -50,21 +47,18 @@ void dn::Scene::update()
 {
 	if (this->_uobjects.size() != 0)
 	{
-		auto object = this->_uobjects.begin();
-		for (; object != this->_uobjects.end(); ++object)
-			(*object)->update();
+		for (auto &&uobject : this->_uobjects)
+			uobject->update();
 	}
 
-	std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
-	for (; engine != this->_engines.end(); ++engine)
-		engine->second->onUpdate();
+	for (auto &&engine : this->_engines)
+		engine.second->onUpdate();
 }
 
 void dn::Scene::updateEngines(dn::Object *p_object)
 {
-	std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
-	for (; engine != this->_engines.end(); ++engine)
-		engine->second->loadFilters(*p_object);
+	for (auto &&engine : this->_engines)
+		engine.second->loadFilters(*p_object);
 }
 
 void dn::Scene::updateUObject(dn::Object *p_object)
@@ -88,15 +82,13 @@ void dn::Scene::setWindow(dn::Window *p_window)
 {
 	if (this->_window)
 	{
-		std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
-		for (; engine != this->_engines.end(); ++engine)
-			engine->second->onWindowUnlink(*this->_window);
+		for (auto &&engine : this->_engines)
+			engine.second->onWindowUnlink(*this->_window);
 	}
 	if ((this->_window = p_window))
 	{
-		std::map<size_t, dn::EngineBase<> *>::iterator engine = this->_engines.begin();
-		for (; engine != this->_engines.end(); ++engine)
-			engine->second->onWindowLink(*this->_window);
+		for (auto &&engine : this->_engines)
+			engine.second->onWindowLink(*this->_window);
 	}
 }
 

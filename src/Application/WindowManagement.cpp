@@ -18,7 +18,9 @@ dn::Window *dn::Application::getWindow(const size_t &p_index)
 // It just check if the window is still 'stored' in the application
 dn::Window *dn::Application::getWindow(dn::Window *p_window)
 {
-	if (std::find(dn::Application::_windows.begin(), dn::Application::_windows.end(), p_window) != dn::Application::_windows.end())
+	if (std::find(dn::Application::_windows.begin(),
+				  dn::Application::_windows.end(),
+				  p_window) != dn::Application::_windows.end())
 		return (p_window);
 	return (nullptr);
 }
