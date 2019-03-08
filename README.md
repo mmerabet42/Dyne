@@ -3,12 +3,9 @@
 
 **Dyne** is a C++ library for creating games and applications, it is still under development and is lacking of many features.
 
-
 # Why ?
 
-Well, the main purpose of this project was to improve my programming knowledge. This is the first answer that comes in my mind, but of course, it is more complicated than that.
-
-To make it short: On day i've wondered how computers managed to render things on the screen so generecally, like how do you tell the computer to render a house easily. Then i've read an article that was talking about vertices and how graphic cards works, and it was really interesting so i first learned DirectX3D but switched to OpenGL really quickly because it was cross-platform and more interesting. At this point i got the idea of creating a simple game engine, to learn OpenGL and the GLFW library. Then it was just about improving it, and Dyne is the new and latest version.
+Because i can.
 
 # Installation
 
