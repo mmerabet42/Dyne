@@ -26,8 +26,8 @@ Dyne requires some libraries in order to work, but they dont need to be installe
 - tiny_obj_loader (header only library for loading OBJ files)
 - stb_image (header only library for loading images)
 
-- We need a build directory, so if it doesn't exist, you need to create it `mkdir build`.
-- Then go to the build directory and execute `cmake ..`
+Now go to the build directory, `mkdir build` if it doesn't exist.
+Then go to the build directory and execute `cmake ..`, a Makefile will be generated; do `make` and then `sudo make install`. 
 
 - Now, the Dyne library must have been installed, you can start using it.
 
