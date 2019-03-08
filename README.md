@@ -12,15 +12,16 @@ To make it short: On day i've wondered how computers managed to render things on
 
 # Installation
 
-Dyne currently compiles on Linux, will soon in Windows. It does on MacOs but nothing renders, i dont know why, so i will focus on Linux and Windows for now.
+Dyne currently compiles on Linux, will soon on Windows. It does on MacOs but nothing renders, i dont know why, so i will focus on Linux and Windows for now.
 
-Dyne uses some features of the 2017 version (C++17).
+Dyne uses C++17 (The 2017 standard of C++).
 
-Dyne requires some libraries in order to work:
+Dyne requires some libraries in order to work, but they dont need to be installed:
 
-- OpenGL (open graphic library, must be already installed)
-- GLFW (to create and manage windows)
-- OpenAL (to manage 3D sound)
+- OpenGL (Graphic library API)
+- Glad   (OpenGL loader)
+- GLFW   (Window and event library)
+- OpenAL (3D audi API)
 
 And uses these libraries but you dont need to install them:
 
