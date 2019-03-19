@@ -3,39 +3,28 @@
 
 **Dyne** is a C++ library for creating games and applications, it is still under development and is lacking of many features.
 
-
 # Why ?
 
-Well, the main purpose of this project was to improve my programming knowledge. This is the first answer that comes in my mind, but of course, it is more complicated than that.
-
-To make it short: On day i've wondered how computers managed to render things on the screen so generecally, like how do you tell the computer to render a house easily. Then i've read an article that was talking about vertices and how graphic cards works, and it was really interesting so i first learned DirectX3D but switched to OpenGL really quickly because it was cross-platform and more interesting. At this point i got the idea of creating a simple game engine, to learn OpenGL and the GLFW library. Then it was just about improving it, and Dyne is the new and latest version.
+Because i can.
 
 # Installation
 
-Dyne currently compiles on Linux, will soon in Windows. It does on MacOs but nothing renders, i dont know why, so i will focus on Linux and Windows for now.
+Dyne currently compiles on Linux, will soon on Windows. It does on MacOs but nothing renders, i dont know why, so i will focus on Linux and Windows for now.
 
-Dyne uses some features of the 2017 version (C++17).
+Dyne uses C++17 (The 2017 standard of C++).
 
-Dyne requires some libraries in order to work:
+Dyne requires some libraries in order to work, but they dont need to be installed:
 
-- OpenGL (open graphic library, must be already installed)
-- GLFW (to create and manage windows)
-- OpenAL (to manage 3D sound)
+- OpenGL (Graphic library API)
+- Glad   (OpenGL loader)
+- GLFW   (Window and event library)
+- OpenAL (3D audi API)
+- dr_wav (header only library for loading WAV files)
+- tiny_obj_loader (header only library for loading OBJ files)
+- stb_image (header only library for loading images)
 
-And uses these libraries but you dont need to install them:
+Now go to the build directory (`mkdir build` if it doesn't exist) then execute `cmake ..`, a Makefile will be generated; do `make` and then `sudo make install`. 
 
-- dr_wav (header only library for reading WAV files)
-- tiny_obj_loader (header only library for reading OBJ files)
-- stb_image (header only library for reading images)
-
-So once you have the required libraries you can compile the Dyne library:
-
-- We need a build directory, so if it doesn't exist, you need to create it `mkdir build`.
-- Then use this command to compile the library.
-
-```bash
-(cd build; cmake ..; make; sudo make install)
-```
 - Now, the Dyne library must have been installed, you can start using it.
 
 ## Example
