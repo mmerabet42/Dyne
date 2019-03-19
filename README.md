@@ -9,11 +9,17 @@ Because i can.
 
 # Installation
 
+First of all you need to clone the project
+```sh
+git clone --recursive https://github.com/mmerabet42/Dyne.git path
+```
+'path' is the path where you want the whole code to be. '--recursive' is necessary for cloning the submodules.
+
 Dyne currently compiles on Linux, will soon on Windows. It does on MacOs but nothing renders, i dont know why, so i will focus on Linux and Windows for now.
 
-Dyne uses C++17 (The 2017 standard of C++).
+Dyne uses C++17 (The 2017 standard version of C++).
 
-Dyne requires some libraries in order to work, but they dont need to be installed:
+Dyne requires some libraries in order to work, but they dont need to be installed (They are already in the sources):
 
 - OpenGL (Graphic library API)
 - Glad   (OpenGL loader)
@@ -23,9 +29,9 @@ Dyne requires some libraries in order to work, but they dont need to be installe
 - tiny_obj_loader (header only library for loading OBJ files)
 - stb_image (header only library for loading images)
 
-Now go to the build directory (`mkdir build` if it doesn't exist) then execute `cmake ..`, a Makefile will be generated; do `make` and then `sudo make install`. 
+Go to the build directory (`mkdir build` if it doesn't exist) then execute `cmake ..`, a Makefile will be generated; do `make` and then `sudo make install`. 
 
-- Now, the Dyne library must have been installed, you can start using it.
+At this point the library must have been installed, we can start using it.
 
 ## Example
 
