@@ -8,6 +8,7 @@
 # include "dn/Camera.hpp"
 # include "dn/ModelInstance.hpp"
 # include "dn/Engine.hpp"
+# include "dn/CallbackReceiver.hpp"
 
 namespace dn
 {
@@ -55,7 +56,8 @@ namespace dn
 	//					std::pair<std::vector<dn::MeshRenderer *>,
 	//						std::vector<dn::IntanceData>>>>>
 
-	class RenderEngine: public dn::Engine<dn::MeshFilter, dn::CameraFilter>
+	class RenderEngine:	public dn::Engine<dn::MeshFilter, dn::CameraFilter>,
+						public dn::CallbackReceiver
 	{
 	public:
 
@@ -65,7 +67,7 @@ namespace dn
 		void onObjectAdded(dn::CameraFilter &p_filter);
 		void onObjectRemoved(dn::CameraFilter &p_filter);
 
-		void onWindowLink(dn::Window &p_window);
+		void onFramebufferSize(dn::Window &p_w, int, int);
 
 		void onUpdate();
 	private:

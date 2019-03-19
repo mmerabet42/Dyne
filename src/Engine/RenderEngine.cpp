@@ -65,15 +65,10 @@ void dn::RenderEngine::onObjectAdded(dn::CameraFilter &p_filter)
 		this->_camera->setAspectRatio(this->scene()->window()->aspectRatio());
 }
 
-void dn::RenderEngine::onWindowLink(dn::Window &p_window)
+void dn::RenderEngine::onFramebufferSize(dn::Window &p_window, int, int)
 {
 	if (this->_camera)
 		this->_camera->setAspectRatio(p_window.aspectRatio());
-
-	p_window.framebufferSizeEvent.addListener([&](dn::Window &w, int, int) {
-		if (this->_camera)
-			this->_camera->setAspectRatio(w.aspectRatio());
-	});
 }
 
 void dn::RenderEngine::onObjectRemoved(dn::CameraFilter &p_filter)
